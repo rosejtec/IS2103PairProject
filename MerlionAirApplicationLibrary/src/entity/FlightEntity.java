@@ -32,6 +32,9 @@ public class FlightEntity implements Serializable {
 //- flightRoute: FlightRouteEntity
 //- aircraftConfiguration: AircraftConfiigurationEntity
 
+    public FlightEntity() {
+    }
+
 
     public Long getId() {
         return id;

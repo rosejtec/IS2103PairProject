@@ -29,6 +29,10 @@ public class FlightScheduleEntity implements Serializable {
     private Integer duration;
     @ManyToOne
     private FlightSchedulePlanEntity Plan;
+
+    public FlightScheduleEntity() {
+    }
+    
     
     public Long getId() {
         return id;

@@ -35,6 +35,11 @@ public class FlightReservationEntity implements Serializable {
     private Integer totalAmount;
     private boolean connecting;
     private boolean returnFlight;
+
+    public FlightReservationEntity() {
+    }
+    
+    
     
     public Long getFlightReservationId() {
         return flightReservationId;

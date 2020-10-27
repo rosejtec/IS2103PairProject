@@ -25,6 +25,9 @@ public class PassengerEntity implements Serializable {
     private String firstName;
     private String lastName;
     private String passport;
+
+    public PassengerEntity() {
+    }
     
     public Long getId() {
         return id;

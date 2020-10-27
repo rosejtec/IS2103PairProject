@@ -28,6 +28,9 @@ public class FlightReservationDetailsEntity implements Serializable {
     @OneToMany
     private List<FlightScheduleEntity> schedule;
     private List<List<String>> seatNum;
+
+    public FlightReservationDetailsEntity() {
+    }
     
 
     public Long getFlightReservationDetailId() {

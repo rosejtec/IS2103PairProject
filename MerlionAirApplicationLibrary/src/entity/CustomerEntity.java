@@ -31,8 +31,15 @@ public class CustomerEntity implements Serializable {
     private String username;
     private String password;
     
+    
     @OneToMany
     private List<FlightReservationEntity> reservations;
+
+    public CustomerEntity() {
+    }
+    
+    
+    
     
     public Long getCustomerId() {
         return customerId;
