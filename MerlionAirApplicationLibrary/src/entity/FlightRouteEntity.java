@@ -31,6 +31,7 @@ public class FlightRouteEntity implements Serializable {
     private List<FlightEntity> flightEntity;
     @ManyToOne
     private AirportEntity airportEntity;
+    //how to do the loop thingy
 
     public FlightRouteEntity(String origin, String destination, List<FlightEntity> flightEntity, AirportEntity airportEntity) {
         this.origin = origin;
