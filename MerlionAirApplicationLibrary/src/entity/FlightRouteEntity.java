@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,21 +26,24 @@ public class FlightRouteEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightRouteId;
-    private String origin;
-    private String destination;
-    @OneToMany
+    private AirportEntity origin;
+    private AirportEntity destination;
+    
+    @OneToMany(mappedBy = "flightRoute")
     private List<FlightEntity> flightEntity;
-    @ManyToOne
-    private AirportEntity airportEntity;
+    //@ManyToOne
+    
+    @OneToOne(mappedBy = "complemntary")
+    FlightRouteEntity complemntary;
     //how to do the loop thingy
 
-    public FlightRouteEntity(String origin, String destination, List<FlightEntity> flightEntity, AirportEntity airportEntity) {
+    public FlightRouteEntity(AirportEntity origin, AirportEntity destination, List<FlightEntity> flightEntity,  FlightRouteEntity complemntary) {
         this.origin = origin;
         this.destination = destination;
         this.flightEntity = flightEntity;
-        this.airportEntity = airportEntity;
+        this.complemntary = complemntary;
     }
-    
+
     public Long getFlightRouteId() {
         return flightRouteId;
     }
@@ -48,19 +52,19 @@ public class FlightRouteEntity implements Serializable {
         this.flightRouteId = flightRouteId;
     }
 
-    public String getOrigin() {
+    public AirportEntity getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(AirportEntity origin) {
         this.origin = origin;
     }
 
-    public String getDestination() {
+    public AirportEntity getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(AirportEntity destination) {
         this.destination = destination;
     }
 
@@ -72,13 +76,14 @@ public class FlightRouteEntity implements Serializable {
         this.flightEntity = flightEntity;
     }
 
-    public AirportEntity getAirportEntity() {
-        return airportEntity;
+    public FlightRouteEntity getComplemntary() {
+        return complemntary;
     }
 
-    public void setAirportEntity(AirportEntity airportEntity) {
-        this.airportEntity = airportEntity;
+    public void setComplemntary(FlightRouteEntity complemntary) {
+        this.complemntary = complemntary;
     }
+    
     
 
     @Override

@@ -22,15 +22,54 @@ public class FlightScheduleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date departure;
     private Date arrival;
     private Integer duration;
     @ManyToOne
-    private FlightSchedulePlanEntity Plan;
+    private FlightSchedulePlanEntity plan;
 
     public FlightScheduleEntity() {
+    }
+
+    public FlightScheduleEntity(Date departure, Date arrival, Integer duration, FlightSchedulePlanEntity plan) {
+        this.departure = departure;
+        this.arrival = arrival;
+        this.duration = duration;
+        this.plan = plan;
+    }
+
+    public Date getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Date departure) {
+        this.departure = departure;
+    }
+
+    public Date getArrival() {
+        return arrival;
+    }
+
+    public void setArrival(Date arrival) {
+        this.arrival = arrival;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public FlightSchedulePlanEntity getPlan() {
+        return plan;
+    }
+
+    public void setPlan(FlightSchedulePlanEntity plan) {
+        this.plan = plan;
     }
     
     
@@ -66,5 +105,7 @@ public class FlightScheduleEntity implements Serializable {
     public String toString() {
         return "entity.FlightScheduleEntity[ id=" + id + " ]";
     }
+
+
     
 }

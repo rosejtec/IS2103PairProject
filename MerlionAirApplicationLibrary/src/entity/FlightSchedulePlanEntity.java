@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ public class FlightSchedulePlanEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
      @OneToMany(mappedBy = "Plan")
     private List<FlightScheduleEntity> flightSchedule;
@@ -32,6 +33,29 @@ public class FlightSchedulePlanEntity implements Serializable {
     private FlightEntity flight;
 
     public FlightSchedulePlanEntity() {
+    }
+
+    public FlightSchedulePlanEntity(List<FlightScheduleEntity> flightSchedule, FlightEntity flight) {
+        this.flightSchedule = flightSchedule;
+        this.flight = flight;
+    }
+
+   
+
+    public List<FlightScheduleEntity> getFlightSchedule() {
+        return flightSchedule;
+    }
+
+    public void setFlightSchedule(List<FlightScheduleEntity> flightSchedule) {
+        this.flightSchedule = flightSchedule;
+    }
+
+    public FlightEntity getFlight() {
+        return flight;
+    }
+
+    public void setFlight(FlightEntity flight) {
+        this.flight = flight;
     }
 
     
