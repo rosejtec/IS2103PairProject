@@ -9,9 +9,9 @@ import javax.ejb.Local;
 
 /**
  *
- * @author leahr
+ * @author quahjingxin
  */
 @Local
-public interface ReservationSessionBeanLocal {
+public interface FlightRouteSessionBeanLocal {
     
 }

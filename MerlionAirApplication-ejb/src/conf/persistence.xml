@@ -9,6 +9,14 @@
     <class>entity.FlightScheduleEntity</class>
     <class>entity.FlightSchedulePlanEntity</class>
     <class>entity.PassengerEntity</class>
+    <class>entity.AircraftConfigurationEntity</class>
+    <class>entity.AircraftTypeEntity</class>
+    <class>entity.AirportEntity</class>
+    <class>entity.CabinClassConfigurationEntity</class>
+    <class>entity.EmployeeEntity</class>
+    <class>entity.FareEntity</class>
+    <class>entity.FlightRouteEntity</class>
+    <class>entity.PartnerEntity</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>

@@ -7,12 +7,16 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -26,17 +30,22 @@ public class AircraftConfigurationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aircraftConfigurationId;
     private String name;
-    private String numOfCabinClass;
+    private Integer numOfCabinClass;
     @ManyToOne
-    private AircraftTypeEntity aircraftTypeEntity;
+    private AircraftTypeEntity aircraftType;
+    @OneToOne
+    private FlightEntity flightEntity;
     @OneToMany
-    private List<CabinClassConfigurationEntity> cabinClassConfigurationEntity;
+    private List<CabinClassConfigurationEntity> cabinClassConfigurations;
 
-    public AircraftConfigurationEntity(String name, String numOfCabinClass, AircraftTypeEntity aircraftTypeEntity, List<CabinClassConfigurationEntity> cabinClassConfigurationEntity) {
+    public AircraftConfigurationEntity(String name, Integer numOfCabinClass, List<CabinClassConfigurationEntity> cabinClassConfigurations) {
         this.name = name;
         this.numOfCabinClass = numOfCabinClass;
-        this.aircraftTypeEntity = aircraftTypeEntity;
-        this.cabinClassConfigurationEntity = cabinClassConfigurationEntity;
+        this.cabinClassConfigurations = cabinClassConfigurations;
+    }
+
+    public AircraftConfigurationEntity()
+    {
     }
     
     public Long getAircraftConfigurationId() {
@@ -55,28 +64,28 @@ public class AircraftConfigurationEntity implements Serializable {
         this.name = name;
     }
 
-    public String getNumOfCabinClass() {
+    public Integer getNumOfCabinClass() {
         return numOfCabinClass;
     }
 
-    public void setNumOfCabinClass(String numOfCabinClass) {
+    public void setNumOfCabinClass(Integer numOfCabinClass) {
         this.numOfCabinClass = numOfCabinClass;
     }
 
-    public AircraftTypeEntity getAircraftTypeEntity() {
-        return aircraftTypeEntity;
+    public AircraftTypeEntity getAircraftType() {
+        return aircraftType;
     }
 
-    public void setAircraftTypeEntity(AircraftTypeEntity aircraftTypeEntity) {
-        this.aircraftTypeEntity = aircraftTypeEntity;
+    public void setAircraftType(AircraftTypeEntity aircraftType) {
+        this.aircraftType = aircraftType;
     }
 
-    public List<CabinClassConfigurationEntity> getCabinClassConfigurationEntity() {
-        return cabinClassConfigurationEntity;
+    public List<CabinClassConfigurationEntity> getCabinClassConfigurations() {
+        return cabinClassConfigurations;
     }
 
-    public void setCabinClassConfigurationEntity(List<CabinClassConfigurationEntity> cabinClassConfigurationEntity) {
-        this.cabinClassConfigurationEntity = cabinClassConfigurationEntity;
+    public void setCabinClassConfigurations(List<CabinClassConfigurationEntity> cabinClassConfigurations) {
+        this.cabinClassConfigurations = cabinClassConfigurations;
     }
     
     @Override

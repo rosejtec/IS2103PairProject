@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -23,42 +22,70 @@ public class FlightSchedulePlanEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-     @OneToMany(mappedBy = "Plan")
-    private List<FlightScheduleEntity> flightSchedule;
-     
-    @ManyToOne
-    private FlightEntity flight;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long fightSchedulePlanId;
+    private String flightNum;
+    @OneToMany
+    private List<FlightScheduleEntity> flightSchedules;
+    @OneToMany
+    private List<FareEntity> fare;
 
-    public FlightSchedulePlanEntity() {
+    public FlightSchedulePlanEntity(String flightNum, List<FlightScheduleEntity> flightSchedules) {
+        this.flightNum = flightNum;
+        this.flightSchedules = flightSchedules;
     }
 
+    public FlightSchedulePlanEntity(List<FareEntity> fare) {
+        this.fare = fare;
+    }
     
-    
-    public Long getId() {
-        return id;
+    public Long getFightSchedulePlanId() {
+        return fightSchedulePlanId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFightSchedulePlanId(Long fightSchedulePlanId) {
+        this.fightSchedulePlanId = fightSchedulePlanId;
+    }
+
+    public String getFlightNum() {
+        return flightNum;
+    }
+
+    public void setFlightNum(String flightNum) {
+        this.flightNum = flightNum;
+    }
+
+    public List<FlightScheduleEntity> getFlightSchedules() {
+        return flightSchedules;
+    }
+
+    public void setFlightSchedules(List<FlightScheduleEntity> flightSchedules) {
+        this.flightSchedules = flightSchedules;
+    }
+
+    public List<FareEntity> getFare() {
+        return fare;
+    }
+
+    public void setFare(List<FareEntity> fare) {
+        this.fare = fare;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (fightSchedulePlanId != null ? fightSchedulePlanId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the fightSchedulePlanId fields are not set
         if (!(object instanceof FlightSchedulePlanEntity)) {
             return false;
         }
         FlightSchedulePlanEntity other = (FlightSchedulePlanEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.fightSchedulePlanId == null && other.fightSchedulePlanId != null) || (this.fightSchedulePlanId != null && !this.fightSchedulePlanId.equals(other.fightSchedulePlanId))) {
             return false;
         }
         return true;
@@ -66,7 +93,7 @@ public class FlightSchedulePlanEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.FlightSchedulePlanEntity[ id=" + id + " ]";
+        return "entity.FlightSchedulePlanEntity[ id=" + fightSchedulePlanId + " ]";
     }
     
 }

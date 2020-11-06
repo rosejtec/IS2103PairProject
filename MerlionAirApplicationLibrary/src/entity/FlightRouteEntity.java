@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,21 +26,34 @@ public class FlightRouteEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightRouteId;
-    private String origin;
-    private String destination;
+    //@ManyToOne
+    private AirportEntity origin;
+    //@ManyToOne
+    private AirportEntity destination;
     @OneToMany
-    private List<FlightEntity> flightEntity;
-    @ManyToOne
-    private AirportEntity airportEntity;
+    private List<FlightEntity> flights;
+    //@ManyToOne
+    //private AirportEntity airport;
+    //IS THIS CORRRECT
+    @OneToOne
+    private FlightRouteEntity complementaryReturnRoute;
+    private boolean disabled;
     //how to do the loop thingy
 
-    public FlightRouteEntity(String origin, String destination, List<FlightEntity> flightEntity, AirportEntity airportEntity) {
+    public FlightRouteEntity(AirportEntity origin, AirportEntity destination, List<FlightEntity> flightEntity, FlightRouteEntity complementaryRoute, boolean disabled) {
         this.origin = origin;
         this.destination = destination;
-        this.flightEntity = flightEntity;
-        this.airportEntity = airportEntity;
+        this.flights = flightEntity;
+        this.complementaryReturnRoute = complementaryRoute;
+        this.disabled = disabled;
+        
     }
-    
+
+    public FlightRouteEntity(AirportEntity origin, AirportEntity destination) {
+        this.origin = origin;
+        this.destination = destination;
+    }
+
     public Long getFlightRouteId() {
         return flightRouteId;
     }
@@ -48,38 +62,42 @@ public class FlightRouteEntity implements Serializable {
         this.flightRouteId = flightRouteId;
     }
 
-    public String getOrigin() {
+    public AirportEntity getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(AirportEntity origin) {
         this.origin = origin;
     }
 
-    public String getDestination() {
+    public AirportEntity getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(AirportEntity destination) {
         this.destination = destination;
     }
-
-    public List<FlightEntity> getFlightEntity() {
-        return flightEntity;
-    }
-
-    public void setFlightEntity(List<FlightEntity> flightEntity) {
-        this.flightEntity = flightEntity;
-    }
-
-    public AirportEntity getAirportEntity() {
-        return airportEntity;
-    }
-
-    public void setAirportEntity(AirportEntity airportEntity) {
-        this.airportEntity = airportEntity;
-    }
     
+    public List<FlightEntity> getFlights() {
+        return flights;
+    }
+
+    public void setFlights(List<FlightEntity> flights) {
+        this.flights = flights;
+    }
+
+    public FlightRouteEntity getComplementaryReturnRoute() {
+        return complementaryReturnRoute;
+    }
+
+    public void setComplementaryReturnRoute(FlightRouteEntity complementaryReturnRoute) {
+        this.complementaryReturnRoute = complementaryReturnRoute;
+    }
+
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = true;
+    }
 
     @Override
     public int hashCode() {

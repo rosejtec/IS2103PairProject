@@ -6,11 +6,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -29,6 +31,8 @@ public class AirportEntity implements Serializable {
     private String city;
     private String state;
     private String country;
+    @OneToMany(mappedBy = "airport")
+    private List<FlightRouteEntity> flightRoutes;
 
     public AirportEntity(String name, String code, String city, String state, String country) {
         this.name = name;
@@ -36,6 +40,10 @@ public class AirportEntity implements Serializable {
         this.city = city;
         this.state = state;
         this.country = country;
+    }
+
+    public AirportEntity(List<FlightRouteEntity> flightRoutes) {
+        this.flightRoutes = flightRoutes;
     }
     
     public Long getAirportId() {
@@ -85,8 +93,14 @@ public class AirportEntity implements Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
-    
-    
+
+    public List<FlightRouteEntity> getFlightRoutes() {
+        return flightRoutes;
+    }
+
+    public void setFlightRoutes(List<FlightRouteEntity> flightRoutes) {
+        this.flightRoutes = flightRoutes;
+    }
 
     @Override
     public int hashCode() {

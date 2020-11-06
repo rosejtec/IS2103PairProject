@@ -5,17 +5,53 @@
  */
 package frsmanagementclient;
 
+import ejb.session.stateless.AircraftConfigurationSessionBeanRemote;
+import ejb.session.stateless.AircraftTypeSessionBeanRemote;
+import ejb.session.stateless.AirportSessionBeanRemote;
+import ejb.session.stateless.CabinClassConfigurationSessionBeanRemote;
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.FlightRouteSessionBeanRemote;
+import ejb.session.stateless.FlightSessionBeanRemote;
+import javax.ejb.EJB;
+
 /**
  *
  * @author leahr
  */
-public class Main {
+public class Main 
+{
+
+    @EJB
+    private static FlightSessionBeanRemote flightSessionBeanRemote;
+
+    @EJB
+    private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
+
+    @EJB
+    private static CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote;
+
+    @EJB
+    private static AirportSessionBeanRemote airportSessionBeanRemote;
+
+    @EJB
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote;
+
+    @EJB
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
+
+    @EJB
+    private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
 
     /**
      * @param args the command line arguments
      */
+    
+    
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        MainApp mainApp = new MainApp(flightSessionBeanRemote, flightRouteSessionBeanRemote, cabinClassConfigurationSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote);
+        mainApp.runApp();
+// TODO code application logic here
     }
     
 }

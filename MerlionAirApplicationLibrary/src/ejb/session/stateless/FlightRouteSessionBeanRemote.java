@@ -9,9 +9,9 @@ import javax.ejb.Remote;
 
 /**
  *
- * @author leahr
+ * @author quahjingxin
  */
 @Remote
-public interface ReservationSessionBeanRemote {
+public interface FlightRouteSessionBeanRemote {
     
 }

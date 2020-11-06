@@ -9,9 +9,11 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import util.enumeration.CabinClassType;
 
@@ -27,20 +29,23 @@ public class CabinClassConfigurationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cabinClassConfigurationId;
     private Integer numOfAisles;
-    private Integer numOfRoles;
+    private Integer numOfRows;
     private Integer numOfSeatsAbreast;
     private String seatConfiguration;
-    @ManyToOne
-    private AircraftConfigurationEntity aircraftConfigurationEntity;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private AircraftConfigurationEntity aircraftConfiguration;
     @Enumerated(EnumType.STRING)
     private CabinClassType cabinClassType;
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, AircraftConfigurationEntity aircraftConfigurationEntity, CabinClassType cabinClassType) {
+    public CabinClassConfigurationEntity() {
+    }
+
+    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType) {
         this.numOfAisles = numOfAisles;
-        this.numOfRoles = numOfRoles;
+        this.numOfRows = numOfRoles;
         this.numOfSeatsAbreast = numOfSeatsAbreast;
         this.seatConfiguration = seatConfiguration;
-        this.aircraftConfigurationEntity = aircraftConfigurationEntity;
         this.cabinClassType = cabinClassType;
     }
 
@@ -60,12 +65,12 @@ public class CabinClassConfigurationEntity implements Serializable {
         this.numOfAisles = numOfAisles;
     }
 
-    public Integer getNumOfRoles() {
-        return numOfRoles;
+    public Integer getNumOfRows() {
+        return numOfRows;
     }
 
-    public void setNumOfRoles(Integer numOfRoles) {
-        this.numOfRoles = numOfRoles;
+    public void setNumOfRows(Integer numOfRows) {
+        this.numOfRows = numOfRows;
     }
 
     public Integer getNumOfSeatsAbreast() {
@@ -84,12 +89,12 @@ public class CabinClassConfigurationEntity implements Serializable {
         this.seatConfiguration = seatConfiguration;
     }
 
-    public AircraftConfigurationEntity getAircraftConfigurationEntity() {
-        return aircraftConfigurationEntity;
+    public AircraftConfigurationEntity getAircraftConfiguration() {
+        return aircraftConfiguration;
     }
 
-    public void setAircraftConfigurationEntity(AircraftConfigurationEntity aircraftConfigurationEntity) {
-        this.aircraftConfigurationEntity = aircraftConfigurationEntity;
+    public void setAircraftConfiguration(AircraftConfigurationEntity aircraftConfiguration) {
+        this.aircraftConfiguration = aircraftConfiguration;
     }
 
     public CabinClassType getCabinClassType() {
