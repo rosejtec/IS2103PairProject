@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import util.enumeration.ScheduleEnum;
 
 /**
  *
@@ -28,7 +31,10 @@ public class FlightSchedulePlanEntity implements Serializable {
     private Long id;
      @OneToMany(mappedBy = "Plan")
     private List<FlightScheduleEntity> flightSchedule;
-     
+    ScheduleEnum schedule;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    Date end;
+    Integer n;
     @ManyToOne
     private FlightEntity flight;
 

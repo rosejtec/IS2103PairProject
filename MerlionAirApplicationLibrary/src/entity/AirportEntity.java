@@ -37,6 +37,9 @@ public class AirportEntity implements Serializable {
         this.state = state;
         this.country = country;
     }
+
+    public AirportEntity() {
+    }
     
     public Long getAirportId() {
         return airportId;

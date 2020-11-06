@@ -30,6 +30,9 @@ public class AircraftTypeEntity implements Serializable {
         this.maxCapacity = maxCapacity;
     }
 
+    public AircraftTypeEntity() {
+    }
+
     
     public Long getAircraftTypeId() {
         return aircraftTypeId;

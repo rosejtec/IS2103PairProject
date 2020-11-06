@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ejb.session.stateless;
-
-import javax.ejb.Local;
+package util.enumeration;
 
 /**
  *
  * @author leahr
  */
-@Local
-public interface CustomeSessionBeanLocal {
-    
+public enum ScheduleEnum {
+    SINGLE, MULTIPLE , RECURRENTDAY, RECURRENTWEEK
 }

@@ -12,6 +12,6 @@ import javax.ejb.Local;
  * @author leahr
  */
 @Local
-public interface FlightSearchSessionBeanLocal {
-    
+public interface AirportSessionBeanLocal {
+    Long retriveBy(String name);
 }

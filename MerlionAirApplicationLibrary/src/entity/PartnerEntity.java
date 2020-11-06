@@ -35,6 +35,10 @@ public class PartnerEntity implements Serializable {
         this.username = username;
         this.password = password;
     }
+
+    public PartnerEntity() {
+    }
+    
     
     public Long getPartnerId() {
         return partnerId;

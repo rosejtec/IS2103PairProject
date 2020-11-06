@@ -33,15 +33,17 @@ public class FlightRouteEntity implements Serializable {
     private List<FlightEntity> flightEntity;
     //@ManyToOne
     
-    @OneToOne(mappedBy = "complemntary")
-    FlightRouteEntity complemntary;
+    
+    //FlightRouteEntity complemntary;
     //how to do the loop thingy
 
-    public FlightRouteEntity(AirportEntity origin, AirportEntity destination, List<FlightEntity> flightEntity,  FlightRouteEntity complemntary) {
+    public FlightRouteEntity(AirportEntity origin, AirportEntity destination) {
         this.origin = origin;
         this.destination = destination;
-        this.flightEntity = flightEntity;
-        this.complemntary = complemntary;
+        
+    }
+
+    public FlightRouteEntity() {
     }
 
     public Long getFlightRouteId() {
@@ -76,15 +78,7 @@ public class FlightRouteEntity implements Serializable {
         this.flightEntity = flightEntity;
     }
 
-    public FlightRouteEntity getComplemntary() {
-        return complemntary;
-    }
-
-    public void setComplemntary(FlightRouteEntity complemntary) {
-        this.complemntary = complemntary;
-    }
-    
-    
+  
 
     @Override
     public int hashCode() {

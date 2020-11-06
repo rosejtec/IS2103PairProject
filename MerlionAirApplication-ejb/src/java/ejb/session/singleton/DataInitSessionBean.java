@@ -5,6 +5,9 @@
  */
 package ejb.session.singleton;
 
+import javax.ejb.Singleton;
+import javax.ejb.LocalBean;
+
 import entity.AircraftConfigurationEntity;
 import entity.AirportEntity;
 import entity.CustomerEntity;
@@ -12,12 +15,16 @@ import entity.FlightEntity;
 import entity.FlightRouteEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javafx.util.converter.LocalDateTimeStringConverter;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
+import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -27,18 +34,20 @@ import javax.persistence.PersistenceContext;
  */
 @Singleton
 @LocalBean
+@Startup
 public class DataInitSessionBean {
 
     @PersistenceContext(unitName = "MerlionAirApplication-ejbPU")
     private EntityManager em;
 
-        
+     public DataInitSessionBean()
+    {
+    }
+    
     @PostConstruct
     public void postConstruct()
     {
-        AirportEntity staffEntity = em.find(AirportEntity.class, 1L);
-        
-        if(staffEntity == null)
+      if(em.find(AirportEntity.class, 1l) == null)
         {
             initializeData();
         }
@@ -48,51 +57,83 @@ public class DataInitSessionBean {
     
     private void initializeData()
     {
-       /**      
-             AirportEntity a = new  AirportEntity("NAR", "001", "TOKYO", "JAPAN", "JAPAN");
+       
+             AirportEntity a = new  AirportEntity("NAR", "111", "TOKYO", "JAPAN", "JAPAN");
              em.persist(a);
-             AirportEntity a1 = new  AirportEntity("SIN", "002", "SINGAPORE", "SINGAPORE", "SINGAPORE");
+              em.flush();
+             AirportEntity a1 = new  AirportEntity("SIN", "112", "SINGAPORE", "SINGAPORE", "SINGAPORE");
              em.persist(a1);
-             AirportEntity a2 = new  AirportEntity("MUM", "003", "MUMBAI", "MAHARASHTRA", "INDIA");
+              em.flush();
+             AirportEntity a2  = new  AirportEntity("MUM", "113", "MUMBAI", "MAHARASHTRA", "INDIA");
              em.persist(a2);
-             em.flush();
+              em.flush();
+ 
             
-            
-            FlightRouteEntity fr = new FlightRouteEntity(a1, a2, null, null);
-                         em.persist(fr);
+            String now = "2020-11-09 10:30";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime d = LocalDateTime.parse(now, formatter);
+            String now1 = "2020-12-09 10:30";
+            LocalDateTime d1 = LocalDateTime.parse(now1, formatter);
 
-            FlightRouteEntity fr1 = new FlightRouteEntity(a, a2, null, null);
-                         em.persist(fr1);
-
-            FlightRouteEntity fr2 = new FlightRouteEntity(a, a1, null, null);
-                         em.persist(fr2);
-
-                           em.flush();
-
-            FlightEntity  f = new FlightEntity("MA11", null, fr, null); 
-            FlightEntity  f1 = new FlightEntity("MA11", null, fr1, null); 
-            FlightEntity  f2 = new FlightEntity("MA11", null, fr2, null); 
-
-            Date d= new Date(2020,8,30);
-            Date d1= new Date(2021,8,30);
-
-            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,0, null);          
-            FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity(null, f);
+            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,3);    
+                                     em.persist(fs);
+                                     em.flush();   
+            FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity();
+                                     em.persist(fsp);
+                                     em.flush();   
             fsp.getFlightSchedule().add(fs);
-            fs.setPlan(fsp);
+            fs.setPlan(fsp);          
             
+             FlightScheduleEntity fs1= new FlightScheduleEntity(d,d1,3);    
+                                     em.persist(fs1);
+                                     em.flush();   
+            FlightSchedulePlanEntity fsp1 = new FlightSchedulePlanEntity();
+                                     em.persist(fsp1);
+                                     em.flush();   
+            fsp1.getFlightSchedule().add(fs1);
+            fs1.setPlan(fsp1);       
+            
+            FlightRouteEntity fr = new FlightRouteEntity(a1, a2);
+                         em.persist(fr);
+                         em.flush();
+            FlightRouteEntity fr1 = new FlightRouteEntity(a, a2);
+                         em.persist(fr1);
+                         em.flush();
+            FlightRouteEntity fr2 = new FlightRouteEntity(a, a1);
+                         em.persist(fr2);
+                         em.flush();             
+              
+            FlightEntity  f = new FlightEntity("MA11", fr); 
+                                     em.persist(f);
+                                     em.flush();
+            FlightEntity  f1 = new FlightEntity("MA12", fr1); 
+                                     em.persist(f1);
+                                     em.flush();   
+            FlightEntity  f2 = new FlightEntity("MA13", fr2); 
+                                     em.persist(f2);
+                                     em.flush();   
+            
+            fr.getFlightEntity().add(f);
+            fr1.getFlightEntity().add(f1);
+            fr2.getFlightEntity().add(f2);
+
+            fsp.setFlight(f);
             f.getScheduledFlights().add(fsp);
             
-            /**
-            CustomerEntity customerEntity1 = new CustomerEntity("One", "Customer", "customer1@gmail.com", "password");
-            em.persist(customerEntity1);
-            CustomerEntity customerEntity2 = new CustomerEntity("Two", "Customer", "customer2@gmail.com", "password");
-            em.persist(customerEntity2);
-            CustomerEntity customerEntity3 = new CustomerEntity("Three", "Customer", "customer3@gmail.com", "password");
-            em.persist(customerEntity3);
-           */
-                   
-        
+             fsp1.setFlight(f2);
+            f2.getScheduledFlights().add(fsp1);
+            
+            
+
+//            f.getScheduledFlights().add(fsp);
+//            CustomerEntity customerEntity1 = new CustomerEntity("One", "Customer", "customer1@gmail.com", "password");
+//            em.persist(customerEntity1);
+//            CustomerEntity customerEntity2 = new CustomerEntity("Two", "Customer", "customer2@gmail.com", "password");
+//            em.persist(customerEntity2);
+//            CustomerEntity customerEntity3 = new CustomerEntity("Three", "Customer", "customer3@gmail.com", "password");
+//            em.persist(customerEntity3);
+           
+                         
         
     }
 }

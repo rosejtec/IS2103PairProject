@@ -19,7 +19,8 @@ import util.exception.InvalidLoginCredentialException;
  * @author leahr
  */
 @Stateless
-public class CustomeSessionBean implements CustomeSessionBeanRemote, CustomeSessionBeanLocal {
+public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerSessionBeanLocal {
+
 
     @PersistenceContext(unitName = "MerlionAirApplication-ejbPU")
     private EntityManager em;
@@ -121,4 +122,3 @@ public class CustomeSessionBean implements CustomeSessionBeanRemote, CustomeSess
         em.persist(object);
     }
 }
-

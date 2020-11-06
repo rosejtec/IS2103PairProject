@@ -36,11 +36,10 @@ public class FlightEntity implements Serializable {
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;
 
-    public FlightEntity(String flightNum, List<FlightSchedulePlanEntity> scheduledFlights, FlightRouteEntity flightRoute, AircraftConfigurationEntity aircraftConfiguration) {
+    public FlightEntity(String flightNum, FlightRouteEntity flightRoute) {
         this.flightNum = flightNum;
-        this.scheduledFlights = scheduledFlights;
         this.flightRoute = flightRoute;
-        this.aircraftConfiguration = aircraftConfiguration;
+ 
     }
 
     public FlightEntity() {

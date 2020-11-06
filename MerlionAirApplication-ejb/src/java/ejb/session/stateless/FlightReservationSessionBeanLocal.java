@@ -5,13 +5,18 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Remote;
+import entity.AirportEntity;
+import entity.FlightScheduleEntity;
+import java.util.Date;
+import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author leahr
  */
-@Remote
-public interface FlightSearchSessionBeanRemote {
-    
+@Local
+public interface FlightReservationSessionBeanLocal {
+
+   
 }

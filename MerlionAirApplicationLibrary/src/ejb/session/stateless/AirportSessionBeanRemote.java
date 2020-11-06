@@ -12,6 +12,6 @@ import javax.ejb.Remote;
  * @author leahr
  */
 @Remote
-public interface CustomeSessionBeanRemote {
+public interface AirportSessionBeanRemote {
     
 }
