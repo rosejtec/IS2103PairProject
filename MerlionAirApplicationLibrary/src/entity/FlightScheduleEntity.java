@@ -25,12 +25,11 @@ public class FlightScheduleEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long flightScheduleId;
   
     private LocalDateTime departure;
   
     private LocalDateTime arrival;
-    private Long flightScheduleId;
     private Integer duration;
     @ManyToOne
     private FlightSchedulePlanEntity flightSchedulePlan;
@@ -75,10 +74,6 @@ public class FlightScheduleEntity implements Serializable {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
-    }
-    
-    public Long getId() {
-        return id;
     }
 
     public FlightScheduleEntity(FlightSchedulePlanEntity flightSchedulePlan) {

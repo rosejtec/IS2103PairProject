@@ -216,20 +216,20 @@ public class MainApp {
          System.out.println(day1.size());
                         
             for(FlightScheduleEntity l:day1) {
-                System.out.println(l.getId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
+                System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
             }
             
             List<FlightScheduleEntity> day3before = flightReservationSessionBean.searchThreeDaysBefore(false,false, departureAirport,destinationAirport, departureDate, passengers, cabin);
          System.out.println(day3before.size());
 
             for(FlightScheduleEntity l:day3before) {
-                System.out.println(l.getId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
+                System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
             }
                         
             List<FlightScheduleEntity> day3after = flightReservationSessionBean.searchThreeDaysAfter(false,false, departureAirport,destinationAirport, departureDate, passengers, cabin);
 
             for(FlightScheduleEntity l:day3after) {
-                System.out.println(l.getId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
+                System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
             }
     }
 

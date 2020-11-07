@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import util.enumeration.ScheduleEnum;
 
 /**
@@ -37,7 +38,10 @@ public class FlightSchedulePlanEntity implements Serializable {
     private FlightEntity flight;
     private String flightNum;
     @OneToMany
-    private List<FareEntity> fare;
+    private List<FareEntity> fares;
+    @OneToOne
+    private FlightSchedulePlanEntity complementaryFsp;
+    private boolean disabled;
 
     public FlightSchedulePlanEntity(String flightNum, List<FlightScheduleEntity> flightSchedules) {
         this.flightNum = flightNum;
@@ -49,8 +53,7 @@ public class FlightSchedulePlanEntity implements Serializable {
         this.flight = flight;
     }
 
-    public FlightSchedulePlanEntity() {
-        
+    public FlightSchedulePlanEntity() {   
     }
 
     public ScheduleEnum getSchedule() {
@@ -112,12 +115,12 @@ public class FlightSchedulePlanEntity implements Serializable {
         this.flightSchedules = flightSchedules;
     }
 
-    public List<FareEntity> getFare() {
-        return fare;
+    public List<FareEntity> getFares() {
+        return fares;
     }
 
-    public void setFare(List<FareEntity> fare) {
-        this.fare = fare;
+    public void setFares(List<FareEntity> fares) {
+        this.fares = fares;
     }
 
     @Override
@@ -143,6 +146,22 @@ public class FlightSchedulePlanEntity implements Serializable {
     @Override
     public String toString() {
         return "entity.FlightSchedulePlanEntity[ id=" + fightSchedulePlanId + " ]";
+    }
+
+    public FlightSchedulePlanEntity getComplementaryFlightSchedulePlan() {
+        return complementaryFsp;
+    }
+
+    public void setComplementaryFsp(FlightSchedulePlanEntity complementaryFsp) {
+        this.complementaryFsp = complementaryFsp;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
     
 }

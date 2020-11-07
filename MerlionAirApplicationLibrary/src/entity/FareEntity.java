@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -22,8 +23,20 @@ public class FareEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fareId;
-
+    @ManyToOne
+    private CabinClassConfigurationEntity cabinClassConfiguration;
+    private String fareBasisCode;
+    private String fareAmount;
+    @ManyToOne
+    private FlightSchedulePlanEntity flightSchedulePlan;
+    
     public FareEntity() {
+    }
+
+    public FareEntity(CabinClassConfigurationEntity cabinClassConfiguration, String fareBasisCode, String fareAmount) {
+        this.cabinClassConfiguration = cabinClassConfiguration;
+        this.fareBasisCode = fareBasisCode;
+        this.fareAmount = fareAmount;
     }
 
     public Long getFareId() {
@@ -57,6 +70,38 @@ public class FareEntity implements Serializable {
     @Override
     public String toString() {
         return "entity.FareEntity[ id=" + fareId + " ]";
+    }
+
+    public CabinClassConfigurationEntity getCabinClassConfiguration() {
+        return cabinClassConfiguration;
+    }
+
+    public void setCabinClassConfiguration(CabinClassConfigurationEntity cabinClassConfiguration) {
+        this.cabinClassConfiguration = cabinClassConfiguration;
+    }
+
+    public String getFareBasisCode() {
+        return fareBasisCode;
+    }
+
+    public void setFareBasisCode(String fareBasisCode) {
+        this.fareBasisCode = fareBasisCode;
+    }
+
+    public String getFareAmount() {
+        return fareAmount;
+    }
+
+    public void setFareAmount(String fareAmount) {
+        this.fareAmount = fareAmount;
+    }
+
+    public FlightSchedulePlanEntity getFlightSchedulePlan() {
+        return flightSchedulePlan;
+    }
+
+    public void setFlightSchedulePlan(FlightSchedulePlanEntity flightSchedulePlan) {
+        this.flightSchedulePlan = flightSchedulePlan;
     }
     
 }

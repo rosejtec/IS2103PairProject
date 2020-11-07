@@ -20,15 +20,11 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import util.enumeration.CabinClassType;
 import util.enumeration.EmployeeAccessRight;
 import util.enumeration.ExceedsMaximumCapacityException;
 import util.exception.AircraftConfigurationNotFoundException;
 import util.exception.AircraftTypeNotFoundException;
-import util.exception.CabinClassConfigurationNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 import util.exception.InvalidAccessRightException;
 
@@ -37,15 +33,14 @@ import util.exception.InvalidAccessRightException;
  * @author quahjingxin
  */
 public class FlightPlanningModule {
-        @EJB
+    
+    @EJB
     private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
-      @EJB
-    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote;
-      
-       @EJB
+    @EJB
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote; 
+    @EJB
     private static AirportSessionBeanRemote airportSessionBeanRemote;
-
-         @EJB
+    @EJB
     private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
       
     //call all the session beans
@@ -55,7 +50,6 @@ public class FlightPlanningModule {
     {
         
            this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
-          
            this.aircraftConfigurationSessionBeanRemote=aircraftConfigurationSessionBeanRemote;
            this.airportSessionBeanRemote= airportSessionBeanRemote;
            this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
