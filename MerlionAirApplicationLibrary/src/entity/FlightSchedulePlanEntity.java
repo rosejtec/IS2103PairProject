@@ -6,12 +6,15 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import util.enumeration.ScheduleEnum;
 
 /**
  *
@@ -24,9 +27,15 @@ public class FlightSchedulePlanEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fightSchedulePlanId;
-    private String flightNum;
-    @OneToMany
+     @OneToMany(mappedBy = "flightSchedulePlan")
     private List<FlightScheduleEntity> flightSchedules;
+    ScheduleEnum schedule;
+  
+    LocalDateTime end;
+    Integer n;
+    @ManyToOne
+    private FlightEntity flight;
+    private String flightNum;
     @OneToMany
     private List<FareEntity> fare;
 
@@ -35,9 +44,49 @@ public class FlightSchedulePlanEntity implements Serializable {
         this.flightSchedules = flightSchedules;
     }
 
-    public FlightSchedulePlanEntity(List<FareEntity> fare) {
-        this.fare = fare;
+    public FlightSchedulePlanEntity(List<FlightScheduleEntity> flightSchedule, FlightEntity flight) {
+        this.flightSchedules = flightSchedule;
+        this.flight = flight;
     }
+
+    public FlightSchedulePlanEntity() {
+        
+    }
+
+    public ScheduleEnum getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(ScheduleEnum schedule) {
+        this.schedule = schedule;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public Integer getN() {
+        return n;
+    }
+
+    public void setN(Integer n) {
+        this.n = n;
+    }
+
+  
+
+    public FlightEntity getFlight() {
+        return flight;
+    }
+
+    public void setFlight(FlightEntity flight) {
+        this.flight = flight;
+    }
+
     
     public Long getFightSchedulePlanId() {
         return fightSchedulePlanId;

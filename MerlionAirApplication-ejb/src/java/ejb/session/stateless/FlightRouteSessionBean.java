@@ -87,7 +87,7 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
             throw new FlightRouteNotFoundException("Flight Route ID " + flightRouteId + " does not exist!");
         }
         
-        if(flightRouteToDelete.getFlights() == null) {
+        if(flightRouteToDelete.getFlights()== null) {
             em.remove(flightRouteToDelete);
         } else {
             flightRouteToDelete.setDisabled(true);

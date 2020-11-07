@@ -29,6 +29,9 @@ public class AircraftTypeEntity implements Serializable {
     @OneToMany(mappedBy = "aircraftType")
     private List<AircraftConfigurationEntity> aircraftConfigurations;
 
+    public AircraftTypeEntity() {
+    }
+
     public AircraftTypeEntity(String name, Integer maxCapacity) {
         this.name = name;
         this.maxCapacity = maxCapacity;

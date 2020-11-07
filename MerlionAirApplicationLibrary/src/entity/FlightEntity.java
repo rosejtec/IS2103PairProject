@@ -22,24 +22,28 @@ import javax.persistence.OneToOne;
 @Entity
 public class FlightEntity implements Serializable {
     
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightId;
-    private String flightNumber;
+    private String flightNum;
     @OneToMany(mappedBy = "flight")
     private List<FlightSchedulePlanEntity> flightSchedulePlans;
-    @ManyToOne
-    private FlightRouteEntity flightRoute;
-    @OneToOne
-    private AircraftConfigurationEntity aircraftConfiguration;
     private boolean disabled;
 
-    public FlightEntity(String flightNumber, FlightRouteEntity flightRoute, AircraftConfigurationEntity aircraftConfiguration) {
-        this.flightNumber = flightNumber;
+    @ManyToOne
+    FlightRouteEntity flightRoute;
+    
+    @OneToOne
+    AircraftConfigurationEntity  aircraftConfiguration;
+
+    public FlightEntity(String flightNum, FlightRouteEntity flightRoute) {
+        this.flightNum = flightNum;
         this.flightRoute = flightRoute;
-        this.aircraftConfiguration = aircraftConfiguration;
+ 
+    }
+
+    public FlightEntity() {
     }
 
     public FlightEntity(List<FlightSchedulePlanEntity> flightSchedulePlans) {
@@ -47,7 +51,7 @@ public class FlightEntity implements Serializable {
     }
 
     public FlightEntity(String flightNumber, List<FlightSchedulePlanEntity> flightSchedulePlans, List<FlightRouteEntity> flightRoutes, AircraftConfigurationEntity aircraftConfiguration, boolean disabled) {
-        this.flightNumber = flightNumber;
+        this.flightNum = flightNum;
         this.flightSchedulePlans = flightSchedulePlans;
         this.flightRoute = flightRoute;
         this.aircraftConfiguration = aircraftConfiguration;
@@ -63,11 +67,11 @@ public class FlightEntity implements Serializable {
     }
 
     public String getFlightNumber() {
-        return flightNumber;
+        return flightNum;
     }
 
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
+    public void setFlightNumber(String flightNum) {
+        this.flightNum = flightNum;
     }
 
     public List<FlightSchedulePlanEntity> getFlightSchedulePlans() {
@@ -93,6 +97,16 @@ public class FlightEntity implements Serializable {
     public void setAircraftConfiguration(AircraftConfigurationEntity aircraftConfiguration) {
         this.aircraftConfiguration = aircraftConfiguration;
     }
+
+    public String getFlightNum() {
+        return flightNum;
+    }
+
+    public void setFlightNum(String flightNum) {
+        this.flightNum = flightNum;
+    }
+
+   
 
     @Override
     public int hashCode() {

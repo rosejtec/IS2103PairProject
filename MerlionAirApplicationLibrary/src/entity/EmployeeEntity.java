@@ -38,6 +38,9 @@ public class EmployeeEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private EmployeeAccessRight accessRight;
 
+    public EmployeeEntity() {
+    }
+
     public EmployeeEntity(String firstName, String lastName, String userName, String password, EmployeeAccessRight accessRight) {
         this.firstName = firstName;
         this.lastName = lastName;

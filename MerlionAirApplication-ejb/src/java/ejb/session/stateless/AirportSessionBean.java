@@ -9,17 +9,30 @@ import entity.AirportEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import util.exception.AirportNotFoundException;
 
 /**
  *
- * @author quahjingxin
+ * @author leahr
  */
 @Stateless
 public class AirportSessionBean implements AirportSessionBeanRemote, AirportSessionBeanLocal {
 
     @PersistenceContext(unitName = "MerlionAirApplication-ejbPU")
     private EntityManager em;
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
+
+    
+    public Long retriveBy(String name){
+        Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.name = :inName");
+        q.setParameter("inName", name);
+        AirportEntity a = (AirportEntity) q.getSingleResult();
+        return a.getAirportId();
+    }
 
    public Long createNewAirport(AirportEntity newAirportEntity)
    {

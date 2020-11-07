@@ -48,7 +48,7 @@ public class CabinClassConfigurationEntity implements Serializable {
         this.seatConfiguration = seatConfiguration;
         this.cabinClassType = cabinClassType;
     }
-
+    
     public Long getCabinClassConfigurationId() {
         return cabinClassConfigurationId;
     }

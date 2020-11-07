@@ -19,9 +19,9 @@ import javax.persistence.Id;
 public class PassengerEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long passengerId;
     private String firstName;
     private String lastName;
     private String passport;
@@ -29,29 +29,29 @@ public class PassengerEntity implements Serializable {
     public PassengerEntity() {
     }
     
-    public Long getId() {
-        return id;
+    public Long getPassengerId() {
+        return passengerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPassengerId(Long passengerId) {
+        this.passengerId = passengerId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (passengerId != null ? passengerId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the passengerId fields are not set
         if (!(object instanceof PassengerEntity)) {
             return false;
         }
         PassengerEntity other = (PassengerEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.passengerId == null && other.passengerId != null) || (this.passengerId != null && !this.passengerId.equals(other.passengerId))) {
             return false;
         }
         return true;
@@ -59,7 +59,7 @@ public class PassengerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.PassengerEntity[ id=" + id + " ]";
+        return "entity.PassengerEntity[ id=" + passengerId + " ]";
     }
     
 }

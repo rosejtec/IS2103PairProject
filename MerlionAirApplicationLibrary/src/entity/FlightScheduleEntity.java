@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,19 +25,60 @@ public class FlightScheduleEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+  
+    private LocalDateTime departure;
+  
+    private LocalDateTime arrival;
     private Long flightScheduleId;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date departure;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date arrival;
     private Integer duration;
     @ManyToOne
     private FlightSchedulePlanEntity flightSchedulePlan;
-//type of clight schedules?
-    public FlightScheduleEntity(Date departure, Date arrival, Integer duration) {
+    
+
+    public FlightScheduleEntity() {
+    }
+
+    public FlightScheduleEntity(LocalDateTime departure, Integer duration) {
+        this.departure = departure;
+        this.duration = duration;
+    }
+
+    
+    public FlightScheduleEntity(LocalDateTime departure, LocalDateTime arrival, Integer duration) {
         this.departure = departure;
         this.arrival = arrival;
         this.duration = duration;
+        
+    }
+
+    public LocalDateTime getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(LocalDateTime departure) {
+        this.departure = departure;
+    }
+
+    public LocalDateTime getArrival() {
+        return arrival;
+    }
+
+    public void setArrival(LocalDateTime arrival) {
+        this.arrival = arrival;
+    }
+
+   
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+    
+    public Long getId() {
+        return id;
     }
 
     public FlightScheduleEntity(FlightSchedulePlanEntity flightSchedulePlan) {
@@ -76,30 +118,7 @@ public class FlightScheduleEntity implements Serializable {
         return "entity.FlightScheduleEntity[ id=" + flightScheduleId + " ]";
     }
 
-    public Date getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(Date departure) {
-        this.departure = departure;
-    }
-
-    public Date getArrival() {
-        return arrival;
-    }
-
-    public void setArrival(Date arrival) {
-        this.arrival = arrival;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
+   
     public FlightSchedulePlanEntity getFlightSchedulePlan() {
         return flightSchedulePlan;
     }
@@ -107,5 +126,7 @@ public class FlightScheduleEntity implements Serializable {
     public void setFlightSchedulePlan(FlightSchedulePlanEntity flightSchedulePlan) {
         this.flightSchedulePlan = flightSchedulePlan;
     }
+
+
     
 }

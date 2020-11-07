@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,14 +26,21 @@ public class FlightReservationDetailsEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long flightReservationDetailId;
     private String cabinClass;
-    @OneToMany
-    private List<FlightScheduleEntity> schedule;
-    private List<List<String>> seatNum;
+    
+    @OneToOne
+    private FlightScheduleEntity schedule;
+    private List<String> seatNum;
 
     public FlightReservationDetailsEntity() {
     }
-    
 
+    public FlightReservationDetailsEntity(String cabinClass, FlightScheduleEntity schedule) {
+        this.cabinClass = cabinClass;
+        this.schedule = schedule;
+    }
+
+
+    
     public Long getFlightReservationDetailId() {
         return flightReservationDetailId;
     }

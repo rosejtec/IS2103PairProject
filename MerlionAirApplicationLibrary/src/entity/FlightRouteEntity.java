@@ -26,9 +26,9 @@ public class FlightRouteEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightRouteId;
-    //@ManyToOne
+    @ManyToOne 
     private AirportEntity origin;
-    //@ManyToOne
+    @ManyToOne
     private AirportEntity destination;
     @OneToMany
     private List<FlightEntity> flights;
@@ -39,6 +39,9 @@ public class FlightRouteEntity implements Serializable {
     private FlightRouteEntity complementaryReturnRoute;
     private boolean disabled;
     //how to do the loop thingy
+
+    public FlightRouteEntity() {
+    }
 
     public FlightRouteEntity(AirportEntity origin, AirportEntity destination, List<FlightEntity> flightEntity, FlightRouteEntity complementaryRoute, boolean disabled) {
         this.origin = origin;

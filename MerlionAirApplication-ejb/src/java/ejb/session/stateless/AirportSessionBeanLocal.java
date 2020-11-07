@@ -9,14 +9,13 @@ import entity.AirportEntity;
 import javax.ejb.Local;
 import util.exception.AirportNotFoundException;
 
-/**
- *
- * @author quahjingxin
- */
+
 @Local
 public interface AirportSessionBeanLocal {
     
     public Long createNewAirport(AirportEntity newAirportEntity);
 
     public AirportEntity retrieveAirportByAirportId(Long airportId) throws AirportNotFoundException;
+
+    public Long retriveBy(String name);
 }

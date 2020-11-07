@@ -38,6 +38,62 @@ public class FlightReservationEntity implements Serializable {
 
     public FlightReservationEntity() {
     }
+
+    public List<FlightReservationDetailsEntity> getInBound() {
+        return inBound;
+    }
+
+    public void setInBound(List<FlightReservationDetailsEntity> inBound) {
+        this.inBound = inBound;
+    }
+
+    public List<FlightReservationDetailsEntity> getOutBound() {
+        return outBound;
+    }
+
+    public void setOutBound(List<FlightReservationDetailsEntity> outBound) {
+        this.outBound = outBound;
+    }
+
+    public Integer getTotalPassengers() {
+        return totalPassengers;
+    }
+
+    public void setTotalPassengers(Integer totalPassengers) {
+        this.totalPassengers = totalPassengers;
+    }
+
+    public List<PassengerEntity> getPassenger() {
+        return passenger;
+    }
+
+    public void setPassenger(List<PassengerEntity> passenger) {
+        this.passenger = passenger;
+    }
+
+    public Integer getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Integer totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public boolean isConnecting() {
+        return connecting;
+    }
+
+    public void setConnecting(boolean connecting) {
+        this.connecting = connecting;
+    }
+
+    public boolean isReturnFlight() {
+        return returnFlight;
+    }
+
+    public void setReturnFlight(boolean returnFlight) {
+        this.returnFlight = returnFlight;
+    }
     
     
     

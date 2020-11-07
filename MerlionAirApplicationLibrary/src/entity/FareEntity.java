@@ -21,31 +21,34 @@ public class FareEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long fareId;
 
-    public Long getId() {
-        return id;
+    public FareEntity() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getFareId() {
+        return fareId;
+    }
+
+    public void setFareId(Long fareId) {
+        this.fareId = fareId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (fareId != null ? fareId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the fareId fields are not set
         if (!(object instanceof FareEntity)) {
             return false;
         }
         FareEntity other = (FareEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.fareId == null && other.fareId != null) || (this.fareId != null && !this.fareId.equals(other.fareId))) {
             return false;
         }
         return true;
@@ -53,7 +56,7 @@ public class FareEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.FareEntity[ id=" + id + " ]";
+        return "entity.FareEntity[ id=" + fareId + " ]";
     }
     
 }

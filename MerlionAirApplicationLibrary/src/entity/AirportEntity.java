@@ -31,8 +31,10 @@ public class AirportEntity implements Serializable {
     private String city;
     private String state;
     private String country;
-    @OneToMany(mappedBy = "airport")
-    private List<FlightRouteEntity> flightRoutes;
+    @OneToMany(mappedBy = "origin")
+    private List<FlightRouteEntity> flightRoutesInbound;
+    @OneToMany(mappedBy = "destination")
+    private List<FlightRouteEntity> flightRoutesOutbound;
 
     public AirportEntity(String name, String code, String city, String state, String country) {
         this.name = name;
@@ -42,8 +44,23 @@ public class AirportEntity implements Serializable {
         this.country = country;
     }
 
-    public AirportEntity(List<FlightRouteEntity> flightRoutes) {
-        this.flightRoutes = flightRoutes;
+    public AirportEntity() {
+    }
+
+    public List<FlightRouteEntity> getFlightRoutesInbound() {
+        return flightRoutesInbound;
+    }
+
+    public void setFlightRoutesInbound(List<FlightRouteEntity> flightRoutesInbound) {
+        this.flightRoutesInbound = flightRoutesInbound;
+    }
+
+    public List<FlightRouteEntity> getFlightRoutesOutbound() {
+        return flightRoutesOutbound;
+    }
+
+    public void setFlightRoutesOutbound(List<FlightRouteEntity> flightRoutesOutbound) {
+        this.flightRoutesOutbound = flightRoutesOutbound;
     }
     
     public Long getAirportId() {
@@ -93,15 +110,7 @@ public class AirportEntity implements Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
-
-    public List<FlightRouteEntity> getFlightRoutes() {
-        return flightRoutes;
-    }
-
-    public void setFlightRoutes(List<FlightRouteEntity> flightRoutes) {
-        this.flightRoutes = flightRoutes;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
