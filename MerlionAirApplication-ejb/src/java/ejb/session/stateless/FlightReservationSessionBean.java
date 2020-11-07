@@ -11,7 +11,10 @@ import entity.FlightScheduleEntity;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -160,7 +163,8 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
         return null;
     }
     
-     public List<FlightScheduleEntity> searchConnectingThreeDaysAfter(boolean connecting,boolean round,String origin, String destination, Date departure,  int passengers, String cabinClass) {    
+ 
+     public TreeMap<FlightScheduleEntity,List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting,boolean round,String origin, String destination, Date departure,  int passengers, String cabinClass) {    
        if(round) {
          
             
@@ -181,21 +185,33 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
       
              System.out.println(list);
             
+             TreeMap<FlightScheduleEntity,List<FlightScheduleEntity>> map = new TreeMap<>();
              for(int i = 0; i<list.size();i++) {
-             Query query1 = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND f.departure BETWEEN :inDate AND :inDate1");
-      
-            query1.setParameter("inOrg", a1);
-            query1.setParameter("inDate", t1);
-            query1.setParameter("inDate1", t2);
-//m.destination.airportId = :outDes 
+                 LocalDateTime d=list.get(i).getArrival();
+                 LocalDateTime d1=list.get(i).getArrival().plusHours(24);
+
+             Query query1 = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND m.destination.airportId=:inDes AND f.departure BETWEEN :inDate AND :inDate1");
+              
+              query1.setParameter("inOrg", list.get(i).getPlan().getFlight().getFlightRoute().getDestination().getAirportId());
+              query1.setParameter("inDes", a2);
+              query1.setParameter("inDate", d);
+              query1.setParameter("inDate1", d1);
+               
+              List<FlightScheduleEntity>  list1 = query1.getResultList();
+             
+                map.put(list.get(i),list1);
              }
              
-             return list;
-        }
+             return map;
+           
+             }
         return null;
+             
+            }
+        
     }
 
   
 
-      
-}
+
+

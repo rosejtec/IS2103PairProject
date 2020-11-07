@@ -10,6 +10,7 @@ import entity.FlightScheduleEntity;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 import javax.ejb.Remote;
 
 /**
@@ -25,7 +26,7 @@ public interface FlightReservationSessionBeanRemote {
 
     public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, Date departure, int passengers, String cabinClass);
 
-    public List<FlightScheduleEntity> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, Date departure, int passengers, String cabinClass);
+    public TreeMap<FlightScheduleEntity,List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, Date departure, int passengers, String cabinClass);
    
    
 
