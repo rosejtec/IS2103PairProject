@@ -36,10 +36,12 @@ public class AircraftTypeSessionBean implements AircraftTypeSessionBeanRemote, A
         
         if(aircraftTypeEntity != null)
         {
+            System.out.println("Here");
             return aircraftTypeEntity;
         }
         else
-        {
+        {System.out.println("Bye");
+            
             throw new AircraftTypeNotFoundException("Airport ID " + aircraftTypeId + " does not exist!");
         }
    }

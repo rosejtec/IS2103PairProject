@@ -14,6 +14,7 @@ import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.EmployeeEntity;
 import java.util.Scanner;
+import javax.ejb.EJB;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -23,7 +24,26 @@ import util.exception.InvalidLoginCredentialException;
  */
 public class MainApp {
     
-    private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    @EJB
+    private static FlightSessionBeanRemote flightSessionBeanRemote;
+
+    @EJB
+    private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
+
+    @EJB
+    private static CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote;
+
+    @EJB
+    private static AirportSessionBeanRemote airportSessionBeanRemote;
+
+    @EJB
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote;
+
+    @EJB
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
+
+    @EJB
+    private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
     
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
@@ -40,10 +60,14 @@ public class MainApp {
     }
 
     MainApp(FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           this.flightSessionBeanRemote = flightSessionBeanRemote;
+           this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
+           this.cabinClassConfigurationSessionBeanRemote= cabinClassConfigurationSessionBeanRemote;
+           this.aircraftConfigurationSessionBeanRemote=aircraftConfigurationSessionBeanRemote;
+           this.airportSessionBeanRemote= airportSessionBeanRemote;
+           this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
+           this.employeeSessionBeanRemote= employeeSessionBeanRemote;
     }
-
-   
     
     public void runApp()
     {
@@ -69,9 +93,7 @@ public class MainApp {
                     {
                         doLogin(); 
                         System.out.println("Login successful!\n");
-                        
-                        //flightPlanningModule = new FlightPlanningModule();
-                        //flightOperationModule = new FlightOperationModule();
+                     
                         
                         menuMain();
                     }
@@ -116,6 +138,8 @@ public class MainApp {
         }
         else
         {
+            
+            
             throw new InvalidLoginCredentialException("Missing login credential!");
         }
     }
@@ -143,9 +167,11 @@ public class MainApp {
 
                 if(response == 1)
                 {
+                    
+                    flightPlanningModule = new FlightPlanningModule(aircraftConfigurationSessionBeanRemote, aircraftTypeSessionBeanRemote, airportSessionBeanRemote, flightRouteSessionBeanRemote, currentEmployeeEntity);
                     try
                     {
-                    flightPlanningModule.menuFlightPlanning();
+                    flightPlanningModule.menuFlightPlanning(currentEmployeeEntity);
                     }
                     catch (InvalidAccessRightException ex)
                     {

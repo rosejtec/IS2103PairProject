@@ -30,11 +30,11 @@ public class FlightRouteEntity implements Serializable {
     private AirportEntity origin;
     @ManyToOne
     private AirportEntity destination;
-    @OneToMany
+    
+    @OneToMany(mappedBy = "flightRoute")
     private List<FlightEntity> flights;
-    //@ManyToOne
-    //private AirportEntity airport;
-    //IS THIS CORRRECT
+
+  
     @OneToOne
     private FlightRouteEntity complementaryReturnRoute;
     private boolean disabled;

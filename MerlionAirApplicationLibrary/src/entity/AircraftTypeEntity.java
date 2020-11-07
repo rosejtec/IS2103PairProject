@@ -97,5 +97,6 @@ public class AircraftTypeEntity implements Serializable {
     public String toString() {
         return "entity.AircraftTypeEntity[ id=" + aircraftTypeId + " ]";
     }
-    
+
+
 }

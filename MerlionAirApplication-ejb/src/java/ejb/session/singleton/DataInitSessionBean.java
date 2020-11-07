@@ -17,8 +17,10 @@ import javax.ejb.Startup;
 import util.exception.EmployeeNotFoundException;
 
 import entity.AircraftConfigurationEntity;
+import entity.AircraftTypeEntity;
 import entity.AirportEntity;
 import entity.CustomerEntity;
+import entity.EmployeeEntity;
 import entity.FlightEntity;
 import entity.FlightRouteEntity;
 import entity.FlightScheduleEntity;
@@ -35,6 +37,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.enumeration.EmployeeAccessRight;
 
 /**
  *
@@ -66,7 +69,17 @@ public class DataInitSessionBean {
     private void initializeData()
     {
        
-             AirportEntity a = new  AirportEntity("NAR", "111", "TOKYO", "JAPAN", "JAPAN");
+        EmployeeEntity e = new EmployeeEntity("L", "J", "123", "123", EmployeeAccessRight.FLEETMANAGER);
+        em.persist(e);
+        em.flush();
+        
+        
+        
+        AircraftTypeEntity ate= new AircraftTypeEntity("Boeing", 100);
+        em.persist(ate);
+         em.flush();
+
+         AirportEntity a = new  AirportEntity("NAR", "111", "TOKYO", "JAPAN", "JAPAN");
              em.persist(a);
               em.flush();
              AirportEntity a1 = new  AirportEntity("SIN", "112", "SINGAPORE", "SINGAPORE", "SINGAPORE");

@@ -34,6 +34,7 @@ public class FlightEntity implements Serializable {
     @ManyToOne
     FlightRouteEntity flightRoute;
     
+  
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;
 

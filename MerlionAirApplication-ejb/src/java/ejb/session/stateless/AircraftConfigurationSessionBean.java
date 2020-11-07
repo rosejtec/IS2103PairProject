@@ -9,6 +9,8 @@ import entity.AircraftConfigurationEntity;
 import entity.AircraftTypeEntity;
 import entity.CabinClassConfigurationEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,6 +26,9 @@ import util.exception.AircraftTypeNotFoundException;
 @Stateless
 public class AircraftConfigurationSessionBean implements AircraftConfigurationSessionBeanRemote, AircraftConfigurationSessionBeanLocal {
 
+    @EJB
+    private CabinClassConfigurationSessionBeanLocal cabinClassConfigurationSessionBean;
+
     //do i need call the relationship for ccc?
     @EJB
     private CabinClassConfigurationSessionBeanLocal cabinClassConfigurationSessionBeanLocal;
@@ -35,13 +40,27 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     private EntityManager em;
     
     //7. create aircraftconfiguration for particular aircraft type use case
-    public AircraftConfigurationEntity createNewAircraftConfiguration(AircraftConfigurationEntity aircraftConfigurationEntity, Long aircraftTypeId) throws AircraftTypeNotFoundException
+    public AircraftConfigurationEntity createNewAircraftConfiguration(AircraftConfigurationEntity aircraftConfigurationEntity,List<CabinClassConfigurationEntity> newCabinClassConfiguration, Long aircraftTypeId) throws AircraftTypeNotFoundException, AircraftConfigurationNotFoundException
     {
         try 
         {
             AircraftTypeEntity aircraftTypeEntity = aircraftTypeSessionBeanLocal.retrieveAircraftTypeByAircraftTypeId(aircraftTypeId);
         
             em.persist(aircraftConfigurationEntity);
+            em.flush();
+            
+            for(CabinClassConfigurationEntity  air :newCabinClassConfiguration){
+                air.setAircraftConfiguration(aircraftConfigurationEntity);
+                
+                air = cabinClassConfigurationSessionBean.createNewCabinClassConfiguration(air, aircraftConfigurationEntity.getAircraftConfigurationId());
+               
+                em.flush();
+               
+                aircraftConfigurationEntity.getCabinClassConfigurations().add(air);
+
+            }
+            
+            
             
             aircraftConfigurationEntity.setAircraftType(aircraftTypeEntity);
             aircraftTypeEntity.getAircraftConfigurations().add(aircraftConfigurationEntity);
@@ -60,9 +79,9 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     @Override
     public List<AircraftConfigurationEntity> retrieveAllAircraftConfigurations()
     {
-        Query query = em.createQuery("SELECT ac FROM AircraftConfigurationEntity ac");
-        
-        return query.getResultList();
+        Query query = em.createQuery("SELECT ac FROM AircraftConfigurationEntity ac ORDER by ac.name ASC, ac.aircraftType.name ASC");
+        List<AircraftConfigurationEntity> a = query.getResultList();
+        return a;
     }
     
     //view aircraft configuration details use case
@@ -74,6 +93,8 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
         
         if(aircraftConfigurationEntity != null)
         {
+            aircraftConfigurationEntity.getAircraftType();
+            aircraftConfigurationEntity.getCabinClassConfigurations().size();
             return aircraftConfigurationEntity;
         }
         else
@@ -84,4 +105,9 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+    @Override
+    public AircraftConfigurationEntity createNewAircraftConfiguration(AircraftConfigurationEntity aircraftConfigurationEntity, Long aircraftTypeId) throws AircraftTypeNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

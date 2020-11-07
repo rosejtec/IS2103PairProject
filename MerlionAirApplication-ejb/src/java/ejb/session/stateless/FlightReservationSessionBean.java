@@ -50,8 +50,8 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).plusDays(1);
             System.out.println(t1);
             System.out.println(t2);
-           Long a1= airportSessionBean.retriveBy(origin);
-            Long a2= airportSessionBean.retriveBy(destination);
+           AirportEntity a1= airportSessionBean.retriveBy(origin);
+            AirportEntity a2= airportSessionBean.retriveBy(destination);
             
             Query query;
             if(connecting){
@@ -97,8 +97,8 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).minusDays(4);
             System.out.println(t1);
             System.out.println(t2);
-            Long a1= airportSessionBean.retriveBy(origin);
-            Long a2= airportSessionBean.retriveBy(destination);
+            AirportEntity a1= airportSessionBean.retriveBy(origin);
+            AirportEntity a2= airportSessionBean.retriveBy(destination);
           Query query;
             if(connecting){
                 query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m JOIN t.flightRoute n WHERE  m.origin.airportId = :inOrg AND n.destination.airportId = :outDes AND  n.origin.airportId = m.destination.airportId AND f.departure BETWEEN :inDate AND :inDate1");
@@ -134,8 +134,8 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).plusDays(4);
             System.out.println(t1);
             System.out.println(t2);
-            Long a1= airportSessionBean.retriveBy(origin);
-            Long a2= airportSessionBean.retriveBy(destination);
+            AirportEntity a1= airportSessionBean.retriveBy(origin);
+            AirportEntity a2= airportSessionBean.retriveBy(destination);
             Query query;
             if(connecting){
                 query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m JOIN t.flightRoute n WHERE  m.origin.airportId = :inOrg AND n.destination.airportId = :outDes AND  n.origin.airportId = m.destination.airportId AND f.departure BETWEEN :inDate AND :inDate1");
@@ -169,8 +169,8 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).plusDays(1);
             System.out.println(t1);
             System.out.println(t2);
-            Long a1= airportSessionBean.retriveBy(origin);
-            Long a2= airportSessionBean.retriveBy(destination);
+            AirportEntity a1= airportSessionBean.retriveBy(origin);
+            AirportEntity a2= airportSessionBean.retriveBy(destination);
             Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND f.departure BETWEEN :inDate AND :inDate1");
       
             query.setParameter("inOrg", a1);

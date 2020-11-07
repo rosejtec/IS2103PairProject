@@ -56,7 +56,7 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
     
     public List<FlightRouteEntity> retrieveAllFlightRoutes()
     {
-        Query query = em.createQuery("SELECT f FROM FlightRouteEntity f");
+        Query query = em.createQuery("SELECT f FROM FlightRouteEntity f ORDER by f.origin.name ASC");
         
         return query.getResultList();
     }
@@ -87,8 +87,13 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
             throw new FlightRouteNotFoundException("Flight Route ID " + flightRouteId + " does not exist!");
         }
         
-        if(flightRouteToDelete.getFlights()== null) {
+        if(flightRouteToDelete.getFlights().size()==0) {
+            flightRouteToDelete.setComplementaryReturnRoute(null);
+            flightRouteToDelete.setFlights(null);
+            em.remove(flightRouteToDelete.getComplementaryReturnRoute());
             em.remove(flightRouteToDelete);
+            
+            em.flush();
         } else {
             flightRouteToDelete.setDisabled(true);
         }

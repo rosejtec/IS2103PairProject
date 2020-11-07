@@ -7,6 +7,7 @@ package frsmanagementclient;
 
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
+import entity.EmployeeEntity;
 import entity.FlightEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
@@ -20,8 +21,14 @@ import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import util.enumeration.EmployeeAccessRight;
+import util.enumeration.ExceedsMaximumCapacityException;
 import util.enumeration.ScheduleEnum;
+import util.exception.AircraftConfigurationNotFoundException;
+import util.exception.AircraftTypeNotFoundException;
 import util.exception.FlightNotFoundException;
+import util.exception.FlightRouteNotFoundException;
+import util.exception.InvalidAccessRightException;
 
 /**
  *
@@ -35,6 +42,110 @@ public class FlightOperationModule {
     @EJB
     private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
     
+    
+    EmployeeEntity currentEmployeeEntity;
+    
+       public void menuFlightPlanning(EmployeeEntity e) throws InvalidAccessRightException
+    {
+        this.currentEmployeeEntity= e;
+        if(currentEmployeeEntity.getAccessRight() == EmployeeAccessRight.SCHEDULEMANAGER )
+        {
+            Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
+        
+        while(true)
+        {
+          
+            response = 0;
+            
+            while(response < 1 || response > 6)
+            {
+             System.out.println("*** FRS Management Client :: Flight Planning ***\n");
+            System.out.println("1: Create Flight");
+            System.out.println("2: View All Flights");
+            System.out.println("3: View Flight Details");
+            System.out.println("4: Update Flight");
+            System.out.println("5: Delete Flight");
+            System.out.println("6: Create Flight Schedule Plan");
+            System.out.println("7: View All Flight Schedule Plans");
+            System.out.println("8: View All Flight Schedule Plan Details");
+            System.out.println("9: Update Flight Schedule Plan");
+            System.out.println("10: Delete Flight Schedule Plan");
+
+            System.out.println("11: Back\n");
+                System.out.print("> ");
+
+                response = scanner.nextInt();
+
+                if(response == 1)
+                {
+
+                    createFlight();
+                }
+                
+                else if(response == 2)
+                {
+                    viewAllFlights();
+                }
+                else if(response == 3)
+                {
+                   viewFlightDetails();
+                }
+                else if(response == 4)
+                {
+                 updateFlight() ; 
+                }
+                else if(response == 5)
+                {
+                    deleteFlight();
+                }
+                else if(response == 6)
+                {
+                  createFlightSchedulePlan();
+                }
+                 else if(response == 7)
+                {
+                    viewAllFlightSchedulePlan();
+                }
+                else if(response == 8)
+                {
+                 viewFlightSchedulePlanDetails();  
+                }
+                  else if(response == 9)
+                {
+                   updateFlightSchedulePlan();
+                }
+                 else if(response == 10)
+                {
+                   deleteFlightSchedulePlan();
+                   
+                }
+                else if(response == 11)
+                {
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid option, please try again!\n");                
+                }
+            }
+            
+            if(response == 11)
+            {
+                break;
+            }
+            
+           }
+           
+        } else {
+             throw new InvalidAccessRightException("You don't have SCHEDULE MANAGER rights to access the flight planning module.");
+        }    
+       
+
+        
+    }
+  
+
     public void createFlightSchedulePlan() {
         Scanner sc = new Scanner(System.in);
         FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity();
@@ -108,6 +219,42 @@ public class FlightOperationModule {
         }
         
        flightSchedulePlanSessionBeanRemote.createFlightSchedulePlan(fsp, list);
+    }
+
+    private void deleteFlightSchedulePlan() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void updateFlightSchedulePlan() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewFlightSchedulePlanDetails() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewAllFlightSchedulePlan() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void deleteFlight() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void updateFlight() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewFlightDetails() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewAllFlights() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void createFlight() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
    

@@ -26,14 +26,16 @@ public class AirportSessionBean implements AirportSessionBeanRemote, AirportSess
         em.persist(object);
     }
 
-    
-    public Long retriveBy(String name){
-        Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.name = :inName");
-        q.setParameter("inName", name);
+ 
+    @Override
+    public AirportEntity retriveBy(String code){
+        Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.code = :inName");
+        q.setParameter("inName", code);
         AirportEntity a = (AirportEntity) q.getSingleResult();
-        return a.getAirportId();
+        return a;
     }
 
+    @Override
    public Long createNewAirport(AirportEntity newAirportEntity)
    {
        em.persist(newAirportEntity);

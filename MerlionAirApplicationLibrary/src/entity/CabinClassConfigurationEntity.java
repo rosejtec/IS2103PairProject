@@ -32,8 +32,7 @@ public class CabinClassConfigurationEntity implements Serializable {
     private Integer numOfRows;
     private Integer numOfSeatsAbreast;
     private String seatConfiguration;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne
     private AircraftConfigurationEntity aircraftConfiguration;
     @Enumerated(EnumType.STRING)
     private CabinClassType cabinClassType;

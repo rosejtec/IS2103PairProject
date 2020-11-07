@@ -20,4 +20,5 @@ public interface AirportSessionBeanRemote {
 
     public AirportEntity retrieveAirportByAirportId(Long airportId) throws AirportNotFoundException;
     
+    public AirportEntity retriveBy(String code);
 }

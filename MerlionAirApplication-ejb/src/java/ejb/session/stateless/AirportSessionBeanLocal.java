@@ -17,5 +17,5 @@ public interface AirportSessionBeanLocal {
 
     public AirportEntity retrieveAirportByAirportId(Long airportId) throws AirportNotFoundException;
 
-    public Long retriveBy(String name);
+    public AirportEntity retriveBy(String name);
 }
