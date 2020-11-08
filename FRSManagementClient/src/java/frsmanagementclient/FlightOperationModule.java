@@ -46,11 +46,17 @@ public class FlightOperationModule {
     
     
     EmployeeEntity currentEmployeeEntity;
+
+    FlightOperationModule(FlightSessionBeanRemote flightSessionBeanRemote, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, EmployeeEntity currentEmployeeEntity) {
+        this.flightSessionBeanRemote = flightSessionBeanRemote;
+        this.flightSchedulePlanSessionBeanRemote = flightSchedulePlanSessionBeanRemote;
+        this.currentEmployeeEntity = currentEmployeeEntity;
+    }
     
-       public void menuFlightPlanning(EmployeeEntity e) throws InvalidAccessRightException
+       public void menuFlightOperation(FlightSessionBeanRemote flightSessionBeanRemote, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, EmployeeEntity e) throws InvalidAccessRightException
     {
         this.currentEmployeeEntity= e;
-        if(currentEmployeeEntity.getAccessRight() == EmployeeAccessRight.SCHEDULEMANAGER )
+        if(currentEmployeeEntity.getAccessRight() == EmployeeAccessRight.SCHEDULEMANAGER);
         {
             Scanner scanner = new Scanner(System.in);
         Integer response = 0;

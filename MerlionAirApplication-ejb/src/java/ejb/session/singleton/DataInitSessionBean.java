@@ -69,10 +69,14 @@ public class DataInitSessionBean {
     private void initializeData()
     {
        
-        EmployeeEntity e = new EmployeeEntity("L", "J", "123", "123", EmployeeAccessRight.FLEETMANAGER);
-        em.persist(e);
+        EmployeeEntity e1 = new EmployeeEntity("L", "J", "123", "123", EmployeeAccessRight.FLEETMANAGER);
+        em.persist(e1);
         em.flush();
         
+         
+        EmployeeEntity e2 = new EmployeeEntity("JX", "Q", "qjx", "123", EmployeeAccessRight.SCHEDULEMANAGER);
+        em.persist(e2);
+        em.flush();
         
         
         AircraftTypeEntity ate= new AircraftTypeEntity("Boeing", 100);

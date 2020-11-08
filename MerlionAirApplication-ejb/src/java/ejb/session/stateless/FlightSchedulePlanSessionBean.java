@@ -103,7 +103,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     
     public List<FlightSchedulePlanEntity> retrieveAllFlightSchedulePlans()
     {
-        Query query = em.createQuery("SELECT f FROM FlightSchedulePlanEntity f ORDER BY f.origin.flightNum ASC ORDER BY f.flightSchedules.departure");
+        Query query = em.createQuery("SELECT f FROM FlightSchedulePlanEntity f ORDER BY f.flightNum ASC");
         return query.getResultList();
     }
     

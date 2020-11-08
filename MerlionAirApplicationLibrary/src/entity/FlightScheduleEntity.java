@@ -9,9 +9,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -31,7 +33,8 @@ public class FlightScheduleEntity implements Serializable {
   
     private LocalDateTime arrival;
     private Integer duration;
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
     
 

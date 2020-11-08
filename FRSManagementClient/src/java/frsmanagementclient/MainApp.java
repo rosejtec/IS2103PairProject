@@ -11,10 +11,16 @@ import ejb.session.stateless.AirportSessionBeanRemote;
 import ejb.session.stateless.CabinClassConfigurationSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
+import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.EmployeeEntity;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -26,7 +32,10 @@ public class MainApp {
     
     @EJB
     private static FlightSessionBeanRemote flightSessionBeanRemote;
-
+    
+    @EJB
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
+    
     @EJB
     private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
 
@@ -59,7 +68,8 @@ public class MainApp {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
     }
 
-    MainApp(FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    MainApp(FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+           this.flightSchedulePlanSessionBeanRemote = flightSchedulePlanSessionBeanRemote;
            this.flightSessionBeanRemote = flightSessionBeanRemote;
            this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
            this.cabinClassConfigurationSessionBeanRemote= cabinClassConfigurationSessionBeanRemote;
@@ -178,18 +188,21 @@ public class MainApp {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
                 }
-                /*
+                
                 else if(response == 2)
                 {
                     try
                     {
-                        flightOperationModule.menuflightOperation();
+                        flightOperationModule = new FlightOperationModule(flightSessionBeanRemote, flightSchedulePlanSessionBeanRemote, currentEmployeeEntity);
+                        flightOperationModule.menuFlightOperation(flightSessionBeanRemote, flightSchedulePlanSessionBeanRemote, currentEmployeeEntity);
                     }
                     catch (InvalidAccessRightException ex)
                     {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
                 }
+                
+                /*
                 else if(response == 3)
                 {
                     try
@@ -223,5 +236,15 @@ public class MainApp {
     
     
     
+    }
+
+    private FlightSchedulePlanSessionBeanRemote lookupFlightSchedulePlanSessionBeanRemote() {
+        try {
+            Context c = new InitialContext();
+            return (FlightSchedulePlanSessionBeanRemote) c.lookup("java:comp/env/FlightSchedulePlanSessionBeanRemote");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
     }
 }
