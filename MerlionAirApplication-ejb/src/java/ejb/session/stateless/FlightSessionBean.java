@@ -25,34 +25,37 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
     @PersistenceContext(unitName = "MerlionAirApplication-ejbPU")
     private EntityManager em;
 
-    public Long createNewFlight(FlightEntity newFlightEntity)
+    public FlightEntity createNewFlight(FlightEntity newFlightEntity)
     {
         em.persist(newFlightEntity);
         em.flush();
+        
 
-        return newFlightEntity.getFlightId();
+        return newFlightEntity;
     }
 
     
     public List<FlightEntity> retrieveAllFlights()
     {
-        Query query = em.createQuery("SELECT f FROM FlightEntity f ORDER BY f.flightNumber ASC");
+        Query query = em.createQuery("SELECT f FROM FlightEntity f ORDER BY f.flightNumber ASC ");
         
         return query.getResultList();
     }
     
-    public FlightEntity retrieveFlightByFlightNumber(String flightNumber) throws FlightNotFoundException
+    public FlightEntity retrieveFlightByFlightNumber(String flightNum) throws FlightNotFoundException
     { 
-       Query query = em.createQuery("SELECT f FROM FlightEntity f WHERE f.flightNumber = :inFlightNumber");
-       query.setParameter("inFlightNumber", flightNumber);
+       Query query = em.createQuery("SELECT f FROM FlightEntity f WHERE f.flightNum = :inFlightNum");
+       query.setParameter("inFlightNum", flightNum);
        
        try
         {
-            return (FlightEntity)query.getSingleResult();
+            FlightEntity flight = (FlightEntity)query.getSingleResult();
+            flight.getAircraftConfiguration().getCabinClassConfigurations().size();
+            return flight;
         }
         catch(NoResultException | NonUniqueResultException ex)
         {
-            throw new FlightNotFoundException("Flight number " + flightNumber + " does not exist!");
+            throw new FlightNotFoundException("Flight number " + flightNum + " does not exist!");
         }
     }   
     

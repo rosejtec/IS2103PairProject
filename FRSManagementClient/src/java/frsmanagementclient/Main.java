@@ -26,6 +26,9 @@ public class Main
     private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
 
     @EJB
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+
+    @EJB
     private static FlightSessionBeanRemote flightSessionBeanRemote;
 
     @EJB

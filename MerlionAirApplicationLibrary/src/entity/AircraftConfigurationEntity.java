@@ -116,5 +116,13 @@ public class AircraftConfigurationEntity implements Serializable {
     public String toString() {
         return "entity.AircraftConfigurationEntity[ id=" + aircraftConfigurationId + " ]";
     }
+
+    public FlightEntity getFlightEntity() {
+        return flightEntity;
+    }
+
+    public void setFlightEntity(FlightEntity flightEntity) {
+        this.flightEntity = flightEntity;
+    }
     
 }

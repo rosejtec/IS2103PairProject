@@ -33,7 +33,7 @@ public class FlightScheduleEntity implements Serializable {
   
     private LocalDateTime arrival;
     private Integer duration;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
     

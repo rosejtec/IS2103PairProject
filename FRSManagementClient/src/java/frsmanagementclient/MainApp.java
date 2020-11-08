@@ -53,7 +53,8 @@ public class MainApp {
 
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
-    
+      @EJB
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
     private SalesManagementModule salesManagementModule;
@@ -77,6 +78,7 @@ public class MainApp {
            this.airportSessionBeanRemote= airportSessionBeanRemote;
            this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
            this.employeeSessionBeanRemote= employeeSessionBeanRemote;
+           this.flightSchedulePlanSessionBean= flightSchedulePlanSessionBean;
     }
     
     public void runApp()
@@ -191,10 +193,11 @@ public class MainApp {
                 
                 else if(response == 2)
                 {
+                    flightOperationModule = new FlightOperationModule(aircraftConfigurationSessionBeanRemote, flightRouteSessionBeanRemote, flightSchedulePlanSessionBean, flightSessionBeanRemote);
                     try
                     {
-                        flightOperationModule = new FlightOperationModule(flightSessionBeanRemote, flightSchedulePlanSessionBeanRemote, currentEmployeeEntity);
-                        flightOperationModule.menuFlightOperation(flightSessionBeanRemote, flightSchedulePlanSessionBeanRemote, currentEmployeeEntity);
+                     
+                        flightOperationModule.menuflightOperation(currentEmployeeEntity);
                     }
                     catch (InvalidAccessRightException ex)
                     {
@@ -202,18 +205,18 @@ public class MainApp {
                     }
                 }
                 
-                /*
+                
                 else if(response == 3)
                 {
-                    try
-                    {
-                        salesManagementModule.menuSalesManagement();
-                    }
-                    catch (InvalidAccessRightException ex)
-                    {
-                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
-                    }
-                    
+//                    try
+//                    {
+//                        salesManagementModule.menuSalesManagement();
+//                    }
+//                    catch (InvalidAccessRightException ex)
+//                    {
+//                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+//                    }
+//                    
                 }
                 else if (response == 4)
                 {
@@ -229,22 +232,13 @@ public class MainApp {
             {
                 break;
             }
-*/
-        }
 
-    }
-    
-    
+        }
+               
+
+       
     
     }
 
-    private FlightSchedulePlanSessionBeanRemote lookupFlightSchedulePlanSessionBeanRemote() {
-        try {
-            Context c = new InitialContext();
-            return (FlightSchedulePlanSessionBeanRemote) c.lookup("java:comp/env/FlightSchedulePlanSessionBeanRemote");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
+
         }
-    }
-}

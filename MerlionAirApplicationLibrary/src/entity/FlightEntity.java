@@ -30,11 +30,12 @@ public class FlightEntity implements Serializable {
     @OneToMany(mappedBy = "flight")
     private List<FlightSchedulePlanEntity> flightSchedulePlans;
     private boolean disabled;
-
     @ManyToOne
     FlightRouteEntity flightRoute;
+    private boolean complementary;
+    @OneToOne
+    FlightEntity complentaryFlight;
     
-  
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;
 
@@ -44,6 +45,38 @@ public class FlightEntity implements Serializable {
  
     }
 
+    public boolean isComplementary() {
+        return complementary;
+    }
+
+    public void setComplementary(boolean complementary) {
+        this.complementary = complementary;
+    }
+
+    public FlightEntity getComplentaryFlight() {
+        return complentaryFlight;
+    }
+
+    public void setComplentaryFlight(FlightEntity complentaryFlight) {
+        this.complentaryFlight = complentaryFlight;
+    }
+
+    public FlightEntity(String flightNum, FlightRouteEntity flightRoute, boolean isComplemntary, AircraftConfigurationEntity aircraftConfiguration) {
+        this.flightNum = flightNum;
+        this.flightRoute = flightRoute;
+        this.complementary = isComplemntary;
+        this.aircraftConfiguration = aircraftConfiguration;
+    }
+    
+    
+
+    public FlightEntity(String flightNum, boolean disabled, FlightRouteEntity flightRoute, AircraftConfigurationEntity aircraftConfiguration) {
+        this.flightNum = flightNum;
+        this.disabled = disabled;
+        this.flightRoute = flightRoute;
+        this.aircraftConfiguration = aircraftConfiguration;
+    }
+
     public FlightEntity() {
     }
 
@@ -51,12 +84,18 @@ public class FlightEntity implements Serializable {
         this.flightSchedulePlans = flightSchedulePlans;
     }
 
-    public FlightEntity(String flightNumber, List<FlightSchedulePlanEntity> flightSchedulePlans, List<FlightRouteEntity> flightRoutes, AircraftConfigurationEntity aircraftConfiguration, boolean disabled) {
+    public FlightEntity(String flightNum, List<FlightSchedulePlanEntity> flightSchedulePlans, boolean disabled, FlightRouteEntity flightRoute, boolean complementary, FlightEntity complentaryFlight, AircraftConfigurationEntity aircraftConfiguration) {
         this.flightNum = flightNum;
         this.flightSchedulePlans = flightSchedulePlans;
-        this.flightRoute = flightRoute;
-        this.aircraftConfiguration = aircraftConfiguration;
         this.disabled = disabled;
+        this.flightRoute = flightRoute;
+        this.complementary = complementary;
+        this.complentaryFlight = complentaryFlight;
+        this.aircraftConfiguration = aircraftConfiguration;
+    }
+    
+    public FlightEntity(String concat, boolean b, Long flightRoute, Long aircraftConfiguration) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public Long getFlightId() {

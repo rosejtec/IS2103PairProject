@@ -18,8 +18,7 @@ import util.exception.UpdateFlightException;
 @Remote
 public interface FlightSessionBeanRemote {
 
-    public Long createNewFlight(FlightEntity newFlightEntity);
-
+public FlightEntity createNewFlight(FlightEntity newFlightEntity);
     public List<FlightEntity> retrieveAllFlights();
 
     public FlightEntity retrieveFlightByFlightNumber(String flightNumber) throws FlightNotFoundException;
