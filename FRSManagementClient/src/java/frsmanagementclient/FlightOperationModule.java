@@ -474,7 +474,7 @@ public class FlightOperationModule {
                if(!r.isIsComplemntary()){
                 System.out.println("Id: "+r.getFlightId()+ " Flight Number: " + r.getFlightNum());
                if(r.getComplentary()!=null) {
-                 System.out.println("Id: "+r.getFlightId()+ " Flight Number: " + r.getFlightNum());
+                 System.out.println("Id: "+r.getComplentary().getFlightId()+ " Flight Number: " + r.getComplentary().getFlightNum());
                }
             }
         }
@@ -500,11 +500,15 @@ public class FlightOperationModule {
        f.setIsComplemntary(false);
        
        
+       if(id.getComplementaryReturnRoute()!=null){
        
+       sc.nextLine();
+     
         System.out.println("Would you like a ComplementaryFlight (Y/N)> ");
-        String comp =sc.nextLine().trim();
+        String comp = sc.nextLine().trim();
       
-      if(comp.equals("Y")){
+      if(comp.equals("Y") ){
+          
          concat = "MA" + fNum +"C";
          FlightEntity f2 = new FlightEntity(concat, true,id.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
          
@@ -514,7 +518,12 @@ public class FlightOperationModule {
          flightSessionBeanRemote.createNewFlight(f);
          
           
-      } else {
+             } else {
+                    flightSessionBeanRemote.createNewFlight(f);
+
+             }
+      
+       }  else {
           flightSessionBeanRemote.createNewFlight(f);
       }
     }
