@@ -11,10 +11,16 @@ import ejb.session.stateless.AirportSessionBeanRemote;
 import ejb.session.stateless.CabinClassConfigurationSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
+import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.EmployeeEntity;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -44,7 +50,8 @@ public class MainApp {
 
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
-    
+      @EJB
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
     private SalesManagementModule salesManagementModule;
@@ -59,7 +66,7 @@ public class MainApp {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
     }
 
-    MainApp(FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    MainApp(FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote,FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean) {
            this.flightSessionBeanRemote = flightSessionBeanRemote;
            this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
            this.cabinClassConfigurationSessionBeanRemote= cabinClassConfigurationSessionBeanRemote;
@@ -67,6 +74,7 @@ public class MainApp {
            this.airportSessionBeanRemote= airportSessionBeanRemote;
            this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
            this.employeeSessionBeanRemote= employeeSessionBeanRemote;
+           this.flightSchedulePlanSessionBean= flightSchedulePlanSessionBean;
     }
     
     public void runApp()
@@ -178,12 +186,13 @@ public class MainApp {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
                 }
-                /*
+                
                 else if(response == 2)
                 {
+                    flightOperationModule = new FlightOperationModule(aircraftConfigurationSessionBeanRemote, flightRouteSessionBeanRemote, flightSchedulePlanSessionBean, flightSessionBeanRemote);
                     try
                     {
-                        flightOperationModule.menuflightOperation();
+                        flightOperationModule.menuflightOperation(currentEmployeeEntity);
                     }
                     catch (InvalidAccessRightException ex)
                     {
@@ -192,15 +201,15 @@ public class MainApp {
                 }
                 else if(response == 3)
                 {
-                    try
-                    {
-                        salesManagementModule.menuSalesManagement();
-                    }
-                    catch (InvalidAccessRightException ex)
-                    {
-                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
-                    }
-                    
+//                    try
+//                    {
+//                        salesManagementModule.menuSalesManagement();
+//                    }
+//                    catch (InvalidAccessRightException ex)
+//                    {
+//                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+//                    }
+//                    
                 }
                 else if (response == 4)
                 {
@@ -216,12 +225,10 @@ public class MainApp {
             {
                 break;
             }
-*/
+
         }
 
-    }
-    
-    
+       
     
     }
 }

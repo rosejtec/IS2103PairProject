@@ -16,4 +16,9 @@
     <ejb-ref-type>Session</ejb-ref-type>
     <remote>ejb.session.stateless.AirportSessionBeanRemote</remote>
   </ejb-ref>
+  <ejb-ref>
+    <ejb-ref-name>FlightSchedulePlanSessionBean</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <remote>ejb.session.stateless.FlightSchedulePlanSessionBeanRemote</remote>
+  </ejb-ref>
 </application-client>

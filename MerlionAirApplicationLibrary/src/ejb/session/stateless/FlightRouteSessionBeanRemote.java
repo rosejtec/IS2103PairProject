@@ -19,6 +19,7 @@ public interface FlightRouteSessionBeanRemote {
      public Long createNewFlightRoute(FlightRouteEntity newFlightRouteEntity);
          public FlightRouteEntity createNewComplementaryReturnRoute(Long flightRouteId, FlightRouteEntity complementaryReturnRoute) throws FlightRouteNotFoundException;
 public List<FlightRouteEntity> retrieveAllFlightRoutes();
+public FlightRouteEntity retrieveFlightRouteByFlightRouteId(Long flightRouteId) throws FlightRouteNotFoundException;
 public void deleteFlightRoute(Long flightRouteId) throws FlightRouteNotFoundException;
         
 

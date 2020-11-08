@@ -33,8 +33,12 @@ public class FlightEntity implements Serializable {
 
     @ManyToOne
     FlightRouteEntity flightRoute;
+   
+    boolean isComplemntary;
     
-  
+    @OneToOne
+    FlightEntity complentary;
+    
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;
 
@@ -42,6 +46,38 @@ public class FlightEntity implements Serializable {
         this.flightNum = flightNum;
         this.flightRoute = flightRoute;
  
+    }
+
+    public boolean isIsComplemntary() {
+        return isComplemntary;
+    }
+
+    public void setIsComplemntary(boolean isComplemntary) {
+        this.isComplemntary = isComplemntary;
+    }
+
+    public FlightEntity getComplentary() {
+        return complentary;
+    }
+
+    public void setComplentary(FlightEntity complentary) {
+        this.complentary = complentary;
+    }
+
+    public FlightEntity(String flightNum, FlightRouteEntity flightRoute, boolean isComplemntary, AircraftConfigurationEntity aircraftConfiguration) {
+        this.flightNum = flightNum;
+        this.flightRoute = flightRoute;
+        this.isComplemntary = isComplemntary;
+        this.aircraftConfiguration = aircraftConfiguration;
+    }
+    
+    
+
+    public FlightEntity(String flightNum, boolean disabled, FlightRouteEntity flightRoute, AircraftConfigurationEntity aircraftConfiguration) {
+        this.flightNum = flightNum;
+        this.disabled = disabled;
+        this.flightRoute = flightRoute;
+        this.aircraftConfiguration = aircraftConfiguration;
     }
 
     public FlightEntity() {
@@ -57,6 +93,10 @@ public class FlightEntity implements Serializable {
         this.flightRoute = flightRoute;
         this.aircraftConfiguration = aircraftConfiguration;
         this.disabled = disabled;
+    }
+
+    public FlightEntity(String concat, boolean b, Long flightRoute, Long aircraftConfiguration) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public Long getFlightId() {

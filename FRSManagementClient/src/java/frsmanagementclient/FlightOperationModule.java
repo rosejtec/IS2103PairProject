@@ -5,11 +5,16 @@
  */
 package frsmanagementclient;
 
+import ejb.session.stateless.AircraftConfigurationSessionBeanRemote;
+import ejb.session.stateless.AircraftTypeSessionBeanRemote;
+import ejb.session.stateless.AirportSessionBeanRemote;
+import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.EmployeeEntity;
 import entity.FareEntity;
 import entity.FlightEntity;
+import entity.FlightRouteEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
 import java.time.LocalDateTime;
@@ -31,6 +36,7 @@ import util.exception.FlightNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 import util.exception.FlightSchedulePlanNotFoundException;
 import util.exception.InvalidAccessRightException;
+import util.exception.UpdateFlightException;
 
 /**
  *
@@ -44,10 +50,24 @@ public class FlightOperationModule {
     @EJB
     private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
     
+        @EJB
+    private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
+    
+          
+    @EJB
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
     
     EmployeeEntity currentEmployeeEntity;
     
-       public void menuFlightPlanning(EmployeeEntity e) throws InvalidAccessRightException
+    public FlightOperationModule(AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote,FlightRouteSessionBeanRemote flightRouteSessionBeanRemote,FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote,FlightSessionBeanRemote flightSessionBeanRemote){
+        
+           this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
+           this.aircraftConfigurationSessionBeanRemote=aircraftConfigurationSessionBeanRemote;
+           this.flightSessionBeanRemote=flightSessionBeanRemote;
+           this.flightSchedulePlanSessionBeanRemote= flightSchedulePlanSessionBeanRemote;
+          
+    }
+       public void menuflightOperation(EmployeeEntity e) throws InvalidAccessRightException
     {
         this.currentEmployeeEntity= e;
         if(currentEmployeeEntity.getAccessRight() == EmployeeAccessRight.SCHEDULEMANAGER )
@@ -60,7 +80,7 @@ public class FlightOperationModule {
           
             response = 0;
             
-            while(response < 1 || response > 6)
+            while(response < 1 || response > 11)
             {
              System.out.println("*** FRS Management Client :: Flight Planning ***\n");
             System.out.println("1: Create Flight");
@@ -81,7 +101,13 @@ public class FlightOperationModule {
 
                 if(response == 1)
                 {
-                    doCreateFlight();
+                 try {
+                     doCreateFlight();
+                 } catch (FlightRouteNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (AircraftConfigurationNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 }
                 }
                 else if(response == 2)
                 {
@@ -89,15 +115,33 @@ public class FlightOperationModule {
                 }
                 else if(response == 3)
                 {
-                   doViewFlightDetails();
+                 try {
+                     doViewFlightDetails();
+                 } catch (FlightNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 }
                 }
                 else if(response == 4)
                 {
-                 doUpdateFlight() ; 
+                 try { 
+                     doUpdateFlight() ;
+                 } catch (FlightNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (UpdateFlightException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (AircraftConfigurationNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (FlightRouteNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 }
                 }
                 else if(response == 5)
                 {
-                    doDeleteFlight();
+                 try {
+                     doDeleteFlight();
+                 } catch (FlightNotFoundException ex) {
+                     Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                 }
                 }
                 else if(response == 6)
                 {
@@ -384,28 +428,101 @@ public class FlightOperationModule {
 
 
 
-    public void doDeleteFlight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void doDeleteFlight() throws FlightNotFoundException {
+             Scanner sc = new Scanner(System.in);
+             System.out.println("Enter Id of Flight> ");
+             Long flight = sc.nextLong();
+             
+             flightSessionBeanRemote.deleteFlight(flight);
+     }
+
+    public void doUpdateFlight() throws FlightNotFoundException, UpdateFlightException, AircraftConfigurationNotFoundException, FlightRouteNotFoundException {
+          Scanner sc = new Scanner(System.in);
+             System.out.println("Enter Id of Flight> ");
+             Long flight = sc.nextLong();
+          
+         System.out.println("Enter Id of AirConfig> ");
+        Long aircraftConfiguration = sc.nextLong();
+          
+        System.out.println("Enter Id of FlightRoute> ");
+        Long flightRoute = sc.nextLong();
+        
+        FlightEntity update = flightSessionBeanRemote.retrieveFlightByFlightId(flight);
+        update.setAircraftConfiguration(aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+        update.setFlightRoute(flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute));
+        
+        flightSessionBeanRemote.updateFlight(update);
     }
 
-    public void doUpdateFlight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void doViewFlightDetails() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void doViewFlightDetails() throws FlightNotFoundException {
+             Scanner sc = new Scanner(System.in);
+             System.out.println("Enter Id of Flight> ");
+             Long flight = sc.nextLong();
+          
+            FlightEntity f = flightSessionBeanRemote.retrieveFlightByFlightId(flight);
+        
+        System.out.println("Details> ");
+        System.out.println("Name: " + f.getFlightNum());
+        System.out.println("Flight route: " + f.getFlightRoute() +" Origin: " +f.getFlightRoute().getOrigin().getCity()+ " Destination: " + f.getFlightRoute().getDestination().getCity());
+    
     }
 
     public void doViewAllFlights() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           List<FlightEntity> list =  flightSessionBeanRemote.retrieveAllFlights();
+           
+           for(FlightEntity r:list){
+               if(!r.isIsComplemntary()){
+                System.out.println("Id: "+r.getFlightId()+ " Flight Number: " + r.getFlightNum());
+               if(r.getComplentary()!=null) {
+                 System.out.println("Id: "+r.getFlightId()+ " Flight Number: " + r.getFlightNum());
+               }
+            }
+        }
+           
+           
+           
     }
 
-    public void doCreateFlight() {
+    public void doCreateFlight() throws FlightRouteNotFoundException, AircraftConfigurationNotFoundException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter Id of AirConfig> ");
+        Long aircraftConfiguration = sc.nextLong();
+          
+        System.out.println("Enter Id of FlightRoute> ");
+        Long flightRoute = sc.nextLong();
         
+       System.out.println("Enter flight Number");
+       Long fNum = sc.nextLong();
+       
+       String concat = "MA"+ fNum;
+        FlightRouteEntity id = flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute);
+       FlightEntity f = new FlightEntity(concat, true,id , aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+       f.setIsComplemntary(false);
+       
+       
+       
+        System.out.println("Would you like a ComplementaryFlight (Y/N)> ");
+        String comp =sc.nextLine().trim();
+      
+      if(comp.equals("Y")){
+         concat = "MA" + fNum +"C";
+         FlightEntity f2 = new FlightEntity(concat, true,id.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+         
+         f2.setIsComplemntary(true);
+         f2 = flightSessionBeanRemote.createNewFlight(f2);
+         f.setComplentary(f2);
+         flightSessionBeanRemote.createNewFlight(f);
+         
+          
+      } else {
+          flightSessionBeanRemote.createNewFlight(f);
+      }
     }
 
    
 
+    
+    
     
     
 }
