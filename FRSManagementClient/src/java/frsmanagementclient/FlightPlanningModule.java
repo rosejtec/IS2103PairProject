@@ -14,6 +14,7 @@ import entity.AircraftTypeEntity;
 import entity.CabinClassConfigurationEntity;
 import entity.EmployeeEntity;
 import entity.FlightRouteEntity;
+import entity.FlightScheduleEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -70,9 +71,9 @@ public class FlightPlanningModule {
           
             response = 0;
             
-            while(response < 1 || response > 6)
-            {
-             System.out.println("*** FRS Management Client :: Flight Planning ***\n");
+            while(response < 1 || response > 6) {
+            
+            System.out.println("*** FRS Management Client :: Flight Planning ***\n");
             System.out.println("1: Create Aircraft Configuration");
             System.out.println("2: View All Aircraft Configurations");
             System.out.println("3: View Aircraft Configuration Details");
@@ -86,6 +87,7 @@ public class FlightPlanningModule {
 
                 if(response == 1)
                 {
+                    
                     
                  try {
                      try {

@@ -159,12 +159,6 @@ public class MainApp {
                     break;
                 }
             }
-            
-            
-      
-            
-  
-               
 
     }
 
@@ -218,6 +212,11 @@ public class MainApp {
             int t2= scanner.nextInt();
             connecting =(t2==1)? true : false;   
            
+       
+            
+            
+            
+            
             if(round || !round) {
             System.out.println("InGoing Flights:");
             System.out.println();
@@ -228,6 +227,23 @@ public class MainApp {
             List<FlightScheduleEntity> day1 = flightReservationSessionBean.searchSingleDay(false,false, departureAirport,destinationAirport, departureTime, passengers, type);
             //System.out.println(day1.size());
             System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");            
+                 if(connecting){
+              List<List<FlightScheduleEntity>> day = flightReservationSessionBean.searchConnectingThreeDaysAfter(false,false,destinationAirport,departureAirport, returnTime, passengers, type);
+            System.out.println(day.size());
+           int i = 0;
+         for(List<FlightScheduleEntity> conn: day){
+           if(conn.size()!=0){
+             FlightScheduleEntity newf = day1.get(i);
+              System.out.println(newf.getFlightScheduleId() + " "  +newf.getArrival().toString()+ " "+ newf.getDeparture().toString() + " " +newf.getDuration());
+            for(FlightScheduleEntity l:conn) {
+                System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
+            }
+           }
+            i+=1;
+            
+         }
+            } else {
+            
             for(FlightScheduleEntity l:day1) {
                  System.out.println();
 
@@ -241,7 +257,7 @@ public class MainApp {
                 System.out.println("3.PremiumEconomy: " +  (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W)*passengers): "Not availablr"));
                 System.out.println("4.Economy:        "  +  (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y)*passengers): "Not availablr"));
             }
-            
+                 }
             System.out.println();
             System.out.println("Direct 3 Day Before"); 
 
