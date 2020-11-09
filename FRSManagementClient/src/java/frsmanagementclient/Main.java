@@ -49,7 +49,6 @@ public class Main
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
 
-    
     /**
      * @param args the command line arguments
      */

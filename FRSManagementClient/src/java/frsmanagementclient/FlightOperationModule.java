@@ -8,8 +8,10 @@ package frsmanagementclient;
 import ejb.session.stateless.AircraftConfigurationSessionBeanRemote;
 import ejb.session.stateless.AircraftTypeSessionBeanRemote;
 import ejb.session.stateless.AirportSessionBeanRemote;
+
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
+
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.CabinClassConfigurationEntity;
 import entity.EmployeeEntity;
@@ -59,13 +61,14 @@ public class FlightOperationModule {
           
     @EJB
     private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
-    
+   
     EmployeeEntity currentEmployeeEntity;
 
-    FlightOperationModule(FlightSessionBeanRemote flightSessionBeanRemote, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, EmployeeEntity currentEmployeeEntity) {
+    FlightOperationModule(FlightSessionBeanRemote flightSessionBeanRemote, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, EmployeeEntity currentEmployeeEntity){
         this.flightSessionBeanRemote = flightSessionBeanRemote;
         this.flightSchedulePlanSessionBeanRemote = flightSchedulePlanSessionBeanRemote;
         this.currentEmployeeEntity = currentEmployeeEntity;
+        
     }
     
     public FlightOperationModule(AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote,FlightRouteSessionBeanRemote flightRouteSessionBeanRemote,FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote,FlightSessionBeanRemote flightSessionBeanRemote){
@@ -74,7 +77,7 @@ public class FlightOperationModule {
            this.aircraftConfigurationSessionBeanRemote=aircraftConfigurationSessionBeanRemote;
            this.flightSessionBeanRemote=flightSessionBeanRemote;
            this.flightSchedulePlanSessionBeanRemote= flightSchedulePlanSessionBeanRemote;
-          
+         
     }
        
     public void menuflightOperation(EmployeeEntity e) throws InvalidAccessRightException
@@ -198,11 +201,12 @@ public class FlightOperationModule {
 
     public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         Scanner sc = new Scanner(System.in);   
-        FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity();
+        
         
         System.out.println("Enter flight number>");
         String flightNum = sc.nextLine().trim();
         FlightEntity flight = flightSessionBeanRemote.retrieveFlightByFlightNumber(flightNum);
+        FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity(flight);
         
         System.out.println(" Select type of flight schedule plan");
         System.out.println("1. SINGLE, 2. MULTIPLE, 3. RECURRENT DAY, 4. RECURRENT WEEK");
@@ -219,7 +223,7 @@ public class FlightOperationModule {
             System.out.println("Enter estimated flight duration (in hours)>");
             int duration = sc.nextInt();
             LocalDateTime arrival = dateTime.plusHours(duration);
-            flightScheduleList.add(new FlightScheduleEntity(dateTime,arrival,duration));
+            fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(dateTime,arrival,duration)));
             
         } else if(type==2) {
             fsp.setSchedule(ScheduleEnum.MULTIPLE);
@@ -235,7 +239,7 @@ public class FlightOperationModule {
            System.out.println("Enter estimated flight duration (in hours)>");
          int duration = sc.nextInt();
          LocalDateTime arrival = dateTime.plusHours(duration);
-         flightScheduleList.add(new FlightScheduleEntity(dateTime,arrival,duration));
+         fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(dateTime,arrival,duration)));
             }
             
         } else if( type ==3){
@@ -258,7 +262,7 @@ public class FlightOperationModule {
             LocalDateTime arrivalTime = departureTime.plusHours(duration);
             fsp.setN(n);
             for(int i =0 ;i<n;i++){
-                flightScheduleList.add(new FlightScheduleEntity(departureTime,arrivalTime,duration));
+                fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(departureTime,arrivalTime,duration)));
                 departureTime = departureTime.plusDays(n);
             }
         } else if (type == 4) {
@@ -279,7 +283,7 @@ public class FlightOperationModule {
            
          
          while (arrival.isBefore(endDate) || arrival.isEqual(endDate)){
-            flightScheduleList.add(new FlightScheduleEntity(arrival,duration));
+            fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(dateTime,arrival,duration)));
              arrival = arrival.plusWeeks(1);
          }
        } else {
@@ -293,7 +297,9 @@ public class FlightOperationModule {
         
         List<CabinClassConfigurationEntity> cccList = flight.getAircraftConfiguration().getCabinClassConfigurations();
         List<FareEntity> fareList = new ArrayList<FareEntity>();
+        fsp.getFares().add(flightSchedulePlanSessionBeanRemote.createNewFare(new FareEntity(cccList.get(0), "E100", "1000")));
         
+        /*
         for (CabinClassConfigurationEntity ccc : cccList)
         {
             
@@ -361,11 +367,16 @@ public class FlightOperationModule {
         }
         }
         }
-        
+        */
 
-        Long fspId = flightSchedulePlanSessionBeanRemote.createFlightSchedulePlan(fsp, flight, flightScheduleList, fareList);
+       System.out.println(fsp);
+       System.out.println(flight);
+     
+       
+        Long fspId = flightSchedulePlanSessionBeanRemote.createFlightSchedulePlan(fsp);
         System.out.println("Flight Schedule Plan " + fspId + " has been successfully created!");
         
+        /*
          //check if got complementary return flight
         if (flight.isComplementary() == true)
         {
@@ -388,6 +399,7 @@ public class FlightOperationModule {
                  System.out.println("Complementary Flight Schedule Plan " + complementaryFspId + " has been successfuly created!");
             }          
         }     
+        */
     }
 
 

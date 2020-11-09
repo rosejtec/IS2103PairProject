@@ -53,8 +53,10 @@ public class MainApp {
 
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
-      @EJB
+    @EJB
     private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+
+      
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
     private SalesManagementModule salesManagementModule;
@@ -79,6 +81,7 @@ public class MainApp {
            this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
            this.employeeSessionBeanRemote= employeeSessionBeanRemote;
            this.flightSchedulePlanSessionBean= flightSchedulePlanSessionBean;
+           
     }
     
     public void runApp()
@@ -240,5 +243,6 @@ public class MainApp {
     
     }
 
+    
 
         }

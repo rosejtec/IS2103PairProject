@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,10 +30,11 @@ public class FlightSchedulePlanEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fightSchedulePlanId;
-    @OneToMany(mappedBy = "flightSchedulePlan", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flightSchedulePlan")
     private List<FlightScheduleEntity> flightSchedules;
     ScheduleEnum schedule;
   
+    
     LocalDateTime end;
     Integer n;
     @ManyToOne
@@ -44,9 +46,11 @@ public class FlightSchedulePlanEntity implements Serializable {
     private FlightSchedulePlanEntity complementaryFsp;
     private boolean disabled;
 
-    public FlightSchedulePlanEntity(String flightNum, List<FlightScheduleEntity> flightSchedules) {
-        this.flightNum = flightNum;
-        this.flightSchedules = flightSchedules;
+    public FlightSchedulePlanEntity(FlightEntity flight) {
+        this.flight = flight;
+        this.fares = new ArrayList<FareEntity>();
+        this.flightSchedules= new ArrayList<FlightScheduleEntity>();
+     
     }
 
     public FlightSchedulePlanEntity(List<FlightScheduleEntity> flightSchedule, FlightEntity flight) {
@@ -55,6 +59,7 @@ public class FlightSchedulePlanEntity implements Serializable {
     }
 
     public FlightSchedulePlanEntity() {   
+   
     }
 
     public ScheduleEnum getSchedule() {

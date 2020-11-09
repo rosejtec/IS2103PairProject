@@ -29,37 +29,49 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     private EntityManager em;
 
     
-    public Long createFlightSchedulePlan(FlightSchedulePlanEntity fsp, FlightEntity flightEntity, List<FlightScheduleEntity> fs, List<FareEntity> fares) {
+    public Long createFlightSchedulePlan(FlightSchedulePlanEntity fsp) {
+       
         em.persist(fsp);
         em.flush();
         System.out.println("Here");
         System.out.println(fsp.getFightSchedulePlanId());
         //map flight entity
-        fsp.setFlight(flightEntity);
-        em.flush();
-        
+       
+        fsp.getFlight().getFlightSchedulePlans().add(fsp);
         //map flight schedules
-        for(int i = 0; i< fs.size(); i++)
+        for(FlightScheduleEntity f : fsp.getFlightSchedules())
         {
-            FlightScheduleEntity f=fs.get(i);
-            em.persist(f);
-            em.flush();
-            fsp.getFlightSchedules().add(f);
             f.setFlightSchedulePlan(fsp);
         }    
        // em.flush();
         
         //map fare entity
-        for(int j = 0; j < fares.size(); j++)
+        for(FareEntity fe: fsp.getFares())
         {
-            FareEntity fareEntity = fares.get(j);
-            em.persist(fareEntity);
-            em.flush();
-            fsp.getFares().add(fareEntity);
-            fareEntity.setFlightSchedulePlan(fsp);
+            fe.setFlightSchedulePlan(fsp);
         }
         //em.flush();
+        fsp.getFlight().getFlightSchedulePlans().add(fsp);
+        em.flush();
         return fsp.getFightSchedulePlanId();
+        
+     
+    }
+    
+    public FareEntity createNewFare(FareEntity fareEntity) 
+    {
+        em.persist(fareEntity);
+        em.flush();
+        
+        return fareEntity;
+    }
+    
+     public FlightScheduleEntity createNewFlightSchedule(FlightScheduleEntity flightScheduleEntity) 
+    {
+        em.persist(flightScheduleEntity);
+        em.flush();
+        
+        return flightScheduleEntity;
     }
 /* 
     public FlightSchedulePlanEntity createNewComplementaryFlightSchedulePlan(Long flightSchedulePlanId, FlightSchedulePlanEntity complementaryFsp) throws FlightSchedulePlanNotFoundException
