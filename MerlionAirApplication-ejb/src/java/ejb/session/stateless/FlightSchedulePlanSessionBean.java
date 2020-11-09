@@ -56,8 +56,8 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         }
         //em.flush();
         fsp.getFlightSchedules().size();
-//        flight.getFlightSchedulePlans().size();
-//        flight.getFlightSchedulePlans().add(fsp);
+        flight.getFlightSchedulePlans().size();
+        flight.getFlightSchedulePlans().add(fsp);
         em.flush();
         return fsp;
         

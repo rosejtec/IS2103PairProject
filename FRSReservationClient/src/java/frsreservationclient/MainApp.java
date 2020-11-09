@@ -15,6 +15,8 @@ import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -24,6 +26,7 @@ import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import util.enumeration.CabinClassType;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -32,14 +35,9 @@ import util.exception.InvalidLoginCredentialException;
  */
 public class MainApp {
  
-     @EJB
-    private static ReservationSessionBeanRemote reservationSessionBean;
-    
-    @EJB
-    private static FlightReservationSessionBeanRemote flightReservationSessionBean;
-
-    @EJB
-    private static CustomerSessionBeanRemote customerSessionBean;
+   ReservationSessionBeanRemote reservationSessionBean;
+    FlightReservationSessionBeanRemote flightReservationSessionBean;
+    CustomerSessionBeanRemote customerSessionBean;
     CustomerEntity  currentCustomer;
 
     MainApp(FlightReservationSessionBeanRemote flightReservationSessionBean, CustomerSessionBeanRemote customerSessionBean,ReservationSessionBeanRemote reservationSessionBean) {
@@ -173,63 +171,141 @@ public class MainApp {
     private void searchFlights() throws ParseException {
             Scanner scanner = new Scanner(System.in);
             Integer response = 0;
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
-            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-            Date departureDate;
-            Date returnDate;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+           
             Boolean round;
             String departureAirport="SIN";
             String destinationAirport="MUM";
             boolean connecting;
             int passengers=1;
             
-//            System.out.println("*** Holiday Reservation System :: Search Holiday ***\n");
-            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
-            departureDate = inputDateFormat.parse("09/11/2020");
-//            System.out.print("Enter Departure Airport> ");
-//            departureAirport = scanner.nextLine().trim();
-//            System.out.print("Enter Destination Airport> ");
-//            destinationAirport = scanner.nextLine().trim();
-//            System.out.print("Enter Number of Travellers> ");
-//            passengers = scanner.nextInt();
-////            System.out.print("Enter cabin class ");
-          String cabin = " ";
-//            System.out.print("Trip Type : 1.One-way 2.Round > ");
-
-//            int t= scanner.nextInt();
-//            if(t == 1){
-//                   round =false;
-//            } else {
-//                   round =true;
-//                   System.out.print("Enter Return Date (dd/mm/yyyy)> ");
-//                   returnDate = inputDateFormat.parse(scanner.nextLine().trim());            
-//            }
-//           
-//          
-//            System.out.print("Connecting Flight : 1.Yes  2.No > ");
-//            int t2= scanner.nextInt();
-//            connecting =(t2==1)? true : false;   
-           
+            System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
+            String date = scanner.nextLine().trim();
+            LocalDateTime departureTime = LocalDateTime.parse(date, formatter);
+              LocalDateTime returnTime = null; 
             
-        System.out.println(departureDate);
-            List<FlightScheduleEntity> day1 = flightReservationSessionBean.searchSingleDay(false,false, departureAirport,destinationAirport, departureDate, passengers, cabin);
-         System.out.println(day1.size());
+            System.out.print("Enter Departure Airport> ");
+            departureAirport = scanner.nextLine().trim();
+            System.out.print("Enter Destination Airport> ");
+            destinationAirport = scanner.nextLine().trim();
+            System.out.print("Enter Number of Travellers> ");
+            passengers = scanner.nextInt();
+            System.out.print("Enter cabin class type 1.FirstClass 2.BusinessClass 3.PremiumEconomy 4.Economy ");
+            CabinClassType type = null;
+            int cabin = scanner.nextInt();
+            switch(cabin){
+                case 1 : type =CabinClassType.F;break;
+                case 2 : type =CabinClassType.J;break;
+                case 3 : type =CabinClassType.W;break;
+                case 4 : type =CabinClassType.Y;break;
+            }
+            
+            System.out.print("Trip Type : 1.One-way 2.Round > ");
+
+            int t = scanner.nextInt();
+            if(t == 1){
+                   round =false;
+            } else {
+                  scanner.nextLine();
+                  round =true;
+                  System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
+                  String date1 = scanner.nextLine().trim();
+                  returnTime = LocalDateTime.parse(date1, formatter);          
+            }
+           
+          
+            System.out.print("Connecting Flight : 1.Yes  2.No > ");
+            int t2= scanner.nextInt();
+            connecting =(t2==1)? true : false;   
+           
+            if(round || !round) {
+            System.out.println("InGoing Flights:");
+            System.out.println();
+                             
+            
+                                
+            System.out.println("Direct on the Same Day"); 
+            List<FlightScheduleEntity> day1 = flightReservationSessionBean.searchSingleDay(false,false, departureAirport,destinationAirport, departureTime, passengers, type);
+            //System.out.println(day1.size());
+            System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");            
+            for(FlightScheduleEntity l:day1) {
+                 System.out.println();
+
+                System.out.println(l.getFlightScheduleId() + "                     "  +l.getArrival().toString()+ "       "+ l.getDeparture().toString() + "       " +l.getDuration());
+                    
+                    System.out.println();
+                System.out.println("                  SinglePassenger   AllPassenger");
+                                   
+                System.out.println("1.FirstClass:     "  + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F)*passengers): "Not availablr"));
+                System.out.println("2.BusinessClass:  " +  (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J)*passengers): "Not availablr"));
+                System.out.println("3.PremiumEconomy: " +  (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W)*passengers): "Not availablr"));
+                System.out.println("4.Economy:        "  +  (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y)*passengers): "Not availablr"));
+            }
+            
+            System.out.println();
+            System.out.println("Direct 3 Day Before"); 
+
+            List<FlightScheduleEntity> day3before = flightReservationSessionBean.searchThreeDaysBefore(false,false, departureAirport,destinationAirport, departureTime, passengers, type);
+             //System.out.println(day3before.size());
+            System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration"); 
+            for(FlightScheduleEntity l:day3before) {
+              System.out.println();
+
+                System.out.println(l.getFlightScheduleId() + "                     "  +l.getArrival().toString()+ "       "+ l.getDeparture().toString() + "       " +l.getDuration());
+                    
+                    System.out.println();
+                System.out.println("                  SinglePassenger   AllPassenger");
+                                   
+                System.out.println("1.FirstClass:     "  + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F)*passengers): "Not availablr"));
+                System.out.println("2.BusinessClass:  " +  (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J)*passengers): "Not availablr"));
+                System.out.println("3.PremiumEconomy: " +  (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W)*passengers): "Not availablr"));
+                System.out.println("4.Economy:        "  +  (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y)*passengers): "Not availablr"));   
+            }
+            System.out.println();
+                        
+            System.out.println("Direct 3 Days After"); 
+
+            List<FlightScheduleEntity> day3after = flightReservationSessionBean.searchThreeDaysAfter(false,false, departureAirport,destinationAirport, departureTime, passengers, type);
+            System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
+            for(FlightScheduleEntity l:day3after) {
+            System.out.println();
+
+                System.out.println(l.getFlightScheduleId() + "                     "  +l.getArrival().toString()+ "       "+ l.getDeparture().toString() + "       " +l.getDuration());
+                    
+                System.out.println();
+                System.out.println("                  SinglePassenger   AllPassenger");
+                                   
+                System.out.println("1.FirstClass:     "  + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F)*passengers): "Not availablr"));
+                System.out.println("2.BusinessClass:  " +  (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J)*passengers): "Not availablr"));
+                System.out.println("3.PremiumEconomy: " +  (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W)*passengers): "Not availablr"));
+                System.out.println("4.Economy:        "  +  (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1")? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y)*passengers): "Not availablr"));           
+            }
+            }
+            
+            if(round) {
+                
+                  
+            List<FlightScheduleEntity> day1 = flightReservationSessionBean.searchSingleDay(false,false,destinationAirport,departureAirport, returnTime, passengers, type);
+            System.out.println(day1.size());
                         
             for(FlightScheduleEntity l:day1) {
                 System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
             }
             
-            List<FlightScheduleEntity> day3before = flightReservationSessionBean.searchThreeDaysBefore(false,false, departureAirport,destinationAirport, departureDate, passengers, cabin);
+            List<FlightScheduleEntity> day3before = flightReservationSessionBean.searchThreeDaysBefore(false,false,destinationAirport,departureAirport,returnTime, passengers, type);
          System.out.println(day3before.size());
 
             for(FlightScheduleEntity l:day3before) {
                 System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
             }
                         
-            List<FlightScheduleEntity> day3after = flightReservationSessionBean.searchThreeDaysAfter(false,false, departureAirport,destinationAirport, departureDate, passengers, cabin);
+            List<FlightScheduleEntity> day3after = flightReservationSessionBean.searchThreeDaysAfter(false,false,destinationAirport,departureAirport, returnTime, passengers, type);
 
             for(FlightScheduleEntity l:day3after) {
                 System.out.println(l.getFlightScheduleId() + " "  +l.getArrival().toString()+ " "+ l.getDeparture().toString() + " " +l.getDuration());
+            }
+            
+                
             }
     }
 

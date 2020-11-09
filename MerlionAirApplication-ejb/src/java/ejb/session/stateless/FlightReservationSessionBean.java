@@ -5,11 +5,13 @@
  */
 package ejb.session.stateless;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import entity.AirportEntity;
 import entity.CustomerEntity;
 import entity.FlightScheduleEntity;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -17,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.CabinClassType;
 
 /**
  *
@@ -41,34 +44,22 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     
     
     @Override
-    public List<FlightScheduleEntity> searchSingleDay(boolean connecting,boolean round,String origin, String destination, Date departure, int passengers, String cabinClass) {    
-       if(connecting) {
-              
-           
-        } else {
-            LocalDateTime t1 = convertToLocalDateTimeViaInstant(departure);
-            LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).plusDays(1);
-            System.out.println(t1);
-            System.out.println(t2);
+    public List<FlightScheduleEntity> searchSingleDay(boolean connecting,boolean round,String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass) {    
+      
            AirportEntity a1= airportSessionBean.retriveBy(origin);
             AirportEntity a2= airportSessionBean.retriveBy(destination);
             
-            Query query;
-            if(connecting){
-                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m JOIN t.flightRoute n WHERE  m.origin.airportId = :inOrg AND n.destination.airportId = :outDes AND  n.origin.airportId = m.destination.airportId AND f.departure BETWEEN :inDate AND :inDate1");
-            } else {
-                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
-            }
-                       
+            Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
+                              
 //SELECT m, p FROM FlightRouteEntity m ,FlightRouteEntity p WHERE  m.origin.airportId = "1" AND p.destination.airportId = "3" AND p.origin.airportId = m.destination.airportId
 //SELECT m FROM FlightRouteEntity m LEFT JOIN FlightRouteEntity p WHERE  m.origin.airportId = "1" AND p.destination.airportId = "3" AND p.origin.airportId = m.destination.airportId
             System.out.println(a1);
             System.out.println(a2);
 
-            query.setParameter("inOrg", a1);
-            query.setParameter("outDes", a2);
-            query.setParameter("inDate", t1);
-            query.setParameter("inDate1", t2);
+            query.setParameter("inOrg", a1.getAirportId());
+            query.setParameter("outDes", a2.getAirportId());
+             query.setParameter("inDate", departure);
+            query.setParameter("inDate1", departure.plusDays(1));   
 
             List<FlightScheduleEntity>  list = query.getResultList();
             System.out.println(list);
@@ -76,125 +67,90 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             
         
         }
-       
-       return null;
-        
-    }
-    
-    public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
-    return dateToConvert.toInstant()
-      .atZone(ZoneId.systemDefault())
-      .toLocalDateTime();
-}
-    
-     @Override
-    public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting,boolean round,String origin, String destination, Date departure, int passengers, String cabinClass) {    
-       if(round) {
-      
-            
-        } else {
-          LocalDateTime t1 = convertToLocalDateTimeViaInstant(departure).minusDays(1);
-            LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).minusDays(4);
-            System.out.println(t1);
-            System.out.println(t2);
-            AirportEntity a1= airportSessionBean.retriveBy(origin);
+
+    @Override
+    public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) {
+ AirportEntity a1= airportSessionBean.retriveBy(origin);
             AirportEntity a2= airportSessionBean.retriveBy(destination);
-          Query query;
-            if(connecting){
-                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m JOIN t.flightRoute n WHERE  m.origin.airportId = :inOrg AND n.destination.airportId = :outDes AND  n.origin.airportId = m.destination.airportId AND f.departure BETWEEN :inDate AND :inDate1");
-            } else {
-                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
-            }
+              Query query;
+           
+                
+                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
+            
             
 //SELECT m, p FROM FlightRouteEntity m ,FlightRouteEntity p WHERE  m.origin.airportId = "1" AND p.destination.airportId = "3" AND p.origin.airportId = m.destination.airportId
 //SELECT m FROM FlightRouteEntity m LEFT JOIN FlightRouteEntity p WHERE  m.origin.airportId = "1" AND p.destination.airportId = "3" AND p.origin.airportId = m.destination.airportId
             System.out.println(a1);
             System.out.println(a2);
 
-            query.setParameter("inOrg", a1);
-            query.setParameter("outDes", a2);
-            query.setParameter("inDate", t1);
-            query.setParameter("inDate1", t2);
-
+            query.setParameter("inOrg", a1.getAirportId());
+            query.setParameter("outDes", a2.getAirportId());
+             query.setParameter("inDate", departure.minusDays(1));
+            query.setParameter("inDate1", departure.minusDays(4));
              List<FlightScheduleEntity>  list = query.getResultList();
             System.out.println(list);
             return list;
-        
-        }
-        return null;
-    } 
-        
+    }
+
     @Override
-    public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting,boolean round,String origin, String destination, Date departure,  int passengers, String cabinClass) {    
-       if(round) {
-         
-            
-        } else {
-            LocalDateTime t1 = convertToLocalDateTimeViaInstant(departure).plusDays(1);
-            LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).plusDays(4);
-            System.out.println(t1);
-            System.out.println(t2);
-            AirportEntity a1= airportSessionBean.retriveBy(origin);
+    public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) {
+           AirportEntity a1= airportSessionBean.retriveBy(origin);
             AirportEntity a2= airportSessionBean.retriveBy(destination);
             Query query;
-            if(connecting){
-                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m JOIN t.flightRoute n WHERE  m.origin.airportId = :inOrg AND n.destination.airportId = :outDes AND  n.origin.airportId = m.destination.airportId AND f.departure BETWEEN :inDate AND :inDate1");
-            } else {
-                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
-            }
+                query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
+            
             
 //SELECT m, p FROM FlightRouteEntity m ,FlightRouteEntity p WHERE  m.origin.airportId = "1" AND p.destination.airportId = "3" AND p.origin.airportId = m.destination.airportId
 //SELECT m FROM FlightRouteEntity m LEFT JOIN FlightRouteEntity p WHERE  m.origin.airportId = "1" AND p.destination.airportId = "3" AND p.origin.airportId = m.destination.airportId
             System.out.println(a1);
             System.out.println(a2);
 
-            query.setParameter("inOrg", a1);
-            query.setParameter("outDes", a2);
-            query.setParameter("inDate", t1);
-            query.setParameter("inDate1", t2);
+            query.setParameter("inOrg", a1.getAirportId());
+            query.setParameter("outDes", a2.getAirportId());
+            query.setParameter("inDate", departure.plusDays(1));
+            query.setParameter("inDate1", departure.plusDays(4));
 
              List<FlightScheduleEntity>  list = query.getResultList();
             System.out.println(list);
             return list;
-        }
-        return null;
     }
-    
-     public List<FlightScheduleEntity> searchConnectingThreeDaysAfter(boolean connecting,boolean round,String origin, String destination, Date departure,  int passengers, String cabinClass) {    
-       if(round) {
-         
-            
-        } else {
-            LocalDateTime t1 = convertToLocalDateTimeViaInstant(departure);
-            LocalDateTime t2 = convertToLocalDateTimeViaInstant(departure).plusDays(1);
-            System.out.println(t1);
-            System.out.println(t2);
+
+    @Override
+    public List<List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) {
             AirportEntity a1= airportSessionBean.retriveBy(origin);
             AirportEntity a2= airportSessionBean.retriveBy(destination);
-            Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND f.departure BETWEEN :inDate AND :inDate1");
+            Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND f.departure BETWEEN :inDate AND :inDate1");
       
-            query.setParameter("inOrg", a1);
-            query.setParameter("inDate", t1);
-            query.setParameter("inDate1", t2);
+            query.setParameter("inOrg", a1.getAirportId());
+              query.setParameter("inDate", departure.plusDays(1));
+            query.setParameter("inDate1", departure.plusDays(4));
 
              List<FlightScheduleEntity>  list = query.getResultList();
       
              System.out.println(list);
-            
-             for(int i = 0; i<list.size();i++) {
-             Query query1 = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.plan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND f.departure BETWEEN :inDate AND :inDate1");
+            List<List<FlightScheduleEntity>> c = new ArrayList<>();
+            int i =0;
+             for(FlightScheduleEntity fs : list) {
+             Query query1 = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND m.destination.airportId = :inDes AND f.departure BETWEEN :inDate AND :inDate1");
       
-            query1.setParameter("inOrg", a1);
-            query1.setParameter("inDate", t1);
-            query1.setParameter("inDate1", t2);
-//m.destination.airportId = :outDes 
-             }
+             query1.setParameter("inOrg", fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getAirportId());
+             query1.setParameter("inDes", a2.getAirportId());
+             query.setParameter("inDate", fs.getArrival());
+             query.setParameter("inDate1", fs.getArrival().plusDays(1));
              
-             return list;
-        }
-        return null;
+              List<FlightScheduleEntity> connect = query1.getResultList();
+             
+              if(!connect.isEmpty()) {
+                  c.get(i).addAll(connect);
+              }
+              i++;
+            }
+             
+             return c;  
     }
-
+      
+    
+   
   
 
       
