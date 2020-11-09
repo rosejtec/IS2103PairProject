@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -28,15 +29,15 @@ public class FlightScheduleEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightScheduleId;
-  
     private LocalDateTime departure;
-  
     private LocalDateTime arrival;
     private Integer duration;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
-    
+    @OneToOne (mappedBy = "flightSchedule")
+    private SeatsInventoryEntity seatsInventory;
+
 
     public FlightScheduleEntity() {
     }
@@ -123,6 +124,14 @@ public class FlightScheduleEntity implements Serializable {
 
     public void setFlightSchedulePlan(FlightSchedulePlanEntity flightSchedulePlan) {
         this.flightSchedulePlan = flightSchedulePlan;
+    }
+
+    public SeatsInventoryEntity getSeatsInventory() {
+        return seatsInventory;
+    }
+
+    public void setSeatsInventory(SeatsInventoryEntity seatsInventory) {
+        this.seatsInventory = seatsInventory;
     }
 
 

@@ -39,28 +39,25 @@ public class FlightSchedulePlanEntity implements Serializable {
     Integer n;
     @ManyToOne
     private FlightEntity flight;
-    private String flightNum;
+    
     @OneToMany
     private List<FareEntity> fares;
     @OneToOne
     private FlightSchedulePlanEntity complementaryFsp;
     private boolean disabled;
 
-    public FlightSchedulePlanEntity(FlightEntity flight) {
-        this.flight = flight;
-        this.fares = new ArrayList<FareEntity>();
-        this.flightSchedules= new ArrayList<FlightScheduleEntity>();
-     
-    }
 
-    public FlightSchedulePlanEntity(List<FlightScheduleEntity> flightSchedule, FlightEntity flight) {
-        this.flightSchedules = flightSchedule;
+    public FlightSchedulePlanEntity( FlightEntity flight) {
+        this.flightSchedules = new ArrayList<FlightScheduleEntity>();
+        this.fares = new ArrayList<FareEntity>();
         this.flight = flight;
     }
 
     public FlightSchedulePlanEntity() {   
    
     }
+
+   
 
     public ScheduleEnum getSchedule() {
         return schedule;
@@ -105,13 +102,6 @@ public class FlightSchedulePlanEntity implements Serializable {
         this.fightSchedulePlanId = fightSchedulePlanId;
     }
 
-    public String getFlightNum() {
-        return flightNum;
-    }
-
-    public void setFlightNum(String flightNum) {
-        this.flightNum = flightNum;
-    }
 
     public List<FlightScheduleEntity> getFlightSchedules() {
         return flightSchedules;

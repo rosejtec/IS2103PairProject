@@ -13,6 +13,7 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
 import javax.ejb.EJB;
 
 /**
@@ -22,11 +23,8 @@ import javax.ejb.EJB;
 public class Main 
 {
 
-    @EJB(name = "FlightSchedulePlanSessionBeanRemote")
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
-
     @EJB
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;   
 
     @EJB
     private static FlightSessionBeanRemote flightSessionBeanRemote;
@@ -49,6 +47,9 @@ public class Main
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
 
+    @EJB
+    private static SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;
+    
     /**
      * @param args the command line arguments
      */
@@ -56,7 +57,13 @@ public class Main
     
     
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, flightRouteSessionBeanRemote, cabinClassConfigurationSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote);
+        
+        if(flightSchedulePlanSessionBeanRemote == null)
+            System.out.println("********** MAIN: NULL");
+        else
+            System.out.println("********** MAIN: NOT null");
+        
+        MainApp mainApp = new MainApp(flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, flightRouteSessionBeanRemote, cabinClassConfigurationSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote, seatsInventorySessionBeanRemote);
         mainApp.runApp();
 // TODO code application logic here
     }

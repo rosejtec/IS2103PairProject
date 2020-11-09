@@ -37,7 +37,7 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
     
     public List<FlightEntity> retrieveAllFlights()
     {
-        Query query = em.createQuery("SELECT f FROM FlightEntity f ORDER BY f.flightNumber ASC ");
+        Query query = em.createQuery("SELECT f FROM FlightEntity f ORDER BY f.flightNum ASC ");
         
         return query.getResultList();
     }
@@ -51,6 +51,8 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
         {
             FlightEntity flight = (FlightEntity)query.getSingleResult();
             flight.getAircraftConfiguration().getCabinClassConfigurations().size();
+            flight.getFlightSchedulePlans().size();
+            flight.getComplentaryFlight();
             return flight;
         }
         catch(NoResultException | NonUniqueResultException ex)
@@ -106,11 +108,16 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
             throw new FlightNotFoundException("Flight ID " + flightId + " does not exist!");
         }
         
-        if(flightEntityToDelete.getFlightSchedulePlans() == null) {
+        if(flightEntityToDelete.getFlightSchedulePlans().size() == 0) {
+            flightEntityToDelete.getComplentaryFlight().setComplementary(false);
             em.remove(flightEntityToDelete);
+            
         } else {
             flightEntityToDelete.setDisabled(true);
         }
+        
+                    em.flush();
+
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

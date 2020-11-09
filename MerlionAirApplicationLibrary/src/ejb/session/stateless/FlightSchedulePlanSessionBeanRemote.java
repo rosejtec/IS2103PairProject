@@ -21,6 +21,7 @@ import util.exception.FlightSchedulePlanNotFoundException;
 @Remote
 public interface FlightSchedulePlanSessionBeanRemote {
 
+    public FlightSchedulePlanEntity createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs, List<FareEntity> f,FlightEntity flight);
     
     public FlightSchedulePlanEntity retrieveFlightSchedulePlanById(Long flightSchedulePlanId) throws FlightSchedulePlanNotFoundException;
 
@@ -29,8 +30,6 @@ public interface FlightSchedulePlanSessionBeanRemote {
     public void deleteFlightSchedulePlan(Long flightSchedulePlanId) throws FlightSchedulePlanNotFoundException;
 
     public void deleteFlightSchedule(Long flightSchedulePlanId, Long flightScheduleId) throws FlightSchedulePlanNotFoundException, FlightScheduleNotFoundException;
-
-    public Long createFlightSchedulePlan(FlightSchedulePlanEntity fsp);
 
     public FareEntity createNewFare(FareEntity fareEntity);
 

@@ -29,84 +29,39 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     private EntityManager em;
 
     
-    public Long createFlightSchedulePlan(FlightSchedulePlanEntity fsp) {
+    public FlightSchedulePlanEntity createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs, List<FareEntity> f,FlightEntity flight) {
        
         em.persist(fsp);
         em.flush();
         System.out.println("Here");
         System.out.println(fsp.getFightSchedulePlanId());
-        //map flight entity
+        
+        
        
-        fsp.getFlight().getFlightSchedulePlans().add(fsp);
         //map flight schedules
-        for(FlightScheduleEntity f : fsp.getFlightSchedules())
-        {
-            f.setFlightSchedulePlan(fsp);
+        for(FlightScheduleEntity d : fs) {
+            d.setFlightSchedulePlan(fsp);
+            FlightScheduleEntity N = this.createNewFlightSchedule(d);
+            fsp.getFlightSchedules().add(N);
         }    
        // em.flush();
         
         //map fare entity
-        for(FareEntity fe: fsp.getFares())
+        for(FareEntity fe: f)
         {
-            fe.setFlightSchedulePlan(fsp);
+               fe.setFlightSchedulePlan(fsp);
+             FareEntity N = this.createNewFare(fe);
+            fsp.getFares().add(N);
+         
         }
         //em.flush();
-        fsp.getFlight().getFlightSchedulePlans().add(fsp);
+        fsp.getFlightSchedules().size();
+//        flight.getFlightSchedulePlans().size();
+//        flight.getFlightSchedulePlans().add(fsp);
         em.flush();
-        return fsp.getFightSchedulePlanId();
+        return fsp;
         
      
-    }
-    
-    public FareEntity createNewFare(FareEntity fareEntity) 
-    {
-        em.persist(fareEntity);
-        em.flush();
-        
-        return fareEntity;
-    }
-    
-     public FlightScheduleEntity createNewFlightSchedule(FlightScheduleEntity flightScheduleEntity) 
-    {
-        em.persist(flightScheduleEntity);
-        em.flush();
-        
-        return flightScheduleEntity;
-    }
-/* 
-    public FlightSchedulePlanEntity createNewComplementaryFlightSchedulePlan(Long flightSchedulePlanId, FlightSchedulePlanEntity complementaryFsp) throws FlightSchedulePlanNotFoundException
-    {
-        try
-        {
-            FlightSchedulePlanEntity fsp = retrieveFlightSchedulePlanById(flightSchedulePlanId);
-            
-            fsp.setComplementaryFsp(complementaryFsp);
-            complementaryFsp.setFightSchedulePlanId(flightSchedulePlanId);
-         
-
-            return complementaryFsp;
-        }
-        catch(FlightSchedulePlanNotFoundException ex)
-        {
-            throw new FlightSchedulePlanNotFoundException("Unable to create new complementary return route as the flight route record does not exist");
-        }
-    }
-    
-    */
-    
-    public FlightSchedulePlanEntity retrieveFlightSchedulePlanById(Long flightSchedulePlanId) throws FlightSchedulePlanNotFoundException
-    {
-        
-        FlightSchedulePlanEntity fsp = em.find(FlightSchedulePlanEntity.class, flightSchedulePlanId);
-        
-        if(fsp != null)
-        {
-            return fsp;
-        }
-        else
-        {
-            throw new FlightSchedulePlanNotFoundException("Flight Schedule Plan ID " + flightSchedulePlanId + " does not exist!");
-        }   
     }
     
     /*
@@ -158,6 +113,16 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         }
     } 
     
+     public FlightSchedulePlanEntity retrieveFlightSchedulePlanById(Long flightSchedulePlanId) throws FlightSchedulePlanNotFoundException {
+         FlightSchedulePlanEntity fsp = em.find(FlightSchedulePlanEntity.class, flightSchedulePlanId);
+         
+         if(fsp!= null){
+             return fsp;
+         } else {
+             throw new FlightSchedulePlanNotFoundException();
+         }
+         
+     }
     public void deleteFlightSchedule(Long flightSchedulePlanId, Long flightScheduleId) throws FlightSchedulePlanNotFoundException, FlightScheduleNotFoundException 
     {
         
@@ -178,4 +143,21 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+    @Override
+    public FareEntity createNewFare(FareEntity flightScheduleEntity) {
+     em.persist(flightScheduleEntity);
+        em.flush();
+          
+        return flightScheduleEntity;
+    }
+
+      @Override
+      public FlightScheduleEntity createNewFlightSchedule(FlightScheduleEntity flightScheduleEntity){
+        em.persist(flightScheduleEntity);
+        em.flush();
+          
+        return flightScheduleEntity;
+      }
+  
 }

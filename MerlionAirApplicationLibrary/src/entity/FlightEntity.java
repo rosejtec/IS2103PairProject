@@ -6,7 +6,9 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,6 +34,7 @@ public class FlightEntity implements Serializable {
     private boolean disabled;
     @ManyToOne
     FlightRouteEntity flightRoute;
+    @Column(name="COMP")
     private boolean complementary;
     @OneToOne
     FlightEntity complentaryFlight;
@@ -42,6 +45,7 @@ public class FlightEntity implements Serializable {
     public FlightEntity(String flightNum, FlightRouteEntity flightRoute) {
         this.flightNum = flightNum;
         this.flightRoute = flightRoute;
+        this.flightSchedulePlans = new ArrayList<>();
  
     }
 
@@ -75,6 +79,7 @@ public class FlightEntity implements Serializable {
         this.disabled = disabled;
         this.flightRoute = flightRoute;
         this.aircraftConfiguration = aircraftConfiguration;
+        this.flightSchedulePlans = new ArrayList<>();
     }
 
     public FlightEntity() {
@@ -94,9 +99,7 @@ public class FlightEntity implements Serializable {
         this.aircraftConfiguration = aircraftConfiguration;
     }
     
-    public FlightEntity(String concat, boolean b, Long flightRoute, Long aircraftConfiguration) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+ 
     
     public Long getFlightId() {
         return flightId;

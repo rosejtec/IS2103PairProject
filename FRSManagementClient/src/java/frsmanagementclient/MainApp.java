@@ -13,6 +13,7 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
 import entity.EmployeeEntity;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -30,33 +31,31 @@ import util.exception.InvalidLoginCredentialException;
  */
 public class MainApp {
     
-    @EJB
-    private static FlightSessionBeanRemote flightSessionBeanRemote;
     
-    @EJB
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
+    private FlightSessionBeanRemote flightSessionBeanRemote;
     
-    @EJB
-    private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
+    
+    private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
+    
+    
+    private FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
 
-    @EJB
-    private static CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote;
+    
+    private CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote;
 
-    @EJB
-    private static AirportSessionBeanRemote airportSessionBeanRemote;
 
-    @EJB
-    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote;
+    private AirportSessionBeanRemote airportSessionBeanRemote;
 
-    @EJB
-    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
+    
+    private AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote;
 
-    @EJB
-    private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
-    @EJB
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+    
+    private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
 
-      
+
+    private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+ private SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;
+  
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
     private SalesManagementModule salesManagementModule;
@@ -67,11 +66,8 @@ public class MainApp {
     {
     }
 
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote) {
-        this.employeeSessionBeanRemote = employeeSessionBeanRemote;
-    }
-
-    MainApp(FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    
+    MainApp(FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote) {
            this.flightSchedulePlanSessionBeanRemote = flightSchedulePlanSessionBeanRemote;
            this.flightSessionBeanRemote = flightSessionBeanRemote;
            this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
@@ -80,8 +76,8 @@ public class MainApp {
            this.airportSessionBeanRemote= airportSessionBeanRemote;
            this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
            this.employeeSessionBeanRemote= employeeSessionBeanRemote;
-           this.flightSchedulePlanSessionBean= flightSchedulePlanSessionBean;
-           
+           this.seatsInventorySessionBeanRemote = seatsInventorySessionBeanRemote;
+          
     }
     
     public void runApp()
@@ -196,7 +192,12 @@ public class MainApp {
                 
                 else if(response == 2)
                 {
-                    flightOperationModule = new FlightOperationModule(aircraftConfigurationSessionBeanRemote, flightRouteSessionBeanRemote, flightSchedulePlanSessionBean, flightSessionBeanRemote);
+                    if(flightSchedulePlanSessionBeanRemote == null)
+                        System.out.println("********** MainApp: NULL");
+                    else
+                        System.out.println("********** MainApp: NOT null");
+
+                    flightOperationModule = new FlightOperationModule(aircraftConfigurationSessionBeanRemote, flightRouteSessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote);
                     try
                     {
                      
@@ -211,15 +212,17 @@ public class MainApp {
                 
                 else if(response == 3)
                 {
-//                    try
-//                    {
-//                        salesManagementModule.menuSalesManagement();
-//                    }
-//                    catch (InvalidAccessRightException ex)
-//                    {
-//                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
-//                    }
-//                    
+                    salesManagementModule = new SalesManagementModule(flightSessionBeanRemote, seatsInventorySessionBeanRemote, currentEmployeeEntity);
+                    try
+                    {
+                    salesManagementModule.menuSalesManagement(currentEmployeeEntity);
+                    }
+                    catch (InvalidAccessRightException ex)
+                    {
+                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+                    }
+      
+                    
                 }
                 else if (response == 4)
                 {
