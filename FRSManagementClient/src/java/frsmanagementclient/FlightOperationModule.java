@@ -385,7 +385,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                 int layoverDuration = sc.nextInt();
                 
                 
-                FlightEntity complementaryFlight = flightSessionBeanRemote.retrieveFlightByFlightId(flight.getComplentaryFlight().getFlightId());
+                FlightEntity complementaryFlight = flightSessionBeanRemote.retrieveFlightByFlightNumber(flight.getComplentaryFlight().getFlightNum());
                 List<FlightScheduleEntity> complementaryFs = new ArrayList<FlightScheduleEntity>(); 
                 FlightSchedulePlanEntity complementaryFsp = new FlightSchedulePlanEntity(complementaryFlight);
                 complementaryFsp.setSchedule(fspId.getSchedule());
