@@ -61,7 +61,8 @@ public class FlightPlanningModule {
         this.currentEmployeeEntity= e;
         if(currentEmployeeEntity.getAccessRight() == EmployeeAccessRight.FLEETMANAGER || currentEmployeeEntity.getAccessRight() == EmployeeAccessRight.ROUTEPLANNER)
         {
-            Scanner scanner = new Scanner(System.in);
+            
+        Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
         while(true)

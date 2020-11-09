@@ -69,8 +69,8 @@ public class DataInitSessionBean {
     private void initializeData()
     {
        
-        EmployeeEntity e = new EmployeeEntity("L", "J", "123", "123", EmployeeAccessRight.FLEETMANAGER);
-        em.persist(e);
+        EmployeeEntity e1 = new EmployeeEntity("L", "J", "123", "123", EmployeeAccessRight.FLEETMANAGER);
+        em.persist(e1);
         em.flush();
         
         EmployeeEntity e2 = new EmployeeEntity("L", "J", "111", "333", EmployeeAccessRight.SCHEDULEMANAGER);
@@ -100,23 +100,25 @@ public class DataInitSessionBean {
             String now1 = "2020-12-09 10:30";
             LocalDateTime d1 = LocalDateTime.parse(now1, formatter);
 
-            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,3);    
-                                     em.persist(fs);
-                                     em.flush();   
             FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity();
                                      em.persist(fsp);
-                                     em.flush();   
+                                     em.flush(); 
+            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,3);    
+                                     em.persist(fs);
+                                     fs.setFlightSchedulePlan(fsp);
+                                     em.flush();               
             fsp.getFlightSchedules().add(fs);
-            fs.setFlightSchedulePlan(fsp);          
             
+            
+              FlightSchedulePlanEntity fsp1 = new FlightSchedulePlanEntity();
+                                     em.persist(fsp1);
+                                     em.flush(); 
              FlightScheduleEntity fs1= new FlightScheduleEntity(d,d1,3);    
                                      em.persist(fs1);
-                                     em.flush();   
-            FlightSchedulePlanEntity fsp1 = new FlightSchedulePlanEntity();
-                                     em.persist(fsp1);
-                                     em.flush();   
+                                     fs1.setFlightSchedulePlan(fsp1);
+                                     em.flush();             
             fsp1.getFlightSchedules().add(fs1);
-            fs1.setFlightSchedulePlan(fsp1);       
+               
             
             FlightRouteEntity fr = new FlightRouteEntity(a1, a2);
                          em.persist(fr);

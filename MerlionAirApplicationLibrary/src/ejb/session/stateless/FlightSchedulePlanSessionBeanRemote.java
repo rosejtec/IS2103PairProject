@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.FareEntity;
+import entity.FlightEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
 import java.util.List;
@@ -20,18 +21,18 @@ import util.exception.FlightSchedulePlanNotFoundException;
 @Remote
 public interface FlightSchedulePlanSessionBeanRemote {
 
-    public Long createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs);
-
-    public FlightSchedulePlanEntity createNewComplementaryFlightSchedulePlan(Long flightSchedulePlanId, FlightSchedulePlanEntity complementaryFsp) throws FlightSchedulePlanNotFoundException;
-
+    public FlightSchedulePlanEntity createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs, List<FareEntity> f,FlightEntity flight);
+    
     public FlightSchedulePlanEntity retrieveFlightSchedulePlanById(Long flightSchedulePlanId) throws FlightSchedulePlanNotFoundException;
-
-    public FareEntity createNewFare(Long flightSchedulePlanId, FareEntity newFare) throws FlightSchedulePlanNotFoundException;
 
     public List<FlightSchedulePlanEntity> retrieveAllFlightSchedulePlans();
 
     public void deleteFlightSchedulePlan(Long flightSchedulePlanId) throws FlightSchedulePlanNotFoundException;
 
     public void deleteFlightSchedule(Long flightSchedulePlanId, Long flightScheduleId) throws FlightSchedulePlanNotFoundException, FlightScheduleNotFoundException;
+
+    public FareEntity createNewFare(FareEntity fareEntity);
+
+    public FlightScheduleEntity createNewFlightSchedule(FlightScheduleEntity flightScheduleEntity);
     
 }

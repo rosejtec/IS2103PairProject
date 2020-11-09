@@ -42,18 +42,22 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
         return query.getResultList();
     }
     
-    public FlightEntity retrieveFlightByFlightNumber(String flightNumber) throws FlightNotFoundException
+    public FlightEntity retrieveFlightByFlightNumber(String flightNum) throws FlightNotFoundException
     { 
-       Query query = em.createQuery("SELECT f FROM FlightEntity f WHERE f.flightNumber = :inFlightNumber");
-       query.setParameter("inFlightNumber", flightNumber);
+       Query query = em.createQuery("SELECT f FROM FlightEntity f WHERE f.flightNum = :inFlightNum");
+       query.setParameter("inFlightNum", flightNum);
        
        try
         {
-            return (FlightEntity)query.getSingleResult();
+            FlightEntity flight = (FlightEntity)query.getSingleResult();
+            flight.getAircraftConfiguration().getCabinClassConfigurations().size();
+            flight.getFlightSchedulePlans().size();
+            flight.getComplentaryFlight();
+            return flight;
         }
         catch(NoResultException | NonUniqueResultException ex)
         {
-            throw new FlightNotFoundException("Flight number " + flightNumber + " does not exist!");
+            throw new FlightNotFoundException("Flight number " + flightNum + " does not exist!");
         }
     }   
     
@@ -105,7 +109,7 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
         }
         
         if(flightEntityToDelete.getFlightSchedulePlans().size() == 0) {
-            flightEntityToDelete.getComplentary().setIsComplemntary(false);
+            flightEntityToDelete.getComplentaryFlight().setComplementary(false);
             em.remove(flightEntityToDelete);
             
         } else {

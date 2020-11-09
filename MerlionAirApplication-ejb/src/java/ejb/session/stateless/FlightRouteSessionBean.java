@@ -69,10 +69,12 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         
         if(flightRouteEntity != null)
         {
+            System.out.println("Here");
             return flightRouteEntity;
         }
         else
         {
+            System.out.println("Not Here");
             throw new FlightRouteNotFoundException("Flight Route ID " + flightRouteId + " does not exist!");
         }   
         

@@ -23,7 +23,7 @@ public class Main
 {
 
     @EJB
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;   
 
     @EJB
     private static FlightSessionBeanRemote flightSessionBeanRemote;
@@ -46,6 +46,7 @@ public class Main
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
 
+    
     /**
      * @param args the command line arguments
      */
@@ -53,7 +54,13 @@ public class Main
     
     
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(flightSessionBeanRemote, flightRouteSessionBeanRemote, cabinClassConfigurationSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote, flightSchedulePlanSessionBean);
+        
+        if(flightSchedulePlanSessionBeanRemote == null)
+            System.out.println("********** MAIN: NULL");
+        else
+            System.out.println("********** MAIN: NOT null");
+        
+        MainApp mainApp = new MainApp(flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, flightRouteSessionBeanRemote, cabinClassConfigurationSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote);
         mainApp.runApp();
 // TODO code application logic here
     }

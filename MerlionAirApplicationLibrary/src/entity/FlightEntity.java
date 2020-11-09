@@ -6,7 +6,9 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,14 +32,12 @@ public class FlightEntity implements Serializable {
     @OneToMany(mappedBy = "flight")
     private List<FlightSchedulePlanEntity> flightSchedulePlans;
     private boolean disabled;
-
     @ManyToOne
     FlightRouteEntity flightRoute;
-   
-    boolean isComplemntary;
-    
+    @Column(name="COMP")
+    private boolean complementary;
     @OneToOne
-    FlightEntity complentary;
+    FlightEntity complentaryFlight;
     
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;
@@ -45,29 +45,30 @@ public class FlightEntity implements Serializable {
     public FlightEntity(String flightNum, FlightRouteEntity flightRoute) {
         this.flightNum = flightNum;
         this.flightRoute = flightRoute;
+        this.flightSchedulePlans = new ArrayList<>();
  
     }
 
-    public boolean isIsComplemntary() {
-        return isComplemntary;
+    public boolean isComplementary() {
+        return complementary;
     }
 
-    public void setIsComplemntary(boolean isComplemntary) {
-        this.isComplemntary = isComplemntary;
+    public void setComplementary(boolean complementary) {
+        this.complementary = complementary;
     }
 
-    public FlightEntity getComplentary() {
-        return complentary;
+    public FlightEntity getComplentaryFlight() {
+        return complentaryFlight;
     }
 
-    public void setComplentary(FlightEntity complentary) {
-        this.complentary = complentary;
+    public void setComplentaryFlight(FlightEntity complentaryFlight) {
+        this.complentaryFlight = complentaryFlight;
     }
 
     public FlightEntity(String flightNum, FlightRouteEntity flightRoute, boolean isComplemntary, AircraftConfigurationEntity aircraftConfiguration) {
         this.flightNum = flightNum;
         this.flightRoute = flightRoute;
-        this.isComplemntary = isComplemntary;
+        this.complementary = isComplemntary;
         this.aircraftConfiguration = aircraftConfiguration;
     }
     
@@ -78,6 +79,7 @@ public class FlightEntity implements Serializable {
         this.disabled = disabled;
         this.flightRoute = flightRoute;
         this.aircraftConfiguration = aircraftConfiguration;
+        this.flightSchedulePlans = new ArrayList<>();
     }
 
     public FlightEntity() {
@@ -87,17 +89,17 @@ public class FlightEntity implements Serializable {
         this.flightSchedulePlans = flightSchedulePlans;
     }
 
-    public FlightEntity(String flightNumber, List<FlightSchedulePlanEntity> flightSchedulePlans, List<FlightRouteEntity> flightRoutes, AircraftConfigurationEntity aircraftConfiguration, boolean disabled) {
+    public FlightEntity(String flightNum, List<FlightSchedulePlanEntity> flightSchedulePlans, boolean disabled, FlightRouteEntity flightRoute, boolean complementary, FlightEntity complentaryFlight, AircraftConfigurationEntity aircraftConfiguration) {
         this.flightNum = flightNum;
         this.flightSchedulePlans = flightSchedulePlans;
-        this.flightRoute = flightRoute;
-        this.aircraftConfiguration = aircraftConfiguration;
         this.disabled = disabled;
+        this.flightRoute = flightRoute;
+        this.complementary = complementary;
+        this.complentaryFlight = complentaryFlight;
+        this.aircraftConfiguration = aircraftConfiguration;
     }
-
-    public FlightEntity(String concat, boolean b, Long flightRoute, Long aircraftConfiguration) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+ 
     
     public Long getFlightId() {
         return flightId;
