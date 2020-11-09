@@ -5,7 +5,10 @@
  */
 package ejb.session.stateless;
 
+import entity.FareEntity;
+import entity.FlightScheduleEntity;
 import javax.ejb.Remote;
+import util.enumeration.CabinClassType;
 
 /**
  *
@@ -13,5 +16,5 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface ReservationSessionBeanRemote {
-    
+    Integer getFare(FlightScheduleEntity fs, CabinClassType t);
 }

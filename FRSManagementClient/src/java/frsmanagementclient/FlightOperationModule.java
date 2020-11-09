@@ -201,7 +201,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         FlightEntity flight = flightSessionBeanRemote.retrieveFlightByFlightNumber(flightNum);
         FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity(flight);
         
-        System.out.println(" Select type of flight schedule plan");
+        System.out.println("Select type of flight schedule plan");
         System.out.println("1. SINGLE, 2. MULTIPLE, 3. RECURRENT DAY, 4. RECURRENT WEEK");
         int type= sc.nextInt();
         sc.nextLine();

@@ -7,6 +7,7 @@ package frsreservationclient;
 
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.FlightReservationSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import java.text.ParseException;
 import javax.ejb.EJB;
 import util.exception.InvalidLoginCredentialException;
@@ -22,15 +23,16 @@ public class Main {
 
     @EJB
     private static CustomerSessionBeanRemote customerSessionBean;
-
+     @EJB
+    private static ReservationSessionBeanRemote reservationSessionBean;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //MainApp ma= new MainApp(flightReservationSessionBean,customerSessionBean);
-        //ma.runApp();
+        MainApp ma= new MainApp(flightReservationSessionBean,customerSessionBean,reservationSessionBean);
+        ma.runApp();
     }
     
 }
