@@ -8,8 +8,10 @@ package frsmanagementclient;
 import ejb.session.stateless.AircraftConfigurationSessionBeanRemote;
 import ejb.session.stateless.AircraftTypeSessionBeanRemote;
 import ejb.session.stateless.AirportSessionBeanRemote;
+
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
+
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.CabinClassConfigurationEntity;
 import entity.EmployeeEntity;
@@ -47,16 +49,16 @@ import util.exception.UpdateFlightException;
  */
 public class FlightOperationModule {
     
+    @EJB
     private FlightSessionBeanRemote flightSessionBeanRemote;
-    
+    @EJB
     private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
-    
+    @EJB
     private FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
-    
-          
+    @EJB     
     private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
     
-    EmployeeEntity currentEmployeeEntity;
+    private EmployeeEntity currentEmployeeEntity;
     
     
     public FlightOperationModule(AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote,FlightRouteSessionBeanRemote flightRouteSessionBeanRemote,FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote,FlightSessionBeanRemote flightSessionBeanRemote){
@@ -65,7 +67,7 @@ public class FlightOperationModule {
            this.aircraftConfigurationSessionBeanRemote=aircraftConfigurationSessionBeanRemote;
            this.flightSessionBeanRemote=flightSessionBeanRemote;
            this.flightSchedulePlanSessionBeanRemote= flightSchedulePlanSessionBeanRemote;
-          
+         
     }
        
     public void menuflightOperation(EmployeeEntity e) throws InvalidAccessRightException
@@ -163,11 +165,11 @@ public class FlightOperationModule {
                 }
                   else if(response == 9)
                 {
-                   doUpdateFlightSchedulePlan();
+                //   doUpdateFlightSchedulePlan();
                 }
                  else if(response == 10)
                 {
-                   doDeleteFlightSchedulePlan();
+                //   doDeleteFlightSchedulePlan();
                    
                 }
                 else if(response == 11)
@@ -216,7 +218,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             System.out.println("Enter estimated flight duration (in hours)>");
             int duration = sc.nextInt();
             LocalDateTime arrival = dateTime.plusHours(duration);
-            flightScheduleList.add(new FlightScheduleEntity(dateTime,arrival,duration));
+            fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(dateTime,arrival,duration)));
             
         } else if(type==2) {
             fsp.setSchedule(ScheduleEnum.MULTIPLE);
@@ -296,6 +298,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
       
         
         
+        /*
         for (CabinClassConfigurationEntity ccc : cccList)
         {
             System.out.println();
@@ -366,7 +369,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         }
         }
         }
-        
+        */
 
        System.out.println(fsp);
        System.out.println(flight);
@@ -375,7 +378,9 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         FlightSchedulePlanEntity fspId = flightSchedulePlanSessionBeanRemote.createFlightSchedulePlan(fsp,flightScheduleList,fareList,flight);
         System.out.println("Flight Schedule Plan " + fspId.getFightSchedulePlanId() + " has been successfully created!");
         
+}
         
+        /*
          //check if got complementary return flight
         if (flight.getComplentaryFlight()!= null)
         {
@@ -403,7 +408,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
     }
 
 
-//
+*/
     public void doViewAllFlightSchedulePlans() {
        List<FlightSchedulePlanEntity> fsp = flightSchedulePlanSessionBeanRemote.retrieveAllFlightSchedulePlans();
     
@@ -447,6 +452,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         }
     }
     
+    /*
     public void doUpdateFlightSchedulePlan() {
         Scanner sc = new Scanner(System.in);   
            System.out.println("Enter Flight Schedule Plan ID to be updated> ");
@@ -471,9 +477,9 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                    flightSchedulePlanSessionBeanRemote.deleteFlightSchedule(id);
                }
            }
-      */
+      
            
-    }
+    
     private void doDeleteFlightSchedulePlan() {
         Scanner sc = new Scanner(System.in);   
            System.out.println("Enter Flight Schedule Plan ID to be deleted> ");
@@ -485,7 +491,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         }
     }
 
-
+*/
 
 
     public void doDeleteFlight() throws FlightNotFoundException {

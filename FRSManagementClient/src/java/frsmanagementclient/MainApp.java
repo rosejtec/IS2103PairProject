@@ -13,6 +13,7 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
 import entity.EmployeeEntity;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -53,7 +54,7 @@ public class MainApp {
 
 
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
-
+ private SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;
   
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
@@ -66,7 +67,7 @@ public class MainApp {
     }
 
     
-    MainApp(FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    MainApp(FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote, FlightSessionBeanRemote flightSessionBeanRemote, FlightRouteSessionBeanRemote flightRouteSessionBeanRemote, CabinClassConfigurationSessionBeanRemote cabinClassConfigurationSessionBeanRemote, AirportSessionBeanRemote airportSessionBeanRemote, AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote) {
            this.flightSchedulePlanSessionBeanRemote = flightSchedulePlanSessionBeanRemote;
            this.flightSessionBeanRemote = flightSessionBeanRemote;
            this.flightRouteSessionBeanRemote= flightRouteSessionBeanRemote;
@@ -75,6 +76,7 @@ public class MainApp {
            this.airportSessionBeanRemote= airportSessionBeanRemote;
            this.aircraftTypeSessionBeanRemote= aircraftTypeSessionBeanRemote;
            this.employeeSessionBeanRemote= employeeSessionBeanRemote;
+           this.seatsInventorySessionBeanRemote = seatsInventorySessionBeanRemote;
           
     }
     
@@ -210,15 +212,17 @@ public class MainApp {
                 
                 else if(response == 3)
                 {
-//                    try
-//                    {
-//                        salesManagementModule.menuSalesManagement();
-//                    }
-//                    catch (InvalidAccessRightException ex)
-//                    {
-//                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
-//                    }
-//                    
+                    salesManagementModule = new SalesManagementModule(flightSessionBeanRemote, seatsInventorySessionBeanRemote, currentEmployeeEntity);
+                    try
+                    {
+                    salesManagementModule.menuSalesManagement(currentEmployeeEntity);
+                    }
+                    catch (InvalidAccessRightException ex)
+                    {
+                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+                    }
+      
+                    
                 }
                 else if (response == 4)
                 {
@@ -242,5 +246,6 @@ public class MainApp {
     
     }
 
+    
 
         }

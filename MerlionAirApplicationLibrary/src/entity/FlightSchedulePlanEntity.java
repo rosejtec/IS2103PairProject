@@ -30,10 +30,11 @@ public class FlightSchedulePlanEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fightSchedulePlanId;
-    @OneToMany(mappedBy = "flightSchedulePlan", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flightSchedulePlan")
     private List<FlightScheduleEntity> flightSchedules;
     ScheduleEnum schedule;
   
+    
     LocalDateTime end;
     Integer n;
     @ManyToOne
@@ -53,6 +54,7 @@ public class FlightSchedulePlanEntity implements Serializable {
     }
 
     public FlightSchedulePlanEntity() {   
+   
     }
 
    
