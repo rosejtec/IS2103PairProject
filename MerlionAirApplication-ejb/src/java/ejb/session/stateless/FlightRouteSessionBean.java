@@ -31,8 +31,7 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
 
             return newFlightRouteEntity.getFlightRouteId();
     }
-    
-    //create complementary return route KIVVVVVV
+
     public FlightRouteEntity createNewComplementaryReturnRoute(Long flightRouteId, FlightRouteEntity complementaryReturnRoute) throws FlightRouteNotFoundException
     {
         try
@@ -56,7 +55,7 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
     
     public List<FlightRouteEntity> retrieveAllFlightRoutes()
     {
-        Query query = em.createQuery("SELECT f FROM FlightRouteEntity f ORDER by f.origin.name ASC");
+        Query query = em.createQuery("SELECT f FROM FlightRouteEntity f ORDER BY f.origin.name ASC");
         
         return query.getResultList();
     }

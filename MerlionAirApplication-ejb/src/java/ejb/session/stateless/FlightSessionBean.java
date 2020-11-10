@@ -53,11 +53,31 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
             flight.getAircraftConfiguration().getCabinClassConfigurations().size();
             flight.getFlightSchedulePlans().size();
             flight.getComplentaryFlight();
-            return flight;
+            return flight; 
+            
         }
         catch(NoResultException | NonUniqueResultException ex)
         {
+         
             throw new FlightNotFoundException("Flight number " + flightNum + " does not exist!");
+        }
+    }   
+    
+     public Boolean checkByFlightNumber(String flightNum)
+    { 
+       Query query = em.createQuery("SELECT f FROM FlightEntity f WHERE f.flightNum = :inFlightNum");
+       query.setParameter("inFlightNum", flightNum);
+       
+       try
+        {
+            FlightEntity flight = (FlightEntity)query.getSingleResult();
+            return false; 
+            
+        }
+        catch(NoResultException | NonUniqueResultException ex)
+        {
+         
+            return true;
         }
     }   
     

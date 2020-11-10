@@ -29,8 +29,8 @@ public class AirportSessionBean implements AirportSessionBeanRemote, AirportSess
  
     @Override
     public AirportEntity retriveBy(String code){
-        Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.code = :inName");
-        q.setParameter("inName", code);
+        Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.code = :inCode");
+        q.setParameter("inCode", code);
         AirportEntity a = (AirportEntity) q.getSingleResult();
         return a;
     }

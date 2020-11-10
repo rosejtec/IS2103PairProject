@@ -89,7 +89,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     
     public List<FlightSchedulePlanEntity> retrieveAllFlightSchedulePlans()
     {
-        Query query = em.createQuery("SELECT f FROM FlightSchedulePlanEntity f ORDER BY f.flightNum ASC");
+        Query query = em.createQuery("SELECT f FROM FlightSchedulePlanEntity f ORDER BY f.flight.flightNum ASC");
         return query.getResultList();
     }
     
@@ -117,6 +117,8 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
          FlightSchedulePlanEntity fsp = em.find(FlightSchedulePlanEntity.class, flightSchedulePlanId);
          
          if(fsp!= null){
+             fsp.getFlightSchedules().size();
+             fsp.getFares().size();
              return fsp;
          } else {
              throw new FlightSchedulePlanNotFoundException();

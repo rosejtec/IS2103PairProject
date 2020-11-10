@@ -77,11 +77,11 @@ public class DataInitSessionBean {
         em.persist(e2);
         em.flush();
         
-        EmployeeEntity e3 = new EmployeeEntity("JX", "Q", "222", "qjx", EmployeeAccessRight.SCHEDULEMANAGER);
+        EmployeeEntity e3 = new EmployeeEntity("JX", "Q", "qjx", "456", EmployeeAccessRight.SCHEDULEMANAGER);
         em.persist(e3);
         em.flush();
         
-        EmployeeEntity e4 = new EmployeeEntity("JX", "Q", "333", "qjx", EmployeeAccessRight.SALESMANAGER);
+        EmployeeEntity e4 = new EmployeeEntity("JX", "Q", "jx", "333", EmployeeAccessRight.SALESMANAGER);
         em.persist(e4);
         em.flush();
         

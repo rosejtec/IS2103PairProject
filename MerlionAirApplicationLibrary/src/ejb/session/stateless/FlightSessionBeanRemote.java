@@ -28,5 +28,7 @@ public FlightEntity createNewFlight(FlightEntity newFlightEntity);
     public void updateFlight(FlightEntity flightEntity) throws FlightNotFoundException, UpdateFlightException;
 
     public void deleteFlight(Long flightId) throws FlightNotFoundException;
+
+    public Boolean checkByFlightNumber(String flightNum);
     
 }
