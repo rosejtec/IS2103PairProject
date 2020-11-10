@@ -35,6 +35,7 @@ public class AircraftConfigurationEntity implements Serializable {
     private Integer numOfCabinClass;
     @ManyToOne
     private AircraftTypeEntity aircraftType;
+    private Integer maxSeats;
    
     @OneToOne(mappedBy="aircraftConfiguration")
     private FlightEntity flightEntity;
@@ -50,6 +51,14 @@ public class AircraftConfigurationEntity implements Serializable {
         this.name = name;
         this.numOfCabinClass = numOfCabinClass;
         this.cabinClassConfigurations = cabinClassConfigurations;
+    }
+
+    public Integer getMaxSeats() {
+        return maxSeats;
+    }
+
+    public void setMaxSeats(Integer maxSeats) {
+        this.maxSeats = maxSeats;
     }
     
     public Long getAircraftConfigurationId() {

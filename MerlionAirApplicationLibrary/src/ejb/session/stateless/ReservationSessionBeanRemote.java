@@ -9,6 +9,7 @@ import entity.FareEntity;
 import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
+import entity.PassengerEntity;
 import java.util.List;
 import javax.ejb.Remote;
 import util.enumeration.CabinClassType;
@@ -20,7 +21,7 @@ import util.enumeration.FlightScheduleEntityNotFoundException;
  */
 @Remote
 public interface ReservationSessionBeanRemote {
-    Integer getFare(FlightScheduleEntity fs, CabinClassType t);
-FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
-FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond);
+    Integer getFare(FlightScheduleEntity fs, CabinClassType t); 
+     FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
+       FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass);
 }

@@ -75,5 +75,29 @@ public class FlightReservationDetailsEntity implements Serializable {
     public String toString() {
         return "entity.FlightReservationDetailsEntity[ id=" + flightReservationDetailId + " ]";
     }
+
+    public CabinClassType getCabinClass() {
+        return cabinClass;
+    }
+
+    public void setCabinClass(CabinClassType cabinClass) {
+        this.cabinClass = cabinClass;
+    }
+
+    public FlightScheduleEntity getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(FlightScheduleEntity schedule) {
+        this.schedule = schedule;
+    }
+
+    public List<String> getSeatNum() {
+        return seatNum;
+    }
+
+    public void setSeatNum(List<String> seatNum) {
+        this.seatNum = seatNum;
+    }
     
 }

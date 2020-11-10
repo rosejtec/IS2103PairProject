@@ -103,8 +103,6 @@ public class SalesManagementModule {
                 System.out.println("Enter flight number> ");
                 
             try {
-                
-                
                 FlightEntity f = flightSessionBeanRemote.retrieveFlightByFlightNumber(sc.nextLine().trim());
                 
                 

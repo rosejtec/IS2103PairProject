@@ -9,6 +9,7 @@ import entity.FareEntity;
 import entity.FlightEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
+import entity.SeatsInventoryEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -43,13 +44,14 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
             d.setFlightSchedulePlan(fsp);
             FlightScheduleEntity N = this.createNewFlightSchedule(d);
             fsp.getFlightSchedules().add(N);
+            d.setSeatsInventory(new SeatsInventoryEntity(flight.getAircraftConfiguration().getMaxSeats(),0));
         }    
        // em.flush();
         
         //map fare entity
         for(FareEntity fe: f)
         {
-               fe.setFlightSchedulePlan(fsp);
+             fe.setFlightSchedulePlan(fsp);
              FareEntity N = this.createNewFare(fe);
             fsp.getFares().add(N);
          

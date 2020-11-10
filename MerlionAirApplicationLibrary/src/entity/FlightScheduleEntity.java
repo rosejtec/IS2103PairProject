@@ -35,7 +35,8 @@ public class FlightScheduleEntity implements Serializable {
     @ManyToOne()
     @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
-    @OneToOne (mappedBy = "flightSchedule")
+   
+    @OneToOne
     private SeatsInventoryEntity seatsInventory;
 
 

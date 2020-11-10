@@ -31,7 +31,7 @@ public interface FlightReservationSessionBeanRemote {
 
     public List<FlightScheduleEntity> getOneWay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass)throws NoFlightsFoundOnSearchException;
 
-    public List<List<FlightScheduleEntity>> searchConnectingDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException;
+    public List<List<List<FlightScheduleEntity>>> searchConnectingDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException;
    
    
 

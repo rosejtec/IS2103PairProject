@@ -9,6 +9,7 @@ import entity.FareEntity;
 import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
+import entity.PassengerEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -55,9 +56,15 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
      }
     }
  
-          public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond){
+          public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass){
               em.persist(book);
               em.flush();
+              
+              for(PassengerEntity p:pass){
+                  em.persist(p);
+                  em.flush();
+                  book.getPassenger().add(p);
+              }
               for(FlightReservationDetailsEntity frd:inbound){
                   em.persist(frd);
                   em.flush();
@@ -68,9 +75,10 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                   em.persist(frd);
                   em.flush();
                   book.getOutBound().add(frd);
-                 
-
+                
               }
+             
+            
             
              return book;
           }

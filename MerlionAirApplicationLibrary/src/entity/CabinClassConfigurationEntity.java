@@ -34,6 +34,7 @@ public class CabinClassConfigurationEntity implements Serializable {
     private Integer numOfRows;
     private Integer numOfSeatsAbreast;
     private String seatConfiguration;
+    private Integer maximum;
     @ManyToOne
     private AircraftConfigurationEntity aircraftConfiguration;
     @Enumerated(EnumType.STRING)
@@ -44,12 +45,21 @@ public class CabinClassConfigurationEntity implements Serializable {
     public CabinClassConfigurationEntity() {
     }
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType) {
+    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType,Integer maximum) {
         this.numOfAisles = numOfAisles;
         this.numOfRows = numOfRoles;
         this.numOfSeatsAbreast = numOfSeatsAbreast;
         this.seatConfiguration = seatConfiguration;
         this.cabinClassType = cabinClassType;
+        this.maximum=maximum;
+    }
+
+    public Integer getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(Integer maximum) {
+        this.maximum = maximum;
     }
     
     public Long getCabinClassConfigurationId() {

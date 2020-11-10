@@ -183,6 +183,7 @@ public class FlightPlanningModule {
      
         int max =0;
         while (numOfCabinClasses >= 1) {
+               int ind=0;
                System.out.println("Enter Number Of Ailes> ");
                Integer numOfAisles=scanner.nextInt();
                System.out.println("Enter Number Of Rows> ");
@@ -201,10 +202,12 @@ public class FlightPlanningModule {
                    throw new ExceedsMaximumCapacityException();
                }
                
+               ind=numOfRows*numOfSeatsAbreast;
                numOfCabinClasses-=1;
-              newCabinClassConfiguration.add(new CabinClassConfigurationEntity(numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, CabinClassType.Y));
+              newCabinClassConfiguration.add(new CabinClassConfigurationEntity(numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, CabinClassType.Y,ind));
         }
         
+        newAircraftConfiguration.setMaxSeats(max);
                   
         aircraftConfigurationSessionBeanRemote.createNewAircraftConfiguration(newAircraftConfiguration,newCabinClassConfiguration, type);
      

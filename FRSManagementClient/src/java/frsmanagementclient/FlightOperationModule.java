@@ -49,13 +49,13 @@ import util.exception.UpdateFlightException;
  */
 public class FlightOperationModule {
     
-    @EJB
+    
     private FlightSessionBeanRemote flightSessionBeanRemote;
-    @EJB
+    
     private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
-    @EJB
+   
     private FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
-    @EJB     
+         
     private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
     
     private EmployeeEntity currentEmployeeEntity;
@@ -210,6 +210,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         List<FlightScheduleEntity> flightScheduleList = new ArrayList<FlightScheduleEntity>(); 
   
         if(type==1) {
+            
             fsp.setSchedule(ScheduleEnum.SINGLE);
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
