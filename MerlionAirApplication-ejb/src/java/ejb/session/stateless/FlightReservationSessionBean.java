@@ -195,5 +195,50 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
         throw new NoFlightsFoundOnSearchException();
     }
     }
+    
+    
+     @Override
+    public List<List<FlightScheduleEntity>> searchConnectingDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException{
+           
+        try{
+          
+            List<FlightScheduleEntity> list = getOneWay(connecting, round, origin, destination, departure, days, cabinClass);
+            
+            List<List<List<FlightScheduleEntity>>> c1 = new ArrayList<>();
+            int i =0;
+            List<List<FlightScheduleEntity>> c2 = new ArrayList<>();
+
+              AirportEntity a2= airportSessionBean.retriveBy(destination);
+             for(FlightScheduleEntity fs : list) {
+                   List<FlightScheduleEntity> list2 = getOneWay(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getOrigin().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), departure, days, cabinClass);
+   
+                   for(FlightScheduleEntity fs2 : list2){
+                       c2.add(new ArrayList<FlightScheduleEntity>());
+                        Query query1 = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND m.destination.airportId = :inDes AND f.departure BETWEEN :inDate AND :inDate1");
+      
+                  query1.setParameter("inOrg", fs2.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getAirportId());
+                  query1.setParameter("inDes", a2.getAirportId());
+                  query1.setParameter("inDate", fs2.getArrival());
+                  query1.setParameter("inDate1", fs2.getArrival().plusDays(1));
+             
+                  List<FlightScheduleEntity> connect = query1.getResultList();
+                  System.out.println(fs.getArrival());
+                               System.out.println(connect);
+
+              if(!connect.isEmpty()) {
+                  c2.get(i).addAll(connect);
+              }
+              
+              i++;
+            }
+             }
+             System.out.println(c2);
+             
+             return c2;  
+             
+           } catch(NoResultException ex){
+                  throw new NoFlightsFoundOnSearchException();
+           }
+    }
       
 }
