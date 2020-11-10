@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.enumeration.CabinClassType;
+import util.enumeration.NoFlightsFoundOnSearchException;
 
 /**
  *
@@ -20,13 +21,15 @@ import util.enumeration.CabinClassType;
 @Remote
 public interface FlightReservationSessionBeanRemote {
 
-    public List<FlightScheduleEntity> searchSingleDay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass);
+    public List<FlightScheduleEntity> searchSingleDay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass)throws NoFlightsFoundOnSearchException;
 
- public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting,boolean round,String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass) ;   
+    public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting,boolean round,String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass) throws NoFlightsFoundOnSearchException;   
      
-    public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass);
+    public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass)throws NoFlightsFoundOnSearchException;
 
-    public  List<List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass);
+    public  List<List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass)throws NoFlightsFoundOnSearchException;
+
+    public List<FlightScheduleEntity> getOneWay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass)throws NoFlightsFoundOnSearchException;
    
    
 

@@ -22,7 +22,7 @@ public class CustomerEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
     
     private String firstName;
@@ -36,6 +36,14 @@ public class CustomerEntity implements Serializable {
     private List<FlightReservationEntity> reservations;
 
     public CustomerEntity() {
+    }
+
+    public CustomerEntity(String firstName, String lastName,String username, Integer mobPhoneNum,  String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mobPhoneNum = mobPhoneNum;
+        this.username = username;
+        this.password = password;
     }
 
     public String getFirstName() {

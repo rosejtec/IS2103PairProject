@@ -6,9 +6,13 @@
 package ejb.session.stateless;
 
 import entity.FareEntity;
+import entity.FlightReservationDetailsEntity;
+import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
+import java.util.List;
 import javax.ejb.Remote;
 import util.enumeration.CabinClassType;
+import util.enumeration.FlightScheduleEntityNotFoundException;
 
 /**
  *
@@ -17,4 +21,6 @@ import util.enumeration.CabinClassType;
 @Remote
 public interface ReservationSessionBeanRemote {
     Integer getFare(FlightScheduleEntity fs, CabinClassType t);
+FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
+FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond);
 }

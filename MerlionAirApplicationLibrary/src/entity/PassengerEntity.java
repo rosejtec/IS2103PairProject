@@ -28,6 +28,12 @@ public class PassengerEntity implements Serializable {
 
     public PassengerEntity() {
     }
+
+    public PassengerEntity(String firstName, String lastName, String passport) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.passport = passport;
+    }
     
     public Long getPassengerId() {
         return passengerId;
