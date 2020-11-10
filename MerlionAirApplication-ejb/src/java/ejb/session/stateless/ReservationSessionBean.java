@@ -69,6 +69,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                   em.persist(frd);
                   em.flush();
                   book.getInBound().add(frd);
+                  
               }
               
              for(FlightReservationDetailsEntity frd:outbond){
@@ -78,7 +79,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 
               }
              
-            
+
             
              return book;
           }
