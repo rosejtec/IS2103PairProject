@@ -8,11 +8,14 @@ package entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import util.enumeration.CabinClassType;
 
 /**
  *
@@ -23,21 +26,22 @@ public class FlightReservationDetailsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightReservationDetailId;
-    private String cabinClass;
-    
-    @OneToOne
+    @Enumerated(EnumType.STRING)
+    private CabinClassType cabinClass;
+    @OneToOne 
     private FlightScheduleEntity schedule;
     private List<String> seatNum;
 
     public FlightReservationDetailsEntity() {
     }
 
-    public FlightReservationDetailsEntity(String cabinClass, FlightScheduleEntity schedule) {
+    public FlightReservationDetailsEntity(CabinClassType cabinClass, FlightScheduleEntity schedule) {
         this.cabinClass = cabinClass;
         this.schedule = schedule;
     }
+
 
 
     
@@ -72,6 +76,30 @@ public class FlightReservationDetailsEntity implements Serializable {
     @Override
     public String toString() {
         return "entity.FlightReservationDetailsEntity[ id=" + flightReservationDetailId + " ]";
+    }
+
+    public CabinClassType getCabinClass() {
+        return cabinClass;
+    }
+
+    public void setCabinClass(CabinClassType cabinClass) {
+        this.cabinClass = cabinClass;
+    }
+
+    public FlightScheduleEntity getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(FlightScheduleEntity schedule) {
+        this.schedule = schedule;
+    }
+
+    public List<String> getSeatNum() {
+        return seatNum;
+    }
+
+    public void setSeatNum(List<String> seatNum) {
+        this.seatNum = seatNum;
     }
     
 }

@@ -28,17 +28,17 @@ public class FlightEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightId;
+    @Column(length = 5, nullable = false, unique = true)
     private String flightNum;
     @OneToMany(mappedBy = "flight")
-    private List<FlightSchedulePlanEntity> flightSchedulePlans;
+    private List<FlightSchedulePlanEntity> flightSchedulePlans;    
     private boolean disabled;
     @ManyToOne
     FlightRouteEntity flightRoute;
     @Column(name="COMP")
     private boolean complementary;
     @OneToOne
-    FlightEntity complentaryFlight;
-    
+    FlightEntity complentaryFlight;    
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;
 

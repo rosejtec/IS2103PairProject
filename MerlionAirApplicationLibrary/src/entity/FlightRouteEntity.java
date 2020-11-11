@@ -28,15 +28,15 @@ public class FlightRouteEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightRouteId;
-    @ManyToOne 
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private AirportEntity origin;
-    @ManyToOne
+     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private AirportEntity destination;
-    
     @OneToMany(mappedBy = "flightRoute")
     private List<FlightEntity> flights;
-
-   @JoinColumn(name="COMPRETURN")
+    @JoinColumn(name="COMPRETURN")
     @OneToOne
     private FlightRouteEntity complementaryReturnRoute;
     private boolean disabled;

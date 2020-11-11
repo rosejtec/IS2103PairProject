@@ -46,6 +46,9 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
         {
             AircraftTypeEntity aircraftTypeEntity = aircraftTypeSessionBeanLocal.retrieveAircraftTypeByAircraftTypeId(aircraftTypeId);
         
+            aircraftConfigurationEntity.setAircraftType(aircraftTypeEntity);
+            aircraftTypeEntity.getAircraftConfigurations().add(aircraftConfigurationEntity);
+            
             em.persist(aircraftConfigurationEntity);
             em.flush();
             

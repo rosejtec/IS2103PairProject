@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,13 +23,16 @@ public class CustomerEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
-    
+    @Column(length = 32, nullable = false)
     private String firstName;
+    @Column(length = 32, nullable = false)
     private String lastName;
+    @Column(length = 8, nullable = false)
     private Integer mobPhoneNum;
-    private String username;// needs to be unique
+    @Column(length = 32, nullable = false, unique = true)
+    private String username;
     private String password;
     
     
@@ -36,6 +40,14 @@ public class CustomerEntity implements Serializable {
     private List<FlightReservationEntity> reservations;
 
     public CustomerEntity() {
+    }
+
+    public CustomerEntity(String firstName, String lastName,String username, Integer mobPhoneNum,  String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mobPhoneNum = mobPhoneNum;
+        this.username = username;
+        this.password = password;
     }
 
     public String getFirstName() {

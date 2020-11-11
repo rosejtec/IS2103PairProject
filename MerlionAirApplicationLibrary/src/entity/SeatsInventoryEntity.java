@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,16 +28,23 @@ public class SeatsInventoryEntity implements Serializable {
     private Integer reservedSeats;
     private Integer balanceSeats;
     @OneToOne
-    private FlightScheduleEntity flightSchedule;
-
+    private FlightScheduleEntity flightSchedule;        
+    HashMap<String,Boolean> seats;
+    
     public SeatsInventoryEntity() {
     }
 
-    public SeatsInventoryEntity(Long seatsInventoryId, Integer availableSeats, Integer reservedSeats, Integer balanceSeats) {
-        this.seatsInventoryId = seatsInventoryId;
+    public HashMap<String, Boolean> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(HashMap<String, Boolean> seats) {
+        this.seats = seats;
+    }
+
+    public SeatsInventoryEntity(Integer availableSeats, Integer reservedSeats) {
         this.availableSeats = availableSeats;
         this.reservedSeats = reservedSeats;
-        this.balanceSeats = balanceSeats;
     }
     
     
@@ -80,6 +88,10 @@ public class SeatsInventoryEntity implements Serializable {
     public void setAvailableSeats(Integer availableSeats) {
         this.availableSeats = availableSeats;
     }
+    
+    public void updateAvailableSeats(Integer availableSeats) {
+        this.availableSeats += availableSeats;
+    }
 
     public Integer getReservedSeats() {
         return reservedSeats;
@@ -88,13 +100,18 @@ public class SeatsInventoryEntity implements Serializable {
     public void setReservedSeats(Integer reservedSeats) {
         this.reservedSeats = reservedSeats;
     }
+    
+      public void updateReservedSeats(Integer reservedSeats) {
+        this.reservedSeats += reservedSeats;
+    }
+
 
     public Integer getBalanceSeats() {
         return balanceSeats;
     }
 
-    public void setBalanceSeats(Integer balanceSeats) {
-        this.balanceSeats = balanceSeats;
+    public void setBalanceSeats() {
+        this.balanceSeats = this.availableSeats-this.reservedSeats;
     }
 
     public FlightScheduleEntity getFlightSchedule() {
@@ -104,5 +121,6 @@ public class SeatsInventoryEntity implements Serializable {
     public void setFlightSchedule(FlightScheduleEntity flightSchedule) {
         this.flightSchedule = flightSchedule;
     }
-    
+
+
 }

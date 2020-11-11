@@ -89,33 +89,45 @@ public class DataInitSessionBean {
         em.persist(ate);
          em.flush();
 
-         AirportEntity a = new  AirportEntity("NAR", "111", "TOKYO", "JAPAN", "JAPAN");
+         //String name, String code, String city, String state, String country
+         AirportEntity a = new  AirportEntity("Narita", "NRT", "Narita", "Chiba", "Japan", "+9");
              em.persist(a);
               em.flush();
-             AirportEntity a1 = new  AirportEntity("SIN", "112", "SINGAPORE", "SINGAPORE", "SINGAPORE");
+             AirportEntity a1 = new  AirportEntity("Changi", "SIN", "Singapore", "Singapore", "Singapore", "+8");
              em.persist(a1);
               em.flush();
-             AirportEntity a2  = new  AirportEntity("MUM", "113", "MUMBAI", "MAHARASHTRA", "INDIA");
+             AirportEntity a2  = new  AirportEntity("Taoyuan", "TPE", "Taoyuan", "Taipei", "Taiwan R.O.C.", "+8");
              em.persist(a2);
               em.flush();
  
-            
+            /*
             String now = "2020-11-09 10:30";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime d = LocalDateTime.parse(now, formatter);
             String now1 = "2020-12-09 10:30";
             LocalDateTime d1 = LocalDateTime.parse(now1, formatter);
-
+*/
+            /*
+            FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity();
+            em.persist(fsp);
+            em.flush();
+            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,3);  
+            fs.setFlightSchedulePlan(fsp);
+            fsp.getFlightSchedules().add(fs);
+            
+            em.persist(fs);
+            em.flush();
+            */
+        /*
             FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity();
                                      em.persist(fsp);
-                                     em.flush(); 
-            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,3);    
+                                    em.flush(); 
+            FlightScheduleEntity fs= new FlightScheduleEntity(d,d1,3); 
                                      em.persist(fs);
                                      fs.setFlightSchedulePlan(fsp);
                                      em.flush();               
             fsp.getFlightSchedules().add(fs);
-            
-            
+           
               FlightSchedulePlanEntity fsp1 = new FlightSchedulePlanEntity();
                                      em.persist(fsp1);
                                      em.flush(); 
@@ -124,7 +136,7 @@ public class DataInitSessionBean {
                                      fs1.setFlightSchedulePlan(fsp1);
                                      em.flush();             
             fsp1.getFlightSchedules().add(fs1);
-               
+           
             
             FlightRouteEntity fr = new FlightRouteEntity(a1, a2);
                          em.persist(fr);
@@ -153,8 +165,8 @@ public class DataInitSessionBean {
             fsp.setFlight(f);
             f.getFlightSchedulePlans().add(fsp);
             
-             fsp1.setFlight(f2);
-            f2.getFlightSchedulePlans().add(fsp1);
+            // fsp1.setFlight(f2);
+            //f2.getFlightSchedulePlans().add(fsp1);
             
             
 
@@ -167,6 +179,6 @@ public class DataInitSessionBean {
 //            em.persist(customerEntity3);
            
                          
-        
+        */
     }
 }

@@ -9,14 +9,20 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import util.enumeration.ScheduleEnum;
 
 /**
@@ -32,32 +38,29 @@ public class FlightSchedulePlanEntity implements Serializable {
     private Long fightSchedulePlanId;
     @OneToMany(mappedBy = "flightSchedulePlan")
     private List<FlightScheduleEntity> flightSchedules;
-    ScheduleEnum schedule;
-  
-    
-    LocalDateTime end;
-    Integer n;
+    @Enumerated(EnumType.STRING)
+    private ScheduleEnum schedule;
     @ManyToOne
     private FlightEntity flight;
+    @OneToMany (mappedBy = "flightSchedulePlan")
     
-    @OneToMany
     private List<FareEntity> fares;
     @OneToOne
     private FlightSchedulePlanEntity complementaryFsp;
     private boolean disabled;
 
-
-    public FlightSchedulePlanEntity( FlightEntity flight) {
-        this.flightSchedules = new ArrayList<FlightScheduleEntity>();
-        this.fares = new ArrayList<FareEntity>();
+    public FlightSchedulePlanEntity(FlightEntity flight) {
         this.flight = flight;
     }
 
-    public FlightSchedulePlanEntity() {   
-   
+    public FlightSchedulePlanEntity(List<FlightScheduleEntity> flightSchedules, FlightEntity flight, List<FareEntity> fares) {
+        this.flightSchedules = flightSchedules;
+        this.flight = flight;
+        this.fares = fares;
     }
 
-   
+    public FlightSchedulePlanEntity() {   
+    }
 
     public ScheduleEnum getSchedule() {
         return schedule;
@@ -67,22 +70,7 @@ public class FlightSchedulePlanEntity implements Serializable {
         this.schedule = schedule;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
-    public Integer getN() {
-        return n;
-    }
-
-    public void setN(Integer n) {
-        this.n = n;
-    }
-
+  
   
 
     public FlightEntity getFlight() {

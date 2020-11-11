@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,26 +31,46 @@ public class CabinClassConfigurationEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cabinClassConfigurationId;
+    @Column(nullable = false)
     private Integer numOfAisles;
+    @Column(nullable = false)
     private Integer numOfRows;
+    @Column(nullable = false)
     private Integer numOfSeatsAbreast;
+    @Column(length = 5, nullable = false)
     private String seatConfiguration;
-    @ManyToOne
+    @Column(nullable = false)
+    private Integer maximum;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private AircraftConfigurationEntity aircraftConfiguration;
     @Enumerated(EnumType.STRING)
     private CabinClassType cabinClassType;
-    @OneToMany
+    @OneToMany(mappedBy = "cabinClassConfiguration")
     private List<FareEntity> fares;
 
     public CabinClassConfigurationEntity() {
     }
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType) {
+    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType,Integer maximum) {
         this.numOfAisles = numOfAisles;
         this.numOfRows = numOfRoles;
         this.numOfSeatsAbreast = numOfSeatsAbreast;
         this.seatConfiguration = seatConfiguration;
         this.cabinClassType = cabinClassType;
+        this.maximum = maximum;
+    }
+
+    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRows, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType valueOf) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Integer getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(Integer maximum) {
+        this.maximum = maximum;
     }
     
     public Long getCabinClassConfigurationId() {

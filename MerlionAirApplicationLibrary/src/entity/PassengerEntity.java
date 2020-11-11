@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,11 +23,20 @@ public class PassengerEntity implements Serializable {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long passengerId;
+    @Column(length = 32, nullable = false)
     private String firstName;
+    @Column(length = 32, nullable = false)
     private String lastName;
+    @Column(length = 10, nullable = false)
     private String passport;
 
     public PassengerEntity() {
+    }
+
+    public PassengerEntity(String firstName, String lastName, String passport) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.passport = passport;
     }
     
     public Long getPassengerId() {

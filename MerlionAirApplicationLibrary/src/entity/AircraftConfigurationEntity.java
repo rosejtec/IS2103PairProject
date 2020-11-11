@@ -31,14 +31,16 @@ public class AircraftConfigurationEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aircraftConfigurationId;
+    @Column(length = 32, nullable = false, unique = true)
     private String name;
+    @Column(nullable = false)
     private Integer numOfCabinClass;
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private AircraftTypeEntity aircraftType;
-   
+    private Integer maxSeats;
     @OneToOne(mappedBy="aircraftConfiguration")
     private FlightEntity flightEntity;
- 
     @OneToMany(mappedBy = "aircraftConfiguration")
     private List<CabinClassConfigurationEntity> cabinClassConfigurations;
 
@@ -50,6 +52,14 @@ public class AircraftConfigurationEntity implements Serializable {
         this.name = name;
         this.numOfCabinClass = numOfCabinClass;
         this.cabinClassConfigurations = cabinClassConfigurations;
+    }
+
+    public Integer getMaxSeats() {
+        return maxSeats;
+    }
+
+    public void setMaxSeats(Integer maxSeats) {
+        this.maxSeats = maxSeats;
     }
     
     public Long getAircraftConfigurationId() {

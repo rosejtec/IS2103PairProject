@@ -31,17 +31,19 @@ public class AirportEntity implements Serializable {
     private String city;
     private String state;
     private String country;
+    private String timeZone;
     @OneToMany(mappedBy = "origin")
     private List<FlightRouteEntity> flightRoutesInbound;
     @OneToMany(mappedBy = "destination")
     private List<FlightRouteEntity> flightRoutesOutbound;
 
-    public AirportEntity(String name, String code, String city, String state, String country) {
+    public AirportEntity(String name, String code, String city, String state, String country, String timeZone) {
         this.name = name;
         this.code = code;
         this.city = city;
         this.state = state;
         this.country = country;
+        this.timeZone = timeZone;
     }
 
     public AirportEntity() {
@@ -134,6 +136,14 @@ public class AirportEntity implements Serializable {
     @Override
     public String toString() {
         return "entity.AirportEntity[ id=" + airportId + " ]";
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
     
 }

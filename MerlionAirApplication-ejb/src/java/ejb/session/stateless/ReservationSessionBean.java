@@ -6,13 +6,17 @@
 package ejb.session.stateless;
 
 import entity.FareEntity;
+import entity.FlightReservationDetailsEntity;
+import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
+import entity.PassengerEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.CabinClassType;
+import util.enumeration.FlightScheduleEntityNotFoundException;
 
 /**
  *
@@ -41,8 +45,46 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             return -1;
         }
     }
-        
+    
+    public FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException{
+     FlightScheduleEntity fs= em.find(FlightScheduleEntity.class, id);
+     
+     if(fs!=null){
+         return fs;
+     } else {
+         throw new FlightScheduleEntityNotFoundException();
+     }
+    }
+ 
+          public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass){
+              em.persist(book);
+              em.flush();
+              
+              for(PassengerEntity p:pass){
+                  em.persist(p);
+                  em.flush();
+                  book.getPassenger().add(p);
+              }
+              for(FlightReservationDetailsEntity frd:inbound){
+                  em.persist(frd);
+                  em.flush();
+                  book.getInBound().add(frd);
+                  
+              }
+              
+             for(FlightReservationDetailsEntity frd:outbond){
+                  em.persist(frd);
+                  em.flush();
+                  book.getOutBound().add(frd);
+                
+              }
+             
+
+            
+             return book;
+          }
     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
 }

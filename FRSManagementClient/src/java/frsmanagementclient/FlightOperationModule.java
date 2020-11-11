@@ -49,13 +49,13 @@ import util.exception.UpdateFlightException;
  */
 public class FlightOperationModule {
     
-    @EJB
+    
     private FlightSessionBeanRemote flightSessionBeanRemote;
-    @EJB
+    
     private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
-    @EJB
+   
     private FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
-    @EJB     
+         
     private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
     
     private EmployeeEntity currentEmployeeEntity;
@@ -210,6 +210,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         List<FlightScheduleEntity> flightScheduleList = new ArrayList<FlightScheduleEntity>(); 
   
         if(type==1) {
+            
             fsp.setSchedule(ScheduleEnum.SINGLE);
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -248,7 +249,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             //String endDate = sc.nextLine().trim();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime endDate = LocalDateTime.parse(sc.nextLine().trim(), formatter);
-            fsp.setEnd(endDate);
+           // fsp.setEnd(endDate);
             
            System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
@@ -257,7 +258,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             int duration = sc.nextInt();
             sc.nextLine();
             LocalDateTime arrival = departure.plusHours(duration);
-            fsp.setN(n);
+            //fsp.setN(n);
             //for(int i =0 ;i<n;i++){
             while (arrival.isBefore(endDate) || arrival.isEqual(endDate)){
                flightScheduleList.add(new FlightScheduleEntity(departure,arrival,duration));
@@ -273,7 +274,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
 
-               fsp.setEnd(endDate);
+              // fsp.setEnd(endDate);
             
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
@@ -550,17 +551,15 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         System.out.println("Enter Flight Route ID> ");
         Long flightRoute = sc.nextLong();
         
-       System.out.println("Enter flight number>");
+       System.out.println("Enter Flight Number>");
        
-       Long fNum = sc.nextLong();
-       
-       String concat = "MA"+ fNum;
-       
-       if(!flightSessionBeanRemote.checkByFlightNumber(concat)){
+       String flightNum = sc.nextLine().trim();
+ 
+       if(!flightSessionBeanRemote.checkByFlightNumber(flightNum)){
           
        }
         FlightRouteEntity id = flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute);
-       FlightEntity f = new FlightEntity(concat, true,id , aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+       FlightEntity f = new FlightEntity(flightNum, true, id , aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
        f.setComplementary(false);
        
        
@@ -568,13 +567,13 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
        
        sc.nextLine();
      
-        System.out.println("Would you like a ComplementaryFlight? (Y/N)> ");
+        System.out.println("Would you like a complementary flight? (Y/N)> ");
         String comp = sc.nextLine().trim();
       
       if(comp.equals("Y") ){
           
-         concat = "MA" + fNum +"C";
-         FlightEntity f2 = new FlightEntity(concat, true,id.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+         flightNum = flightNum + "C";
+         FlightEntity f2 = new FlightEntity(flightNum, true,id.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
          
          f2.setComplementary(true);
          f2 = flightSessionBeanRemote.createNewFlight(f2);

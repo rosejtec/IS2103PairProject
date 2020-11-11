@@ -14,6 +14,7 @@ import entity.AircraftTypeEntity;
 import entity.CabinClassConfigurationEntity;
 import entity.EmployeeEntity;
 import entity.FlightRouteEntity;
+import entity.FlightScheduleEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -70,9 +71,9 @@ public class FlightPlanningModule {
           
             response = 0;
             
-            while(response < 1 || response > 6)
-            {
-             System.out.println("*** FRS Management Client :: Flight Planning ***\n");
+            while(response < 1 || response > 6) {
+            
+            System.out.println("*** FRS Management Client :: Flight Planning ***\n");
             System.out.println("1: Create Aircraft Configuration");
             System.out.println("2: View All Aircraft Configurations");
             System.out.println("3: View Aircraft Configuration Details");
@@ -87,16 +88,17 @@ public class FlightPlanningModule {
                 if(response == 1)
                 {
                     
+                    
                  try {
                      try {
                          doCreateAircraftConfiguration();
                      } catch (AircraftConfigurationNotFoundException ex) {
-                         Logger.getLogger(FlightPlanningModule.class.getName()).log(Level.SEVERE, null, ex);
+                         System.out.println("Aircraft Configuration not found!");
                      }
                  } catch (AircraftTypeNotFoundException ex) {
-                       System.out.println("type");
+                       System.out.println("Aircraft Type does not exist!");
                  } catch (ExceedsMaximumCapacityException ex) {
-                       System.out.println("Capacity");
+                       System.out.println("Number of seats exceeds maximum capacity!");
                  }
                     
                 }
@@ -110,7 +112,7 @@ public class FlightPlanningModule {
                     try {
                         doViewAircraftConfigurationDetails();
                     } catch (AircraftConfigurationNotFoundException ex) {
-                        Logger.getLogger(FlightPlanningModule.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Aircraft Configuration not found!");
                     }
                 }
                 else if(response == 4)
@@ -161,14 +163,14 @@ public class FlightPlanningModule {
     public void doCreateAircraftConfiguration() throws AircraftTypeNotFoundException, ExceedsMaximumCapacityException, AircraftConfigurationNotFoundException
     {
         Scanner scanner = new Scanner(System.in);
-         System.out.println("Enter Id of AirCraft Type> ");
+         System.out.println("Enter Aircraft Type ID> ");
          Long type = scanner.nextLong();
          AircraftTypeEntity aircraft = aircraftTypeSessionBeanRemote.retrieveAircraftTypeByAircraftTypeId(type);
          
         scanner.nextLine();
         AircraftConfigurationEntity newAircraftConfiguration = new AircraftConfigurationEntity();
         
-        System.out.println("\"*** FRS Management Client :: Flight Planning :: Create New Aircraft Configuration ***\n");
+        System.out.println("*** FRS Management Client :: Flight Planning :: Create New Aircraft Configuration ***\n");
         System.out.println("Enter Name> ");
         newAircraftConfiguration.setName(scanner.nextLine().trim());
         System.out.println("Enter Number Of Cabin Classes (1 to 4)> ");
@@ -177,9 +179,6 @@ public class FlightPlanningModule {
         newAircraftConfiguration.setNumOfCabinClass(numOfCabinClasses);
         List<CabinClassConfigurationEntity> newCabinClassConfiguration = new ArrayList<CabinClassConfigurationEntity>();
 
-        
-       
-     
         int max = 0;
         int count = 1;
         while (numOfCabinClasses >= 1) {
@@ -195,17 +194,17 @@ public class FlightPlanningModule {
                System.out.println("Enter Seat Configuration> ");
                String seatConfiguration=scanner.nextLine().trim();
                
-               if(max < aircraft.getMaxCapacity()) {
-                   max+= numOfRows*numOfSeatsAbreast;
-               } else {
+               max += numOfRows*numOfSeatsAbreast;
+               if(max >= aircraft.getMaxCapacity()) {
                    throw new ExceedsMaximumCapacityException();
                }
                
                numOfCabinClasses -= 1;
                count += 1;
-              newCabinClassConfiguration.add(new CabinClassConfigurationEntity(numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, CabinClassType.valueOf(cabinClassType)));
+              newCabinClassConfiguration.add(new CabinClassConfigurationEntity(numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, CabinClassType.valueOf(cabinClassType), max));
         }
         
+        newAircraftConfiguration.setMaxSeats(max);
                   
         aircraftConfigurationSessionBeanRemote.createNewAircraftConfiguration(newAircraftConfiguration,newCabinClassConfiguration, type);
         System.out.println("Aircraft Configuration " + newAircraftConfiguration.getName() +  " has been successfully created!");
@@ -230,13 +229,14 @@ public class FlightPlanningModule {
         AircraftConfigurationEntity aircraft = aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(config);
         System.out.println("Details> ");
         System.out.println("Name: " + aircraft.getName());
-        System.out.println("Num of Cabin Class " + aircraft.getNumOfCabinClass());
-        System.out.println("AirCraft Type 1. " + aircraft.getAircraftType().getName() +  " 2.Max Capacity: " + aircraft.getAircraftType().getMaxCapacity());
+        System.out.println("Number Of Cabin Class: " + aircraft.getNumOfCabinClass());
+        System.out.println("Aircraft Type: " + aircraft.getAircraftType().getName() +  "; Max Capacity: " + aircraft.getAircraftType().getMaxCapacity());
     
         for(CabinClassConfigurationEntity c : aircraft.getCabinClassConfigurations()) {
             System.out.println("Seat Configuration: " + c.getSeatConfiguration() + "; Cabin Class Type: "+  c.getCabinClassType()+ "; Number Of Aisles: " + c.getNumOfAisles()+ "; Number Of Rows: " + c.getNumOfRows() + "; Number Of Seats Abreast: " + c.getNumOfSeatsAbreast());
         }
         
+        System.out.println();
     }
 
     private void doCreateFlightRoute() throws FlightRouteNotFoundException {
@@ -263,9 +263,9 @@ public class FlightPlanningModule {
         List<FlightRouteEntity> route = flightRouteSessionBeanRemote.retrieveAllFlightRoutes();
         
         for(FlightRouteEntity r:route){
-            System.out.println("Id: "+r.getFlightRouteId()+ " Origin: " + r.getOrigin().getCity()+ " Destination: " + r.getDestination().getCity());
+            System.out.println("Flight Route ID: "+r.getFlightRouteId()+ "; Origin: " + r.getOrigin().getCity()+ "; Destination: " + r.getDestination().getCity());
             if(r.getComplementaryReturnRoute()!= null) {
-            System.out.println("Id: "+r.getComplementaryReturnRoute().getFlightRouteId()+ " Origin: " + r.getComplementaryReturnRoute().getOrigin().getCity()+ " Destination: " + r.getComplementaryReturnRoute().getDestination().getCity());
+            System.out.println("Flight Route ID: "+r.getComplementaryReturnRoute().getFlightRouteId()+ "; Origin: " + r.getComplementaryReturnRoute().getOrigin().getCity()+ "; Destination: " + r.getComplementaryReturnRoute().getDestination().getCity());
    
             }
         }
