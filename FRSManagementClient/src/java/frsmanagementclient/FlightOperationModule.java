@@ -551,13 +551,12 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         System.out.println("Enter Flight Route ID> ");
         Long flightRoute = sc.nextLong();
         
+       sc.nextLine();
        System.out.println("Enter Flight Number>");
        
        String flightNum = sc.nextLine().trim();
  
-       if(!flightSessionBeanRemote.checkByFlightNumber(flightNum)){
-          
-       }
+  
         FlightRouteEntity id = flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute);
        FlightEntity f = new FlightEntity(flightNum, true, id , aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
        f.setComplementary(false);
@@ -565,14 +564,13 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
        
        if(id.getComplementaryReturnRoute()!=null){
        
-       sc.nextLine();
      
         System.out.println("Would you like a complementary flight? (Y/N)> ");
         String comp = sc.nextLine().trim();
       
       if(comp.equals("Y") ){
           
-         flightNum = flightNum + "C";
+         flightNum =  "MA1C";
          FlightEntity f2 = new FlightEntity(flightNum, true,id.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
          
          f2.setComplementary(true);
