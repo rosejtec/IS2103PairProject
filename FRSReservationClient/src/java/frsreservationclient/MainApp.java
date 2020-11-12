@@ -245,7 +245,11 @@ public class MainApp {
         List<FlightReservationDetailsEntity> outbound = new ArrayList<FlightReservationDetailsEntity>();
         
         if(passenger==null ){
-            doSearchFlights();
+            try {
+                doSearchFlights();
+            } catch (AirportNotFoundException ex) {
+                Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         System.out.println("Enter Flight Schedule ID for Outbound: ");
         Long id = sc.nextLong();
