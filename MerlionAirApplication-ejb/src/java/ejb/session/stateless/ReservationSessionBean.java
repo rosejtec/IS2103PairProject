@@ -34,9 +34,10 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         em.persist(object);
     }
 
+    @Override
     public Integer getFare(FlightScheduleEntity fs, CabinClassType t){
         
-        Query q= em.createQuery("SELECT f FROM FareEntity f WHERE f.flightSchedulePlan.fightSchedulePlanId=:t  AND f.cabinClassConfiguration.cabinClassType=:f ORDER BY f.fareAmount ASC");
+        Query q= em.createQuery("SELECT f FROM FareEntity f WHERE f.flightSchedulePlan.fightSchedulePlanId=:t  AND f.type=:f ORDER BY f.fareAmount ASC");
         q.setParameter("t",fs.getFlightSchedulePlan().getFightSchedulePlanId() ); 
         q.setParameter("f", t);
         
@@ -48,6 +49,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
+    @Override
     public FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException{
      FlightScheduleEntity fs= em.find(FlightScheduleEntity.class, id);
      

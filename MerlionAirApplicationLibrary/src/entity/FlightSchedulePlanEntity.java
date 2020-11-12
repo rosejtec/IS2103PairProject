@@ -70,6 +70,11 @@ public class FlightSchedulePlanEntity implements Serializable {
         this.schedule = schedule;
     }
 
+    public FlightSchedulePlanEntity(FlightEntity flight,ScheduleEnum schedule) {
+        this.schedule = schedule;
+        this.flight = flight;
+    }
+
   
   
 

@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import util.enumeration.CabinClassType;
 
 /**
  *
@@ -35,6 +36,7 @@ public class FareEntity implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
+    CabinClassType type;
     
     public FareEntity() {
     }
@@ -45,6 +47,13 @@ public class FareEntity implements Serializable {
         this.fareAmount = fareAmount;
     }
 
+    public FareEntity( CabinClassType type,String fareBasisCode, String fareAmount) {
+        this.fareBasisCode = fareBasisCode;
+        this.fareAmount = fareAmount;
+        this.type = type;
+    }
+
+    
     public Long getFareId() {
         return fareId;
     }

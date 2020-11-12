@@ -52,7 +52,7 @@ public class CabinClassConfigurationEntity implements Serializable {
     public CabinClassConfigurationEntity() {
     }
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType,Integer maximum) {
+    public CabinClassConfigurationEntity( CabinClassType cabinClassType,Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration,Integer maximum) {
         this.numOfAisles = numOfAisles;
         this.numOfRows = numOfRoles;
         this.numOfSeatsAbreast = numOfSeatsAbreast;
@@ -61,9 +61,7 @@ public class CabinClassConfigurationEntity implements Serializable {
         this.maximum = maximum;
     }
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRows, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType valueOf) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     public Integer getMaximum() {
         return maximum;

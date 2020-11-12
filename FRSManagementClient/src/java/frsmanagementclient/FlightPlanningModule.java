@@ -200,7 +200,7 @@ public class FlightPlanningModule {
                    throw new ExceedsMaximumCapacityException();
                }
                
-              newCabinClassConfiguration.add(new CabinClassConfigurationEntity(numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, CabinClassType.valueOf(cabinClassType), max));
+              newCabinClassConfiguration.add(new CabinClassConfigurationEntity( CabinClassType.valueOf(cabinClassType),numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, max));
         }
         
         newAircraftConfiguration.setMaxSeats(max);

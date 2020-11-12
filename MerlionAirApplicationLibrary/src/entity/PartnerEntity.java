@@ -40,6 +40,12 @@ public class PartnerEntity implements Serializable {
 
     public PartnerEntity() {
     }
+
+    public PartnerEntity(String firstName, String username, String password) {
+        this.firstName = firstName;
+        this.username = username;
+        this.password = password;
+    }
     
     
     public Long getPartnerId() {

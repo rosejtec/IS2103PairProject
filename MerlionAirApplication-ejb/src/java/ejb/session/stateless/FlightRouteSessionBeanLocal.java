@@ -5,7 +5,9 @@
  */
 package ejb.session.stateless;
 
+import entity.FlightRouteEntity;
 import javax.ejb.Local;
+import util.exception.FlightRouteNotFoundException;
 
 /**
  *
@@ -13,5 +15,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface FlightRouteSessionBeanLocal {
-    
+     public Long createNewFlightRoute(FlightRouteEntity newFlightRouteEntity);
+    public FlightRouteEntity createNewComplementaryReturnRoute(Long flightRouteId, FlightRouteEntity complementaryReturnRoute) throws FlightRouteNotFoundException;
+     public FlightRouteEntity retrieveFlightRouteByFlightRouteId(Long flightRouteId) throws FlightRouteNotFoundException;
 }

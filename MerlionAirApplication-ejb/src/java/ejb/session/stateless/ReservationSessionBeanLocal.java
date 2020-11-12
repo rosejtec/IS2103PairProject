@@ -5,7 +5,16 @@
  */
 package ejb.session.stateless;
 
+import entity.CreditCardEntity;
+import entity.FlightReservationDetailsEntity;
+import entity.FlightReservationEntity;
+import entity.FlightScheduleEntity;
+import entity.PassengerEntity;
+import entity.SeatsInventoryEntity;
+import java.util.List;
 import javax.ejb.Local;
+import util.enumeration.CabinClassType;
+import util.enumeration.FlightScheduleEntityNotFoundException;
 
 /**
  *
@@ -13,5 +22,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface ReservationSessionBeanLocal {
-    
+     Integer getFare(FlightScheduleEntity fs, CabinClassType t); 
+     FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
+       FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass,Integer passenger,CreditCardEntity c);
+   void updateSeat(SeatsInventoryEntity seat);
+
 }
