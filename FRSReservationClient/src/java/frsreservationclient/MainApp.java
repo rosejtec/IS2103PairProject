@@ -33,6 +33,7 @@ import javax.naming.NamingException;
 import util.enumeration.CabinClassType;
 import util.enumeration.FlightScheduleEntityNotFoundException;
 import util.enumeration.NoFlightsFoundOnSearchException;
+import util.exception.AirportNotFoundException;
 import util.exception.FlightReservationNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -94,6 +95,8 @@ public class MainApp {
                         doSearchFlights();
                     } catch (NoFlightsFoundOnSearchException ex) {
                         System.out.println("No flights search available!\n");
+                    } catch (AirportNotFoundException ex) {
+                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (response == 4)
                 {
@@ -238,7 +241,11 @@ public class MainApp {
         List<FlightReservationDetailsEntity> outbound = new ArrayList<FlightReservationDetailsEntity>();
         
         if(passenger==null ){
-            doSearchFlights();
+            try {
+                doSearchFlights();
+            } catch (AirportNotFoundException ex) {
+                Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         System.out.println("Enter Flight Schedule ID for Outbound: ");
         Long id = sc.nextLong();
@@ -388,7 +395,7 @@ public class MainApp {
         //create creditcard entiy and ask for input details
     }
 
-    private void doSearchFlights() throws NoFlightsFoundOnSearchException {
+    private void doSearchFlights() throws NoFlightsFoundOnSearchException, AirportNotFoundException {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
