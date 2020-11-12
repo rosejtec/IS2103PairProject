@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.CreditCardEntity;
+import entity.CustomerEntity;
 import entity.FareEntity;
 import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
@@ -67,7 +68,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
     
     
-          public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass, Integer passenger,CreditCardEntity c){
+     public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass, Integer passenger,CreditCardEntity c, CustomerEntity customer){
             
               em.persist(c);
               em.flush();
@@ -88,7 +89,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                   em.persist(frd);
                   em.flush();
                   book.getInBound().add(frd);
-                  frd.setReservation(book);
+                  frd.setFlightReservation(book);
                  
                   
               }
@@ -98,9 +99,13 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                   em.flush();
                   book.getOutBound().add(frd);
                
-                 frd.setReservation(book);
+                 frd.setFlightReservation(book);
              
               }
+             
+             book.setCustomer(customer);
+             customer.getFlightReservations().add(book);
+             
              
 
             

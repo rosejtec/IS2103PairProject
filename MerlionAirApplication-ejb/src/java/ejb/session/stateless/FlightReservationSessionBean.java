@@ -385,5 +385,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             throw new NoFlightsFoundOnSearchException();
         }
     }
+    
+    
 
 }

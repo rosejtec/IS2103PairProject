@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entity.AirportEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.AirportNotFoundException;
@@ -28,11 +30,22 @@ public class AirportSessionBean implements AirportSessionBeanRemote, AirportSess
 
  
     @Override
-    public AirportEntity retriveBy(String code){
+    public AirportEntity retriveBy(String code) throws AirportNotFoundException
+    {
+        
         Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.code = :inCode");
         q.setParameter("inCode", code);
+        
+        try
+        {
         AirportEntity a = (AirportEntity) q.getSingleResult();
         return a;
+        }
+         catch(NoResultException | NonUniqueResultException ex)
+        {
+         
+            throw new AirportNotFoundException("Airport code " + code + " does not exist!");
+        }
     }
 
     @Override

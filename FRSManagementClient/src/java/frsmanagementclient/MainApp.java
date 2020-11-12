@@ -54,8 +54,7 @@ public class MainApp {
 
 
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
- private SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;
-  
+    private SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;    
     private FlightPlanningModule flightPlanningModule;
     private FlightOperationModule flightOperationModule;
     private SalesManagementModule salesManagementModule;
@@ -236,16 +235,10 @@ public class MainApp {
             
             if(response == 4)
             {
-                break;
+                break; 
             }
 
         }
-               
 
-       
-    
     }
-
-    
-
-        }
+}

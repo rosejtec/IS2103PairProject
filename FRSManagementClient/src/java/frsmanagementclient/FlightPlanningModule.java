@@ -26,6 +26,7 @@ import util.enumeration.EmployeeAccessRight;
 import util.enumeration.ExceedsMaximumCapacityException;
 import util.exception.AircraftConfigurationNotFoundException;
 import util.exception.AircraftTypeNotFoundException;
+import util.exception.AirportNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 import util.exception.InvalidAccessRightException;
 
@@ -118,7 +119,11 @@ public class FlightPlanningModule {
                 else if(response == 4)
                 {
                     try {
-                        doCreateFlightRoute();
+                        try {
+                            doCreateFlightRoute();
+                        } catch (AirportNotFoundException ex) {
+                            Logger.getLogger(FlightPlanningModule.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } catch (FlightRouteNotFoundException ex) {
                         System.out.println("Flight Route does not exist!");
                     }
@@ -238,7 +243,7 @@ public class FlightPlanningModule {
         System.out.println();
     }
 
-    private void doCreateFlightRoute() throws FlightRouteNotFoundException {
+    private void doCreateFlightRoute() throws FlightRouteNotFoundException, AirportNotFoundException {
       Scanner sc = new Scanner(System.in);
       System.out.println("Enter Origin Airport Code> ");
       String codeO= sc.nextLine().trim();

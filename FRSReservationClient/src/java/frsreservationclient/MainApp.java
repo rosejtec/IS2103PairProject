@@ -33,6 +33,7 @@ import javax.naming.NamingException;
 import util.enumeration.CabinClassType;
 import util.enumeration.FlightScheduleEntityNotFoundException;
 import util.enumeration.NoFlightsFoundOnSearchException;
+import util.exception.FlightReservationNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -41,24 +42,25 @@ import util.exception.InvalidLoginCredentialException;
  */
 public class MainApp {
 
-    ReservationSessionBeanRemote reservationSessionBean;
-    FlightReservationSessionBeanRemote flightReservationSessionBean;
-    CustomerSessionBeanRemote customerSessionBean;
+    ReservationSessionBeanRemote reservationSessionBeanRemote;
+    FlightReservationSessionBeanRemote flightReservationSessionBeanRemote;
+    CustomerSessionBeanRemote customerSessionBeanRemote;
     CustomerEntity currentCustomer;
-    Boolean round=false;
+    Boolean round = false;
     String departureAirport;
     String destinationAirport;
-    boolean connecting=false;
-    Integer passenger=2;
-    CabinClassType type=CabinClassType.F;
+    boolean connecting = false;
+    Integer passenger = 2;
+    CabinClassType type = CabinClassType.F;
 
-    MainApp(FlightReservationSessionBeanRemote flightReservationSessionBean, CustomerSessionBeanRemote customerSessionBean, ReservationSessionBeanRemote reservationSessionBean) {
-        this.flightReservationSessionBean = flightReservationSessionBean;
-        this.customerSessionBean = customerSessionBean;
-        this.reservationSessionBean = reservationSessionBean;
+    public MainApp(FlightReservationSessionBeanRemote flightReservationSessionBean, CustomerSessionBeanRemote customerSessionBean, ReservationSessionBeanRemote reservationSessionBean) {
+        this.flightReservationSessionBeanRemote = flightReservationSessionBean;
+        this.customerSessionBeanRemote = customerSessionBean;
+        this.reservationSessionBeanRemote = reservationSessionBean;
     }
 
-    void runApp() {
+    public void runApp() 
+    {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
@@ -67,78 +69,170 @@ public class MainApp {
             System.out.println("1: Register As Customer");
             System.out.println("2: Customer Login");
             System.out.println("3: Search Flight");
-            System.out.println("4: Reserve Flight");
-            System.out.println("5: View My Flight Reservations");
-            System.out.println("6: View My Flight Reservation Details");
-            System.out.println("7: Customer Logout");
-            System.out.println("8: Exit\n");
+            System.out.println("4: Exit\n");
             response = 0;
-
-            while (response < 1 || response > 8) {
+            
+            while(response < 1 || response > 4)
+            {
                 System.out.print("> ");
-
                 response = scanner.nextInt();
-
-                if (response == 1) {
+               
+                if(response == 1) 
+                {
                     doRegisterCustomer();
-                } else if (response == 2) {
+                } else if (response == 2)
+                {
                     try {
-                        CustomerLogin();
+                        doCustomerLogin();
+                        menuMain();
                     } catch (InvalidLoginCredentialException ex) {
-                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
                     }
-                } else if (response == 3) {
-
+                } else if (response == 3)
+                {
                     try {
                         doSearchFlights();
-                    } catch (ParseException ex) {
-                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (NoFlightsFoundOnSearchException ex) {
-                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("No flights search available!\n");
                     }
-
-                } else if (response == 4) {
-                    try {
-                        try {
-                            doReserveFlights();
-                        } catch (NoFlightsFoundOnSearchException ex) {
-                            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (ParseException ex) {
-                            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } catch (FlightScheduleEntityNotFoundException ex) {
-                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else if (response == 5) {
-                    doViewFlightReservations();
-                } else if (response == 6) {
-                    doViewFlightReservationDetails();
-                } else if (response == 7) {
-                    doCustomerLogout();
-                } else if (response == 8) {
+                } else if (response == 4)
+                {
                     break;
-                } else {
-                    System.out.println("Invalid option, please try again!\n");
                 }
+                else
+                {
+                    System.out.println("Invalid option, please try again!\n");
+                }               
             }
-
-            if (response == 6) {
+            
+            if (response == 4)
+            { 
                 break;
             }
         }
-
     }
-
-    private void doViewFlightReservationDetails() {
+    
+    private void menuMain() 
+    {
+        Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
+        
+        while(true) {
+            System.out.println("*** Welcome to FRS - Reservation Client ***\n");
+            System.out.println("You are login as " + currentCustomer.getFirstName() + " " + currentCustomer.getLastName() + "\n");
+            System.out.println("1: Reserve Flight");
+            System.out.println("2: View My Flight Reservations");
+            System.out.println("3: View My Flight Reservation Details");
+            System.out.println("4: Customer Logout\n");
+            response = 0;
+            
+            while(response < 1 || response > 4)
+            {
+                System.out.print("> ");
+                
+                response = scanner.nextInt();
+                
+                if (response == 1) 
+                {
+                    try {
+                        doReserveFlight();
+                    } catch (FlightScheduleEntityNotFoundException ex) {
+                        System.out.println("Flight schedule does not exist!");
+                    } catch (NoFlightsFoundOnSearchException ex) {
+                        System.out.println("No flights search available!");
+                    }
+                } 
+                else if (response == 2)
+                {
+                    doViewFlightReservations();
+                } 
+                else if (response == 3)
+                {
+                    try {
+                        doViewFlightReservationDetails();
+                    } catch (FlightReservationNotFoundException ex) {  
+                        System.out.println("Flight Reservation does not exist!");
+                    }
+                }
+                else if (response == 4)
+                {
+                    break;
+                }
+                else 
+                {
+                    System.out.println("Invalid option, please try again!\n");   
+                }     
+            }
+            
+            if (response == 4)
+            { 
+                break;
+            }
+        }
     }
-
-    private void doCustomerLogout() {
-    }
-
+            
+            
     private void doViewFlightReservations() {
+        List<FlightReservationEntity> frList = currentCustomer.getFlightReservations();
+        for(FlightReservationEntity fr : frList)
+        {
+            System.out.println("Flight Reservation ID " + fr.getFlightReservationId() + "; Total Passengers:" + fr.getTotalPassengers() + "; Total Amount: " + fr.getTotalAmount());
+
+        }
+    }
+    
+    
+    private void doViewFlightReservationDetails() throws FlightReservationNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Flight Reservation ID> ");
+        Long frId = scanner.nextLong();
+        scanner.nextLine();
+        FlightReservationEntity fr = customerSessionBeanRemote.retrieveFlightReservationById(frId);
+        
+        System.out.println("Flight Reservation ID " + frId + " details>");
+        
+       List<FlightReservationDetailsEntity> inBoundList = fr.getInBound();
+       System.out.println("Inbound> ");
+       for(FlightReservationDetailsEntity inBound : inBoundList)
+       {
+           System.out.println("Departure: " + inBound.getFlightSchedule().getDeparture() + "; Arrival: " + inBound.getFlightSchedule().getArrival() + "; Cabin Class Type: " + inBound.getCabinClass());
+           List<String> seatNum = inBound.getSeatNum();
+           System.out.print("Seat Numbers: ");
+           for(String seat : seatNum)
+           {
+               System.out.print(seat + " ");
+           }
+           System.out.println();
+       }
+        
+       List<FlightReservationDetailsEntity> outBoundList = fr.getOutBound();
+       System.out.println("Outbound> ");
+       for(FlightReservationDetailsEntity outbound : outBoundList)
+       {
+           System.out.println("Departure: " + outbound.getFlightSchedule().getDeparture() + "; Arrival: " + outbound.getFlightSchedule().getArrival() + "; Cabin Class Type: " + outbound.getCabinClass());
+           List<String> seatNum = outbound.getSeatNum();
+           System.out.print("Seat Numbers: ");
+           for(String seat : seatNum)
+           {
+               System.out.print(seat + " ");
+           }
+           System.out.println();
+       }
+       
+        List<PassengerEntity> pList = fr.getPassenger();
+                int count = 0;
+                for(PassengerEntity p : pList) {
+                    count++;
+                    System.out.println("Passenger " + count + "> Name: " + p.getFirstName() + " " + p.getLastName() + "Passport Number: " + p.getPassport());
+                }
+                
+                System.out.println("Total amount paid: " + fr.getTotalAmount());
+ 
     }
 
-    private void doReserveFlights() throws FlightScheduleEntityNotFoundException, NoFlightsFoundOnSearchException, ParseException {
+
+
+    private void doReserveFlight() throws FlightScheduleEntityNotFoundException, NoFlightsFoundOnSearchException {
         Scanner sc = new Scanner(System.in);
         List<FlightReservationDetailsEntity> inbound = new ArrayList<FlightReservationDetailsEntity>();
         List<FlightReservationDetailsEntity> outbound = new ArrayList<FlightReservationDetailsEntity>();
@@ -146,19 +240,19 @@ public class MainApp {
         if(passenger==null ){
             doSearchFlights();
         }
-        System.out.println("Enter Flight Schedule Id for OutBound: ");
+        System.out.println("Enter Flight Schedule ID for Outbound: ");
         Long id = sc.nextLong();
-        inbound.add(new FlightReservationDetailsEntity(type, reservationSessionBean.retrievebyId(id)));
+        inbound.add(new FlightReservationDetailsEntity(type, reservationSessionBeanRemote.retrievebyId(id)));
         List<String> seatNum = new ArrayList<>();
         sc.nextLine();
         int amount = 0;
-        SeatsInventoryEntity seat = reservationSessionBean.retrievebyId(id).getSeatsInventory();
+        SeatsInventoryEntity seat = reservationSessionBeanRemote.retrievebyId(id).getSeatsInventory();
         System.out.println(seat);
 
         for (int i = 0; i < this.passenger; i++) {
             int j = i+1;
             System.out.println("Seat Details for Passenger " + (j) + ": ");
-            System.out.print("Enter SeatNumber> ");
+            System.out.print("Enter Seat Number> ");
             String first = sc.nextLine().trim();
             seat.getSeats().add(first);
             seatNum.add(first);
@@ -169,10 +263,10 @@ public class MainApp {
         seat.updateReservedSeats(passenger);
         inbound.get(0).setSeatNum(seatNum);
         
-        reservationSessionBean.updateSeat(seat);
+        reservationSessionBeanRemote.updateSeat(seat);
 
         seatNum.clear();
-        amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
+        amount += reservationSessionBeanRemote.getFare(reservationSessionBeanRemote.retrievebyId(id), type) * passenger;
 
         if (connecting) {
             Long loop = sc.nextLong();
@@ -182,8 +276,8 @@ public class MainApp {
                 id = sc.nextLong();
                 sc.nextLine();
 
-                inbound.add(new FlightReservationDetailsEntity(type, reservationSessionBean.retrievebyId(id)));
-                seat = reservationSessionBean.retrievebyId(id).getSeatsInventory();
+                inbound.add(new FlightReservationDetailsEntity(type, reservationSessionBeanRemote.retrievebyId(id)));
+                seat = reservationSessionBeanRemote.retrievebyId(id).getSeatsInventory();
                 for (int j = 0; j < this.passenger; j++) {
                     System.out.println("Seat Details for Passenger:" + (i + 1));
                     System.out.print("Enter SeatNumber> ");
@@ -196,21 +290,21 @@ public class MainApp {
                 seat.updateAvailableSeats(passenger);
                 seat.updateReservedSeats(passenger);
                 inbound.get(i).setSeatNum(seatNum);
-        reservationSessionBean.updateSeat(seat);
+        reservationSessionBeanRemote.updateSeat(seat);
 
                 seatNum.clear();
-                amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
+                amount += reservationSessionBeanRemote.getFare(reservationSessionBeanRemote.retrievebyId(id), type) * passenger;
 
             }
         }
 
         if (round) {
-            System.out.println("Enter Flight Schedule Id for Inbound: ");
+            System.out.println("Enter Flight Schedule ID for inbound: ");
             id = sc.nextLong();
             sc.nextLine();
 
-            outbound.add(new FlightReservationDetailsEntity(type, reservationSessionBean.retrievebyId(id)));
-            seat = reservationSessionBean.retrievebyId(id).getSeatsInventory();
+            outbound.add(new FlightReservationDetailsEntity(type, reservationSessionBeanRemote.retrievebyId(id)));
+            seat = reservationSessionBeanRemote.retrievebyId(id).getSeatsInventory();
             for (int i = 0; i < this.passenger; i++) {
                 System.out.println("Seat Details for Passenger:" + (i + 1));
                 System.out.print("Enter SeatNumber> ");
@@ -221,8 +315,8 @@ public class MainApp {
             }
             seat.updateAvailableSeats(passenger);
             seat.updateReservedSeats(passenger);
-            amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
-        reservationSessionBean.updateSeat(seat);
+            amount += reservationSessionBeanRemote.getFare(reservationSessionBeanRemote.retrievebyId(id), type) * passenger;
+        reservationSessionBeanRemote.updateSeat(seat);
 
             outbound.get(0).setSeatNum(seatNum);
             seatNum.clear();
@@ -235,8 +329,8 @@ public class MainApp {
 
                     id = sc.nextLong();
                     sc.nextLine();
-                    seat = reservationSessionBean.retrievebyId(id).getSeatsInventory();
-                    outbound.add(new FlightReservationDetailsEntity(type, reservationSessionBean.retrievebyId(id)));
+                    seat = reservationSessionBeanRemote.retrievebyId(id).getSeatsInventory();
+                    outbound.add(new FlightReservationDetailsEntity(type, reservationSessionBeanRemote.retrievebyId(id)));
                     for (int j = 0; j < this.passenger; j++) {
                         System.out.println("Seat Details for Passenger:" + (i + 1));
                         System.out.print("Enter SeatNumber> ");
@@ -247,8 +341,8 @@ public class MainApp {
                     }
                     seat.updateAvailableSeats(passenger);
                     seat.updateReservedSeats(passenger);
-                    amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
-                  reservationSessionBean.updateSeat(seat);
+                    amount += reservationSessionBeanRemote.getFare(reservationSessionBeanRemote.retrievebyId(id), type) * passenger;
+                  reservationSessionBeanRemote.updateSeat(seat);
  
                     outbound.get(i).setSeatNum(seatNum);
                     seatNum.clear();
@@ -288,13 +382,13 @@ public class MainApp {
             
             CreditCardEntity c = new CreditCardEntity(num, pin);
 
-        reservationSessionBean.reserveFlight(book, inbound, outbound, pass,passenger,c);
+        reservationSessionBeanRemote.reserveFlight(book, inbound, outbound, pass, passenger, c, currentCustomer);
 
-        System.out.println("done");
+        System.out.println("Flight Reservation has been successful!");
         //create creditcard entiy and ask for input details
     }
 
-    private void doSearchFlights() throws ParseException, NoFlightsFoundOnSearchException {
+    private void doSearchFlights() throws NoFlightsFoundOnSearchException {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -369,12 +463,12 @@ public class MainApp {
                     System.out.println("Connecting on the Same Day");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
                     int i = 0;
-                    List<FlightScheduleEntity> list = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
+                    List<FlightScheduleEntity> list = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
 
 //                    System.out.println(list);
                     for (FlightScheduleEntity conn : list) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                         for (FlightScheduleEntity l : list4) {
                             System.out.println(conn.getFlightScheduleId() + "                     " + conn.getArrival().toString() + "        " + conn.getDeparture().toString() + "           " + conn.getDuration());
@@ -383,14 +477,14 @@ public class MainApp {
 
                     }
 
-                    List<FlightScheduleEntity> day2degree = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
+                    List<FlightScheduleEntity> day2degree = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
 //                    System.out.println(day2degree);
 
                     int j = 0;
                     i = 0;
                     for (FlightScheduleEntity fs : day2degree) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
                         j = 0;
 //                        System.out.println(list4);
 //                        System.out.println("FS" + fs);
@@ -399,7 +493,7 @@ public class MainApp {
 
                             System.out.println("Conn" + conn);
 
-                            List<FlightScheduleEntity> l5 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                            List<FlightScheduleEntity> l5 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                             for (FlightScheduleEntity l : l5) {
                                 System.out.println(fs.getFlightScheduleId() + "                     " + fs.getArrival().toString() + "        " + fs.getDeparture().toString() + "           " + fs.getDuration());
@@ -414,12 +508,12 @@ public class MainApp {
                 for (int k = 1; k <= 3; k++) {
                     System.out.println("Connecting " + k + " day after");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> list = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
+                    List<FlightScheduleEntity> list = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
 
 //                    System.out.println(list);
                     for (FlightScheduleEntity conn : list) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                         for (FlightScheduleEntity l : list4) {
                             System.out.println(conn.getFlightScheduleId() + "                     " + conn.getArrival().toString() + "        " + conn.getDeparture().toString() + "           " + conn.getDuration());
@@ -428,14 +522,14 @@ public class MainApp {
 
                     }
 
-                    List<FlightScheduleEntity> day2degree = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
+                    List<FlightScheduleEntity> day2degree = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
 //                    System.out.println(day2degree);
 
                     int j = 0;
                     int i = 0;
                     for (FlightScheduleEntity fs : day2degree) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
                         j = 0;
 //                        System.out.println(list4);
 //                        System.out.println("FS" + fs);
@@ -444,7 +538,7 @@ public class MainApp {
 
 //                            System.out.println("Conn" + conn);
 
-                            List<FlightScheduleEntity> l5 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                            List<FlightScheduleEntity> l5 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                             for (FlightScheduleEntity l : l5) {
                                 System.out.println(fs.getFlightScheduleId() + "                     " + fs.getArrival().toString() + "        " + fs.getDeparture().toString() + "           " + fs.getDuration());
@@ -459,12 +553,12 @@ public class MainApp {
                 for (int k = 1; k <= 3; k++) {
                     System.out.println("Connecting " + k + " day Before");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> list = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
+                    List<FlightScheduleEntity> list = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
 
                     System.out.println(list);
                     for (FlightScheduleEntity conn : list) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                         for (FlightScheduleEntity l : list4) {
                             System.out.println(conn.getFlightScheduleId() + "                     " + conn.getArrival().toString() + "        " + conn.getDeparture().toString() + "           " + conn.getDuration());
@@ -473,14 +567,14 @@ public class MainApp {
 
                     }
 
-                    List<FlightScheduleEntity> day2degree = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
+                    List<FlightScheduleEntity> day2degree = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
 //                    System.out.println(day2degree);
 
                     int j = 0;
                     int i = 0;
                     for (FlightScheduleEntity fs : day2degree) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
                         j = 0;
 //                        System.out.println(list4);
 //                        System.out.println("FS" + fs);
@@ -489,7 +583,7 @@ public class MainApp {
 
 //                            System.out.println("Conn" + conn);
 
-                            List<FlightScheduleEntity> l5 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                            List<FlightScheduleEntity> l5 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                             for (FlightScheduleEntity l : l5) {
                                 System.out.println(fs.getFlightScheduleId() + "                     " + fs.getArrival().toString() + "        " + fs.getDeparture().toString() + "           " + fs.getDuration());
@@ -503,7 +597,7 @@ public class MainApp {
             } else {
                 System.out.println("Direct on the Same Day");
                 System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                List<FlightScheduleEntity> day1 = flightReservationSessionBean.searchSingleDay(false, false, departureAirport, destinationAirport, departureTime, passengers, type);
+                List<FlightScheduleEntity> day1 = flightReservationSessionBeanRemote.searchSingleDay(false, false, departureAirport, destinationAirport, departureTime, passengers, type);
                 for (FlightScheduleEntity l : day1) {
                     System.out.println();
 
@@ -512,17 +606,17 @@ public class MainApp {
                     System.out.println();
                     System.out.println("                  SinglePassenger   AllPassenger");
 
-                    System.out.println("1.FirstClass:     " + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
-                    System.out.println("2.BusinessClass:  " + (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
-                    System.out.println("3.PremiumEconomy: " + (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
-                    System.out.println("4.Economy:        " + (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
+                    System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                    System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
+                    System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
+                    System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
 
                 }
 
                 for (int i = 1; i <= 3; i++) {
                     System.out.println("Direct " + i + " Day Before ");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> day2 = flightReservationSessionBean.searchThreeDaysBefore(false, false, departureAirport, destinationAirport, departureTime, i, type);
+                    List<FlightScheduleEntity> day2 = flightReservationSessionBeanRemote.searchThreeDaysBefore(false, false, departureAirport, destinationAirport, departureTime, i, type);
                     for (FlightScheduleEntity l : day2) {
                         System.out.println();
 
@@ -531,17 +625,17 @@ public class MainApp {
                         System.out.println();
                         System.out.println("                  SinglePassenger   AllPassenger");
 
-                        System.out.println("1.FirstClass:     " + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
-                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
-                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
-                        System.out.println("4.Economy:        " + (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
+                        System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
+                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
+                        System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
                     }
                 }
 
                 for (int i = 1; i <= 3; i++) {
                     System.out.println("Direct " + i + " Day After ");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> day2 = flightReservationSessionBean.searchThreeDaysAfter(false, false, departureAirport, destinationAirport, departureTime, i, type);
+                    List<FlightScheduleEntity> day2 = flightReservationSessionBeanRemote.searchThreeDaysAfter(false, false, departureAirport, destinationAirport, departureTime, i, type);
                     for (FlightScheduleEntity l : day2) {
                         System.out.println();
 
@@ -550,10 +644,10 @@ public class MainApp {
                         System.out.println();
                         System.out.println("                  SinglePassenger   AllPassenger");
 
-                        System.out.println("1.FirstClass:     " + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
-                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
-                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
-                        System.out.println("4.Economy:        " + (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
+                        System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
+                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
+                        System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
                     }
                 }
 
@@ -567,7 +661,7 @@ public class MainApp {
                 System.out.println("Inbound Flights:");
                 System.out.println("Direct on the Same Day");
                 System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                List<FlightScheduleEntity> day1 = flightReservationSessionBean.searchSingleDay(false, false, destinationAirport, departureAirport, departureTime, passengers, type);
+                List<FlightScheduleEntity> day1 = flightReservationSessionBeanRemote.searchSingleDay(false, false, destinationAirport, departureAirport, departureTime, passengers, type);
                 for (FlightScheduleEntity l : day1) {
                     System.out.println();
 
@@ -576,10 +670,10 @@ public class MainApp {
                     System.out.println();
                     System.out.println("                  SinglePassenger   AllPassenger");
 
-                    System.out.println("1.FirstClass:     " + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
-                    System.out.println("2.BusinessClass:  " + (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
-                    System.out.println("3.PremiumEconomy: " + (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
-                    System.out.println("4.Economy:        " + (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
+                    System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                    System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
+                    System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
+                    System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
 
                 }
 
@@ -587,7 +681,7 @@ public class MainApp {
 
                     System.out.println("Direct " + i + " Day Before ");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> day2 = flightReservationSessionBean.searchThreeDaysBefore(false, false, destinationAirport, departureAirport, departureTime, i, type);
+                    List<FlightScheduleEntity> day2 = flightReservationSessionBeanRemote.searchThreeDaysBefore(false, false, destinationAirport, departureAirport, departureTime, i, type);
                     for (FlightScheduleEntity l : day2) {
                         System.out.println();
 
@@ -596,17 +690,17 @@ public class MainApp {
                         System.out.println();
                         System.out.println("                  SinglePassenger   AllPassenger");
 
-                        System.out.println("1.FirstClass:     " + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
-                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
-                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
-                        System.out.println("4.Economy:        " + (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
+                        System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
+                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
+                        System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
                     }
                 }
 
                 for (int i = 1; i <= 3; i++) {
                     System.out.println("Direct " + i + " Day After ");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> day2 = flightReservationSessionBean.searchThreeDaysAfter(false, false, destinationAirport, departureAirport, departureTime, i, type);
+                    List<FlightScheduleEntity> day2 = flightReservationSessionBeanRemote.searchThreeDaysAfter(false, false, destinationAirport, departureAirport, departureTime, i, type);
                     for (FlightScheduleEntity l : day2) {
                         System.out.println();
 
@@ -615,10 +709,10 @@ public class MainApp {
                         System.out.println();
                         System.out.println("                  SinglePassenger   AllPassenger");
 
-                        System.out.println("1.FirstClass:     " + (!(reservationSessionBean.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.F) + "               " + (reservationSessionBean.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
-                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBean.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.J) + "               " + (reservationSessionBean.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
-                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBean.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.W) + "               " + (reservationSessionBean.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
-                        System.out.println("4.Economy:        " + (!(reservationSessionBean.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBean.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBean.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
+                        System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                        System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
+                        System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
+                        System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
                     }
                 }
 
@@ -633,12 +727,12 @@ public class MainApp {
                     System.out.println("Connecting on the Same Day");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
                     int i = 0;
-                    List<FlightScheduleEntity> list = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
+                    List<FlightScheduleEntity> list = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
 
                     System.out.println(list);
                     for (FlightScheduleEntity conn : list) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                         for (FlightScheduleEntity l : list4) {
                             System.out.println(conn.getFlightScheduleId() + "                     " + conn.getArrival().toString() + "        " + conn.getDeparture().toString() + "           " + conn.getDuration());
@@ -647,14 +741,14 @@ public class MainApp {
 
                     }
 
-                    List<FlightScheduleEntity> day2degree = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
+                    List<FlightScheduleEntity> day2degree = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime, 0, type);
 //                    System.out.println(day2degree);
 
                     int j = 0;
                     i = 0;
                     for (FlightScheduleEntity fs : day2degree) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
                         j = 0;
 //                        System.out.println(list4);
 //                        System.out.println("FS" + fs);
@@ -663,7 +757,7 @@ public class MainApp {
 
 //                            System.out.println("Conn" + conn);
 
-                            List<FlightScheduleEntity> l5 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                            List<FlightScheduleEntity> l5 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                             for (FlightScheduleEntity l : l5) {
                                 System.out.println(fs.getFlightScheduleId() + "                     " + fs.getArrival().toString() + "        " + fs.getDeparture().toString() + "           " + fs.getDuration());
@@ -678,12 +772,12 @@ public class MainApp {
                 for (int k = 1; k <= 3; k++) {
                     System.out.println("Connecting " + k + " day after");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> list = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
+                    List<FlightScheduleEntity> list = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
 
 //                    System.out.println(list);
                     for (FlightScheduleEntity conn : list) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                         for (FlightScheduleEntity l : list4) {
                             System.out.println(conn.getFlightScheduleId() + "                     " + conn.getArrival().toString() + "        " + conn.getDeparture().toString() + "           " + conn.getDuration());
@@ -692,14 +786,14 @@ public class MainApp {
 
                     }
 
-                    List<FlightScheduleEntity> day2degree = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
+                    List<FlightScheduleEntity> day2degree = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.plusDays(k), 0, type);
 //                    System.out.println(day2degree);
 
                     int j = 0;
                     int i = 0;
                     for (FlightScheduleEntity fs : day2degree) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
                         j = 0;
 //                        System.out.println(list4);
 //                        System.out.println("FS" + fs);
@@ -708,7 +802,7 @@ public class MainApp {
 
 //                            System.out.println("Conn" + conn);
 
-                            List<FlightScheduleEntity> l5 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                            List<FlightScheduleEntity> l5 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                             for (FlightScheduleEntity l : l5) {
                                 System.out.println(fs.getFlightScheduleId() + "                     " + fs.getArrival().toString() + "        " + fs.getDeparture().toString() + "           " + fs.getDuration());
@@ -723,12 +817,12 @@ public class MainApp {
                 for (int k = 1; k <= 3; k++) {
                     System.out.println("Connecting " + k + " day Before");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
-                    List<FlightScheduleEntity> list = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
+                    List<FlightScheduleEntity> list = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
 
 //                    System.out.println(list);
                     for (FlightScheduleEntity conn : list) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                         for (FlightScheduleEntity l : list4) {
                             System.out.println(conn.getFlightScheduleId() + "                     " + conn.getArrival().toString() + "        " + conn.getDeparture().toString() + "           " + conn.getDuration());
@@ -737,14 +831,14 @@ public class MainApp {
 
                     }
 
-                    List<FlightScheduleEntity> day2degree = flightReservationSessionBean.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
+                    List<FlightScheduleEntity> day2degree = flightReservationSessionBeanRemote.getOneWayAfter(true, true, departureAirport, destinationAirport, departureTime.minusDays(k), 0, type);
 //                    System.out.println(day2degree);
 
                     int j = 0;
                     int i = 0;
                     for (FlightScheduleEntity fs : day2degree) {
 
-                        List<FlightScheduleEntity> list4 = flightReservationSessionBean.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
+                        List<FlightScheduleEntity> list4 = flightReservationSessionBeanRemote.getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), 0, type);
                         j = 0;
 //                        System.out.println(list4);
 //                        System.out.println("FS" + fs);
@@ -753,7 +847,7 @@ public class MainApp {
 
 //                            System.out.println("Conn" + conn);
 
-                            List<FlightScheduleEntity> l5 = flightReservationSessionBean.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
+                            List<FlightScheduleEntity> l5 = flightReservationSessionBeanRemote.getDestination(connecting, round, conn.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), destinationAirport, conn.getArrival(), 0, type);
 
                             for (FlightScheduleEntity l : l5) {
                                 System.out.println(fs.getFlightScheduleId() + "                     " + fs.getArrival().toString() + "        " + fs.getDeparture().toString() + "           " + fs.getDuration());
@@ -773,27 +867,28 @@ public class MainApp {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("*** FRS Reservation :: Create ***\n");
+        System.out.println("*** FRS Reservation :: Register As Customer ***\n");
 
-        System.out.print("Enter First name> ");
+        System.out.print("Enter first name> ");
         String first = scanner.nextLine().trim();
-        System.out.print("Enter Last Name> ");
+        System.out.print("Enter last name> ");
         String last = scanner.nextLine().trim();
         System.out.print("Enter email> ");
         String email = scanner.nextLine().trim();
         System.out.print("Enter password> ");
         String password = scanner.nextLine().trim();
-        System.out.print("Enter MobileNum> ");
+        System.out.print("Enter mobile number> ");
         Integer num = scanner.nextInt();
 
         CustomerEntity cust = new CustomerEntity(first, last, email, num, password);
 
-        CustomerEntity custNew = customerSessionBean.createNewCustomer(cust);
-        System.out.println("New Customer Id" + custNew.getCustomerId());
+        CustomerEntity custNew = customerSessionBeanRemote.createNewCustomer(cust);
+        System.out.println("New Customer ID " + custNew.getCustomerId() + " has been successfully created!");
 
     }
 
-    private void CustomerLogin() throws InvalidLoginCredentialException {
+    private void doCustomerLogin() throws InvalidLoginCredentialException {
+        
         Scanner scanner = new Scanner(System.in);
         String email = "";
         String password = "";
@@ -805,7 +900,7 @@ public class MainApp {
         password = scanner.nextLine().trim();
 
         if (email.length() > 0 && password.length() > 0) {
-            currentCustomer = customerSessionBean.login(email, password);
+            currentCustomer = customerSessionBeanRemote.login(email, password);
             this.currentCustomer = currentCustomer;
         } else {
             throw new InvalidLoginCredentialException("Missing login credential!");
