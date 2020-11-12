@@ -87,6 +87,7 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
         
         if(flightEntity != null)
         {
+            flightEntity.getFlightSchedulePlans().size();
             return flightEntity;
         }
         else
