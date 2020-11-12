@@ -117,4 +117,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
+   
+   
+
 }

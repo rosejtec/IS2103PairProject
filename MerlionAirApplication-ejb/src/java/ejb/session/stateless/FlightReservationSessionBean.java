@@ -24,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.CabinClassType;
 import util.enumeration.NoFlightsFoundOnSearchException;
+import util.exception.AirportNotFoundException;
 
 /**
  *
@@ -69,8 +70,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
             throw new NoFlightsFoundOnSearchException();
 
-        }
-
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        return null;
     }
 
     @Override
@@ -98,7 +101,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -125,7 +131,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -175,7 +184,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -196,7 +208,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             return list;
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -249,7 +264,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
       @Override
@@ -290,7 +308,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -311,7 +332,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             return list;
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -335,7 +359,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             return list;
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     @Override
     public List<List<List<FlightScheduleEntity>>> searchConnectingDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
@@ -383,7 +410,10 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(FlightReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
     

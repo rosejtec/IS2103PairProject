@@ -51,6 +51,7 @@ import util.enumeration.EmployeeAccessRight;
 import util.enumeration.ScheduleEnum;
 import util.exception.AircraftConfigurationNotFoundException;
 import util.exception.AircraftTypeNotFoundException;
+import util.exception.AirportNotFoundException;
 import util.exception.FlightNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 
@@ -87,11 +88,15 @@ public class DataInitSessionBean {
     @PostConstruct
     public void postConstruct() {
         if (em.find(AirportEntity.class, 1l) == null) {
-            initializeData();
+            try {
+                initializeData();
+            } catch (AirportNotFoundException ex) {
+                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
-    private void initializeData() {
+    private void initializeData() throws AirportNotFoundException {
 
         EmployeeEntity e = new EmployeeEntity(" Fleet", "Manager", "fleetmanager", "password", EmployeeAccessRight.FLEETMANAGER);
         em.persist(e);
@@ -227,7 +232,11 @@ public class DataInitSessionBean {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SYD"), airportSessionBean.retriveBy("NRT")));
+        try {
+            id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SYD"), airportSessionBean.retriveBy("NRT")));
+        } catch (AirportNotFoundException ex) {
+            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("NRT"), airportSessionBean.retriveBy("SYD")));
         } catch (FlightRouteNotFoundException ex) {
