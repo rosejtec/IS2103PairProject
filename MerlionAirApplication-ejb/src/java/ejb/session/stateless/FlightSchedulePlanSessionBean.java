@@ -30,7 +30,8 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     private EntityManager em;
 
     
-    public FlightSchedulePlanEntity createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs, List<FareEntity> f,FlightEntity flight) {
+    @Override
+   public FlightSchedulePlanEntity createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs, List<FareEntity> f,FlightEntity flight) {
        
         em.persist(fsp);
         em.flush();
@@ -42,13 +43,16 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         //map flight schedules
         for(FlightScheduleEntity d : fs) {
             d.setFlightSchedulePlan(fsp);
-            FlightScheduleEntity N = this.createNewFlightSchedule(d);
-            fsp.getFlightSchedules().add(N);
+            em.persist(d);
+            em.flush();
+            fsp.getFlightSchedules().add(d);
             SeatsInventoryEntity sie = new SeatsInventoryEntity(flight.getAircraftConfiguration().getMaxSeats(),0);
             em.persist(sie);
+            em.flush();
             d.setSeatsInventory(sie);
+            sie.setFlightSchedule(d);
         }    
-       // em.flush();
+       
         
         //map fare entity
         for(FareEntity fe: f)
@@ -67,6 +71,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         
      
     }
+    
     
     /*
     public FareEntity createNewFare(Long flightSchedulePlanId, FareEntity newFare) throws FlightSchedulePlanNotFoundException
@@ -158,11 +163,10 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         return flightScheduleEntity;
     }
 
-      @Override
+     @Override
       public FlightScheduleEntity createNewFlightSchedule(FlightScheduleEntity flightScheduleEntity){
         
-        em.persist(flightScheduleEntity);
-        em.flush();
+       
         SeatsInventoryEntity sie = new SeatsInventoryEntity();
         em.persist(sie);
         flightScheduleEntity.setSeatsInventory(new SeatsInventoryEntity());

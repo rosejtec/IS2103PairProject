@@ -7,11 +7,13 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -26,13 +28,16 @@ public class FlightReservationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightReservationId;
     
-    @OneToMany
+    @OneToMany(mappedBy = "reservation")
     private List<FlightReservationDetailsEntity> inBound;
-    @OneToMany
+    
+    @OneToMany(mappedBy = "reservation")
     private List<FlightReservationDetailsEntity> outBound;
     private Integer totalPassengers;
     @OneToMany
     private List<PassengerEntity> passenger;
+    @OneToOne
+    private CreditCardEntity card;
     private Integer totalAmount;
     private boolean connecting;
     private boolean returnFlight;
@@ -42,6 +47,14 @@ public class FlightReservationEntity implements Serializable {
 
     public List<FlightReservationDetailsEntity> getInBound() {
         return inBound;
+    }
+
+    public CreditCardEntity getCard() {
+        return card;
+    }
+
+    public void setCard(CreditCardEntity card) {
+        this.card = card;
     }
 
     public void setInBound(List<FlightReservationDetailsEntity> inBound) {

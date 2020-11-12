@@ -143,7 +143,7 @@ public class SalesManagementModule {
     
 
     private void doViewFlightReservations() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
     
 }

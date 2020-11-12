@@ -9,6 +9,7 @@ import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.FlightReservationSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
 import entity.AirportEntity;
+import entity.CreditCardEntity;
 import entity.CustomerEntity;
 import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
@@ -44,12 +45,12 @@ public class MainApp {
     FlightReservationSessionBeanRemote flightReservationSessionBean;
     CustomerSessionBeanRemote customerSessionBean;
     CustomerEntity currentCustomer;
-    Boolean round;
+    Boolean round=false;
     String departureAirport;
     String destinationAirport;
-    boolean connecting;
-    Integer passenger;
-    CabinClassType type;
+    boolean connecting=false;
+    Integer passenger=2;
+    CabinClassType type=CabinClassType.F;
 
     MainApp(FlightReservationSessionBeanRemote flightReservationSessionBean, CustomerSessionBeanRemote customerSessionBean, ReservationSessionBeanRemote reservationSessionBean) {
         this.flightReservationSessionBean = flightReservationSessionBean;
@@ -98,7 +99,13 @@ public class MainApp {
 
                 } else if (response == 4) {
                     try {
-                        doReserveFlights();
+                        try {
+                            doReserveFlights();
+                        } catch (NoFlightsFoundOnSearchException ex) {
+                            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ParseException ex) {
+                            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } catch (FlightScheduleEntityNotFoundException ex) {
                         Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -131,35 +138,39 @@ public class MainApp {
     private void doViewFlightReservations() {
     }
 
-    private void doReserveFlights() throws FlightScheduleEntityNotFoundException {
+    private void doReserveFlights() throws FlightScheduleEntityNotFoundException, NoFlightsFoundOnSearchException, ParseException {
         Scanner sc = new Scanner(System.in);
         List<FlightReservationDetailsEntity> inbound = new ArrayList<FlightReservationDetailsEntity>();
         List<FlightReservationDetailsEntity> outbound = new ArrayList<FlightReservationDetailsEntity>();
-        passenger = 1;
+        
+        if(passenger==null ){
+            doSearchFlights();
+        }
         System.out.println("Enter Flight Schedule Id for OutBound: ");
-
         Long id = sc.nextLong();
         inbound.add(new FlightReservationDetailsEntity(type, reservationSessionBean.retrievebyId(id)));
         List<String> seatNum = new ArrayList<>();
         sc.nextLine();
         int amount = 0;
         SeatsInventoryEntity seat = reservationSessionBean.retrievebyId(id).getSeatsInventory();
-        //System.out.println("Enter degree of connection");
+        System.out.println(seat);
 
         for (int i = 0; i < this.passenger; i++) {
-            System.out.println("Seat Details for Passenger " + (i + 1) + ": ");
+            int j = i+1;
+            System.out.println("Seat Details for Passenger " + (j) + ": ");
             System.out.print("Enter SeatNumber> ");
             String first = sc.nextLine().trim();
-            while (seat.getSeats().get(first) != null) {
-                first = sc.nextLine().trim();
-            }
-            seat.getSeats().put(first, true);
+            seat.getSeats().add(first);
             seatNum.add(first);
         }
+        
 
         seat.updateAvailableSeats(passenger);
         seat.updateReservedSeats(passenger);
         inbound.get(0).setSeatNum(seatNum);
+        
+        reservationSessionBean.updateSeat(seat);
+
         seatNum.clear();
         amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
 
@@ -177,17 +188,16 @@ public class MainApp {
                     System.out.println("Seat Details for Passenger:" + (i + 1));
                     System.out.print("Enter SeatNumber> ");
                     String first = sc.nextLine().trim();
-                    while (seat.getSeats().get(first) != null) {
-                        first = sc.nextLine().trim();
-                    }
+                          seat.getSeats().add(first);
 
-                    seat.getSeats().put(first, true);
                     seatNum.add(first);
 
                 }
                 seat.updateAvailableSeats(passenger);
                 seat.updateReservedSeats(passenger);
                 inbound.get(i).setSeatNum(seatNum);
+        reservationSessionBean.updateSeat(seat);
+
                 seatNum.clear();
                 amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
 
@@ -205,17 +215,14 @@ public class MainApp {
                 System.out.println("Seat Details for Passenger:" + (i + 1));
                 System.out.print("Enter SeatNumber> ");
                 String first = sc.nextLine().trim();
-                while (seat.getSeats().get(first) != null) {
-                    first = sc.nextLine().trim();
-                }
-
-                seat.getSeats().put(first, true);
+                seat.getSeats().add(first);
                 seatNum.add(first);
 
             }
             seat.updateAvailableSeats(passenger);
             seat.updateReservedSeats(passenger);
             amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
+        reservationSessionBean.updateSeat(seat);
 
             outbound.get(0).setSeatNum(seatNum);
             seatNum.clear();
@@ -234,17 +241,15 @@ public class MainApp {
                         System.out.println("Seat Details for Passenger:" + (i + 1));
                         System.out.print("Enter SeatNumber> ");
                         String first = sc.nextLine().trim();
-                        while (seat.getSeats().get(first) != null) {
-                            first = sc.nextLine().trim();
-                        }
+                        seat.getSeats().add(first);
 
-                        seat.getSeats().put(first, true);
                         seatNum.add(first);
                     }
                     seat.updateAvailableSeats(passenger);
                     seat.updateReservedSeats(passenger);
                     amount += reservationSessionBean.getFare(reservationSessionBean.retrievebyId(id), type) * passenger;
-
+                  reservationSessionBean.updateSeat(seat);
+ 
                     outbound.get(i).setSeatNum(seatNum);
                     seatNum.clear();
 
@@ -260,7 +265,8 @@ public class MainApp {
         book.setTotalAmount(amount);
         List<PassengerEntity> pass = new ArrayList<PassengerEntity>();
         for (int i = 0; i < this.passenger; i++) {
-            System.out.println("Details for Passenger:" + (i + 1));
+            int j = i+1;
+            System.out.println("Details for Passenger: " + j);
             System.out.print("Enter First Name> ");
             String first = sc.nextLine().trim();
             System.out.print("Enter Last Name> ");
@@ -269,11 +275,22 @@ public class MainApp {
             String passport = sc.nextLine().trim();
 
             pass.add(new PassengerEntity(first, last, passport));
-
+            System.out.println("");
         }
+        
+        
+            
+            System.out.print("Enter Credit Card Details > ");
+            System.out.print("Enter Credit Card Number> ");
+            String num = sc.nextLine().trim();
+            System.out.print("Enter Credit Card Pin> ");
+            String pin = sc.nextLine().trim();
+            
+            CreditCardEntity c = new CreditCardEntity(num, pin);
 
-        reservationSessionBean.reserveFlight(book, inbound, outbound, pass);
+        reservationSessionBean.reserveFlight(book, inbound, outbound, pass,passenger,c);
 
+        System.out.println("done");
         //create creditcard entiy and ask for input details
     }
 
@@ -339,7 +356,8 @@ public class MainApp {
         this.round = round;
         this.type = type;
         this.destinationAirport = destinationAirport;
-
+        this.passenger=passengers;
+       
         boolean use = true;
         if (round || !round) {
 
