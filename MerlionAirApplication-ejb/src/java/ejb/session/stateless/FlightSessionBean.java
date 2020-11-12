@@ -109,7 +109,7 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
             }
             else
             {
-                throw new UpdateFlightException("Flight number of flight record to be updated does not match the existing record");
+                throw new UpdateFlightException("Flight number of flight record to be updated does not match the existing record!");
             }
         }
         else 

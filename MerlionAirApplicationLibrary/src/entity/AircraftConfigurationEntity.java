@@ -31,7 +31,7 @@ public class AircraftConfigurationEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aircraftConfigurationId;
-    @Column(length = 32, nullable = false, unique = true)
+    @Column(length = 32, nullable = false)
     private String name;
     @Column(nullable = false)
     private Integer numOfCabinClass;

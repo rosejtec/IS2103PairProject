@@ -120,7 +120,7 @@ public class FlightPlanningModule {
                     try {
                         doCreateFlightRoute();
                     } catch (FlightRouteNotFoundException ex) {
-                        Logger.getLogger(FlightPlanningModule.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Flight Route does not exist!");
                     }
                 }
                 else if(response == 5)
@@ -132,7 +132,7 @@ public class FlightPlanningModule {
                     try {
                         doDeleteFightRoute();
                     } catch (FlightRouteNotFoundException ex) {
-                        Logger.getLogger(FlightPlanningModule.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Flight Route does not exist!");
                     }
                 }
                 else if(response == 7)
@@ -241,9 +241,9 @@ public class FlightPlanningModule {
 
     private void doCreateFlightRoute() throws FlightRouteNotFoundException {
       Scanner sc = new Scanner(System.in);
-      System.out.println("Enter Origin Aiport Code> ");
+      System.out.println("Enter Origin Airport Code> ");
       String codeO= sc.nextLine().trim();
-      System.out.println("Enter Destination Aiport Code> ");
+      System.out.println("Enter Destination Airport Code> ");
       String codeD= sc.nextLine().trim();
 
         FlightRouteEntity route  = new FlightRouteEntity(airportSessionBeanRemote.retriveBy(codeO), airportSessionBeanRemote.retriveBy(codeD));
@@ -253,9 +253,9 @@ public class FlightPlanningModule {
         String comp =sc.nextLine().trim();
       
       if(comp.equals("Y")){
-          FlightRouteEntity routeComp  = new FlightRouteEntity( airportSessionBeanRemote.retriveBy(codeD),airportSessionBeanRemote.retriveBy(codeO));
+          FlightRouteEntity routeComp  = new FlightRouteEntity(airportSessionBeanRemote.retriveBy(codeD),airportSessionBeanRemote.retriveBy(codeO));
           flightRouteSessionBeanRemote.createNewComplementaryReturnRoute(id, routeComp);
-          System.out.println("Complementary Flight Route " + routeComp.getFlightRouteId() + " has been successfully created!");
+          System.out.println("Complementary Flight Route has been successfully created!");
       }
     }
 
@@ -274,8 +274,9 @@ public class FlightPlanningModule {
     private void doDeleteFightRoute() throws FlightRouteNotFoundException {
            Scanner sc = new Scanner(System.in);   
            System.out.println("Enter Flight Route ID to be deleted> ");
-           Long config = sc.nextLong();
-           flightRouteSessionBeanRemote.deleteFlightRoute(config);
+           Long id = sc.nextLong();
+           flightRouteSessionBeanRemote.deleteFlightRoute(id);
+           System.out.println("Flight Route ID " + id + " is successfully deleted!");
     }
 
   
