@@ -90,13 +90,13 @@ public class DataInitSessionBean {
          em.flush();
 
          //String name, String code, String city, String state, String country
-         AirportEntity a = new  AirportEntity("Narita", "NRT", "Narita", "Chiba", "Japan", "+9");
+         AirportEntity a = new  AirportEntity("Narita", "NRT", "Narita", "Chiba", "Japan", 9);
              em.persist(a);
               em.flush();
-             AirportEntity a1 = new  AirportEntity("Changi", "SIN", "Singapore", "Singapore", "Singapore", "+8");
+             AirportEntity a1 = new  AirportEntity("Changi", "SIN", "Singapore", "Singapore", "Singapore", 8);
              em.persist(a1);
               em.flush();
-             AirportEntity a2  = new  AirportEntity("Taoyuan", "TPE", "Taoyuan", "Taipei", "Taiwan R.O.C.", "+8");
+             AirportEntity a2  = new  AirportEntity("Taoyuan", "TPE", "Taoyuan", "Taipei", "Taiwan R.O.C.", 8);
              em.persist(a2);
               em.flush();
  

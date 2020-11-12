@@ -31,13 +31,13 @@ public class AirportEntity implements Serializable {
     private String city;
     private String state;
     private String country;
-    private String timeZone;
+    private Integer timeZone;
     @OneToMany(mappedBy = "origin")
     private List<FlightRouteEntity> flightRoutesInbound;
     @OneToMany(mappedBy = "destination")
     private List<FlightRouteEntity> flightRoutesOutbound;
 
-    public AirportEntity(String name, String code, String city, String state, String country, String timeZone) {
+    public AirportEntity(String name, String code, String city, String state, String country, Integer timeZone) {
         this.name = name;
         this.code = code;
         this.city = city;
@@ -138,11 +138,11 @@ public class AirportEntity implements Serializable {
         return "entity.AirportEntity[ id=" + airportId + " ]";
     }
 
-    public String getTimeZone() {
+    public Integer getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(String timeZone) {
+    public void setTimeZone(Integer timeZone) {
         this.timeZone = timeZone;
     }
     

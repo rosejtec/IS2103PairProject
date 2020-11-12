@@ -65,10 +65,10 @@ public class FlightEntity implements Serializable {
         this.complentaryFlight = complentaryFlight;
     }
 
-    public FlightEntity(String flightNum, FlightRouteEntity flightRoute, boolean isComplemntary, AircraftConfigurationEntity aircraftConfiguration) {
+    public FlightEntity(String flightNum, FlightRouteEntity flightRoute, boolean isComplementary, AircraftConfigurationEntity aircraftConfiguration) {
         this.flightNum = flightNum;
         this.flightRoute = flightRoute;
-        this.complementary = isComplemntary;
+        this.complementary = isComplementary;
         this.aircraftConfiguration = aircraftConfiguration;
     }
     
@@ -140,16 +140,6 @@ public class FlightEntity implements Serializable {
     public void setAircraftConfiguration(AircraftConfigurationEntity aircraftConfiguration) {
         this.aircraftConfiguration = aircraftConfiguration;
     }
-
-    public String getFlightNum() {
-        return flightNum;
-    }
-
-    public void setFlightNum(String flightNum) {
-        this.flightNum = flightNum;
-    }
-
-   
 
     @Override
     public int hashCode() {

@@ -38,18 +38,18 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         {
             FlightRouteEntity flightRouteEntity = retrieveFlightRouteByFlightRouteId(flightRouteId);
             
-            em.persist(complementaryReturnRoute);
+            //
             
             flightRouteEntity.setComplementaryReturnRoute(complementaryReturnRoute);
             complementaryReturnRoute.setFlightRouteId(flightRouteId);
-            
+            em.persist(complementaryReturnRoute);
             em.flush();
 
             return complementaryReturnRoute;
         }
         catch(FlightRouteNotFoundException ex)
         {
-            throw new FlightRouteNotFoundException("Unable to create new complementary return route as the flight route record does not exist");
+            throw new FlightRouteNotFoundException("Unable to create new complementary return route as flight route record does not exist!");
         }
     }
     
@@ -90,8 +90,8 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         
         if(flightRouteToDelete.getFlights().size()==0) {
             flightRouteToDelete.setComplementaryReturnRoute(null);
-            flightRouteToDelete.setFlights(null);
-            em.remove(flightRouteToDelete.getComplementaryReturnRoute());
+            //flightRouteToDelete.setFlights(null);
+  //          em.remove(flightRouteToDelete.getComplementaryReturnRoute());
             em.remove(flightRouteToDelete);
             
             em.flush();
