@@ -21,9 +21,10 @@ import util.exception.AirportNotFoundException;
  */
 @Remote
 public interface FlightReservationSessionBeanRemote {
-public List<FlightScheduleEntity> searchSingleDay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException;
     
-
+    
+    public List<FlightScheduleEntity> searchSingleDay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException;
+   
     public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting,boolean round,String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException;   
      
     public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers,  CabinClassType cabinClass)throws NoFlightsFoundOnSearchException, AirportNotFoundException;

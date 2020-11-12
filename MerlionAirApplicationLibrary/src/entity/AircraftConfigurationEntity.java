@@ -48,10 +48,10 @@ public class AircraftConfigurationEntity implements Serializable {
         cabinClassConfigurations= new ArrayList<CabinClassConfigurationEntity>();
     }
 
-    public AircraftConfigurationEntity(String name, Integer numOfCabinClass, AircraftTypeEntity aircraftTypeEntity, List<CabinClassConfigurationEntity> cabinClassConfigurationEntity) {
+    public AircraftConfigurationEntity(String name, Integer numOfCabinClass,Integer max) {
         this.name = name;
         this.numOfCabinClass = numOfCabinClass;
-        this.cabinClassConfigurations = cabinClassConfigurations;
+        this.maxSeats=max;
     }
 
     public Integer getMaxSeats() {

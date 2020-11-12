@@ -27,7 +27,7 @@ public interface ReservationSessionBeanRemote {
     Integer getFare(FlightScheduleEntity fs, CabinClassType t); 
      FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
       
-void updateSeat(SeatsInventoryEntity seat);
+ void updateSeat(SeatsInventoryEntity seat);
 
     public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound, List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass, Integer passenger, CreditCardEntity c, CustomerEntity customer);
 

@@ -46,13 +46,14 @@ public class CabinClassConfigurationEntity implements Serializable {
     private AircraftConfigurationEntity aircraftConfiguration;
     @Enumerated(EnumType.STRING)
     private CabinClassType cabinClassType;
+    /*
     @OneToMany(mappedBy = "cabinClassConfiguration")
     private List<FareEntity> fares;
-
+*/
     public CabinClassConfigurationEntity() {
     }
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType cabinClassType,Integer maximum) {
+    public CabinClassConfigurationEntity( CabinClassType cabinClassType,Integer numOfAisles, Integer numOfRoles, Integer numOfSeatsAbreast, String seatConfiguration,Integer maximum) {
         this.numOfAisles = numOfAisles;
         this.numOfRows = numOfRoles;
         this.numOfSeatsAbreast = numOfSeatsAbreast;
@@ -61,9 +62,7 @@ public class CabinClassConfigurationEntity implements Serializable {
         this.maximum = maximum;
     }
 
-    public CabinClassConfigurationEntity(Integer numOfAisles, Integer numOfRows, Integer numOfSeatsAbreast, String seatConfiguration, CabinClassType valueOf) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     public Integer getMaximum() {
         return maximum;
@@ -155,7 +154,7 @@ public class CabinClassConfigurationEntity implements Serializable {
     public String toString() {
         return "entity.CabinClassConfigurationEntity[ id=" + cabinClassConfigurationId + " ]";
     }
-
+/*
     public List<FareEntity> getFares() {
         return fares;
     }
@@ -163,5 +162,5 @@ public class CabinClassConfigurationEntity implements Serializable {
     public void setFares(List<FareEntity> fares) {
         this.fares = fares;
     }
-    
+    */
 }

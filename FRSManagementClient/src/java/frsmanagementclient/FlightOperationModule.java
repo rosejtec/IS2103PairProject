@@ -352,7 +352,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             for(int i = 0; i < faresNum1; i++) {
             
             FareEntity f = new FareEntity();
-            f.setCabinClassConfiguration(ccc);
+          //  f.setCabinClassConfiguration(ccc);
             System.out.print("First Class - Enter fare basis code> ");
             f.setFareBasisCode(sc.nextLine().trim());
             System.out.print("First Class - Enter fare amount> ");
@@ -367,7 +367,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         sc.nextLine();
         for(int i = 0; i < faresNum2; i++) {
             FareEntity j = new FareEntity();
-            j.setCabinClassConfiguration(ccc);
+           // j.setCabinClassConfiguration(ccc);
             System.out.print("Business Class - Enter fare basis code> ");
             j.setFareBasisCode(sc.nextLine().trim());
             System.out.print("Business Class - Enter fare amount> ");
@@ -382,7 +382,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         sc.nextLine();
         for(int i = 0; i < faresNum3; i++) {
             FareEntity w = new FareEntity();
-            w.setCabinClassConfiguration(ccc);
+         //   w.setCabinClassConfiguration(ccc);
             System.out.print("Premium Economy Class - Enter fare basis code> ");
             w.setFareBasisCode(sc.nextLine().trim());
             System.out.print("Premium Economy Class - Enter fare amount> ");
@@ -397,7 +397,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         sc.nextLine();
         for(int i = 0; i < faresNum4; i++) {
             FareEntity y = new FareEntity();
-            y.setCabinClassConfiguration(ccc);
+          //  y.setCabinClassConfiguration(ccc);
             System.out.print("Economy Class - Enter fare basis code> ");
             y.setFareBasisCode(sc.nextLine().trim());
             System.out.print("Economy Class - Enter fare amount> ");
@@ -476,7 +476,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             System.out.println("Fares>");
             List<FareEntity> f = fsp.getFares();
             for(FareEntity f1 : f) {
-                System.out.println("Fare ID: " + f1.getFareId() +"; Cabin Class Type: " + f1.getCabinClassConfiguration().getCabinClassType() + "; Fare Basis Code: " + f1.getFareBasisCode() + "; Fare Amount: " + f1.getFareAmount());
+                System.out.println("Fare ID: " + f1.getFareId() +"; Cabin Class Type: " + f1.getCabinClassType() + "; Fare Basis Code: " + f1.getFareBasisCode() + "; Fare Amount: " + f1.getFareAmount());
             }
        
              while(true)

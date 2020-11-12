@@ -28,9 +28,11 @@ public class FareEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fareId;
+    /*
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private CabinClassConfigurationEntity cabinClassConfiguration;
+*/
     @Column(length = 5, nullable = false)
     private String fareBasisCode;
     @Column(length = 7, nullable = false)
@@ -44,12 +46,19 @@ public class FareEntity implements Serializable {
     public FareEntity() {
     }
 
-    public FareEntity(CabinClassConfigurationEntity cabinClassConfiguration, String fareBasisCode, String fareAmount) {
-        this.cabinClassConfiguration = cabinClassConfiguration;
+    
+    public FareEntity(String fareBasisCode, String fareAmount) {
         this.fareBasisCode = fareBasisCode;
         this.fareAmount = fareAmount;
     }
 
+    public FareEntity( CabinClassType cabinClassType,String fareBasisCode, String fareAmount) {
+        this.fareBasisCode = fareBasisCode;
+        this.fareAmount = fareAmount;
+        this.cabinClassType = cabinClassType;
+    }
+
+    
     public Long getFareId() {
         return fareId;
     }
@@ -83,6 +92,7 @@ public class FareEntity implements Serializable {
         return "entity.FareEntity[ id=" + fareId + " ]";
     }
 
+    /*
     public CabinClassConfigurationEntity getCabinClassConfiguration() {
         return cabinClassConfiguration;
     }
@@ -90,7 +100,7 @@ public class FareEntity implements Serializable {
     public void setCabinClassConfiguration(CabinClassConfigurationEntity cabinClassConfiguration) {
         this.cabinClassConfiguration = cabinClassConfiguration;
     }
-
+*/
     public String getFareBasisCode() {
         return fareBasisCode;
     }

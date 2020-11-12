@@ -49,6 +49,14 @@ public class FlightEntity implements Serializable {
  
     }
 
+    public FlightEntity(String flightNum, FlightRouteEntity flightRoute, AircraftConfigurationEntity aircraftConfiguration) {
+        this.flightNum = flightNum;
+        this.flightRoute = flightRoute;
+        this.aircraftConfiguration = aircraftConfiguration;
+    }
+
+    
+    
     public boolean isComplementary() {
         return complementary;
     }

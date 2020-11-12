@@ -40,6 +40,7 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     private EntityManager em;
     
     //7. create aircraftconfiguration for particular aircraft type use case
+    @Override
     public AircraftConfigurationEntity createNewAircraftConfiguration(AircraftConfigurationEntity aircraftConfigurationEntity,List<CabinClassConfigurationEntity> newCabinClassConfiguration, Long aircraftTypeId) throws AircraftTypeNotFoundException, AircraftConfigurationNotFoundException
     {
         try 
@@ -109,8 +110,5 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
-    @Override
-    public AircraftConfigurationEntity createNewAircraftConfiguration(AircraftConfigurationEntity aircraftConfigurationEntity, Long aircraftTypeId) throws AircraftTypeNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 }
