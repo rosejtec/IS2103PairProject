@@ -11,6 +11,7 @@ import ejb.session.stateless.AirportSessionBeanRemote;
 import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import entity.AircraftConfigurationEntity;
 import entity.AircraftTypeEntity;
+import entity.AirportEntity;
 import entity.CabinClassConfigurationEntity;
 import entity.EmployeeEntity;
 import entity.FlightRouteEntity;
@@ -94,12 +95,12 @@ public class FlightPlanningModule {
                      try {
                          doCreateAircraftConfiguration();
                      } catch (AircraftConfigurationNotFoundException ex) {
-                         System.out.println("Aircraft Configuration not found!");
+                         System.out.println("Aircraft Configuration not found!\n");
                      }
                  } catch (AircraftTypeNotFoundException ex) {
-                       System.out.println("Aircraft Type does not exist!");
+                       System.out.println("Aircraft Type does not exist!\n");
                  } catch (ExceedsMaximumCapacityException ex) {
-                       System.out.println("Number of seats exceeds maximum capacity!");
+                       System.out.println("Number of seats exceeds maximum capacity!\n");
                  }
                     
                 }
@@ -113,7 +114,7 @@ public class FlightPlanningModule {
                     try {
                         doViewAircraftConfigurationDetails();
                     } catch (AircraftConfigurationNotFoundException ex) {
-                        System.out.println("Aircraft Configuration not found!");
+                        System.out.println("Aircraft Configuration not found!\n");
                     }
                 }
                 else if(response == 4)
@@ -122,10 +123,10 @@ public class FlightPlanningModule {
                         try {
                             doCreateFlightRoute();
                         } catch (AirportNotFoundException ex) {
-                            Logger.getLogger(FlightPlanningModule.class.getName()).log(Level.SEVERE, null, ex);
+                            System.out.println("Airport code does not exist!\n");
                         }
                     } catch (FlightRouteNotFoundException ex) {
-                        System.out.println("Flight Route does not exist!");
+                        System.out.println("Flight Route does not exist!\n");
                     }
                 }
                 else if(response == 5)
@@ -137,7 +138,7 @@ public class FlightPlanningModule {
                     try {
                         doDeleteFightRoute();
                     } catch (FlightRouteNotFoundException ex) {
-                        System.out.println("Flight Route does not exist!");
+                        System.out.println("Flight Route does not exist!\n");
                     }
                 }
                 else if(response == 7)
@@ -158,7 +159,7 @@ public class FlightPlanningModule {
            }
            
         } else {
-             throw new InvalidAccessRightException("You don't have FLEET MANAGER or ROUTE PLANNER rights to access the flight planning module.");
+             throw new InvalidAccessRightException("You don't have FLEET MANAGER or ROUTE PLANNER rights to access the flight planning module.\n");
         }    
        
 
@@ -247,10 +248,12 @@ public class FlightPlanningModule {
       Scanner sc = new Scanner(System.in);
       System.out.println("Enter Origin Airport Code> ");
       String codeO= sc.nextLine().trim();
+      AirportEntity origin = airportSessionBeanRemote.retriveBy(codeO);
       System.out.println("Enter Destination Airport Code> ");
       String codeD= sc.nextLine().trim();
+      AirportEntity destination = airportSessionBeanRemote.retriveBy(codeD);
 
-        FlightRouteEntity route  = new FlightRouteEntity(airportSessionBeanRemote.retriveBy(codeO), airportSessionBeanRemote.retriveBy(codeD));
+        FlightRouteEntity route  = new FlightRouteEntity(origin, destination);
         Long id = flightRouteSessionBeanRemote.createNewFlightRoute(route);
         System.out.println("Flight Route " + id + " has been successfully created!");
         System.out.println("Would you like a Complementary Flight Route (Y/N)> ");

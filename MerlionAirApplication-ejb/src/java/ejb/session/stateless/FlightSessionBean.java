@@ -52,7 +52,7 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
             FlightEntity flight = (FlightEntity)query.getSingleResult();
             flight.getAircraftConfiguration().getCabinClassConfigurations().size();
             flight.getFlightSchedulePlans().size();
-            flight.getComplentaryFlight();
+            flight.getComplementaryFlight();
             return flight; 
             
         }
@@ -130,7 +130,7 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
         }
         
         if(flightEntityToDelete.getFlightSchedulePlans().size() == 0) {
-            flightEntityToDelete.getComplentaryFlight().setComplementary(false);
+            flightEntityToDelete.getComplementaryFlight().setComplementary(false);
             em.remove(flightEntityToDelete);
             
         } else {

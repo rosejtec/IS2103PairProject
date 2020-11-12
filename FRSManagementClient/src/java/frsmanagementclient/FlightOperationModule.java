@@ -110,9 +110,9 @@ public class FlightOperationModule {
                  try {
                      doCreateFlight();
                  } catch (FlightRouteNotFoundException ex) {
-                     System.out.println("Flight Route ID does not exist!");
+                     System.out.println("Flight Route ID does not exist!\n");
                  } catch (AircraftConfigurationNotFoundException ex) {
-                     System.out.println("Aircraft Configuration! ID does not exist!");
+                     System.out.println("Aircraft Configuration! ID does not exist!\n");
                  }
                 }
                 else if(response == 2)
@@ -124,7 +124,7 @@ public class FlightOperationModule {
                  try {
                      doViewFlightDetails();
                  } catch (FlightNotFoundException ex) {
-                     System.out.println("Flight ID does not exist!");
+                     System.out.println("Flight ID does not exist!\n");
                  }
                 }
                /* else if(response == 4)
@@ -154,7 +154,7 @@ public class FlightOperationModule {
                 try {
                     doCreateFlightSchedulePlan();
                 } catch (FlightNotFoundException ex) {
-                    System.out.println("Flight ID does not exist!");
+                    System.out.println("Flight ID does not exist!\n");
                 }
                 }
                  else if(response == 5)
@@ -167,11 +167,11 @@ public class FlightOperationModule {
                         try {  
                             doViewFlightSchedulePlanDetails();
                         } catch (FareNotFoundException ex) {
-                            System.out.println("Fare ID does not exist!");
+                            System.out.println("Fare ID does not exist!\n");
                         }
                     } catch (FlightSchedulePlanNotFoundException ex)
                     {
-                        System.out.println("Flight Schedule Plan ID does not exist!");
+                        System.out.println("Flight Schedule Plan ID does not exist!\n");
                     }
                 }
                   /*else if(response == 7)
@@ -201,7 +201,7 @@ public class FlightOperationModule {
         } 
         
         } else {
-             throw new InvalidAccessRightException("You don't have SCHEDULE MANAGER rights to access the flight planning module.");
+             throw new InvalidAccessRightException("You don't have SCHEDULE MANAGER rights to access the flight planning module.\n");
         }   
         
     }
@@ -233,14 +233,16 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime departure = LocalDateTime.parse(sc.nextLine().trim(), formatter);
-            System.out.println("Enter estimated flight duration (in hours)>");
-            int duration = sc.nextInt();    
+            System.out.println("Enter estimated flight duration (hours)>");
+            int durationHours = sc.nextInt();  
+            System.out.println("Enter estimated flight duration (minutes)>");
+            int durationMinutes = sc.nextInt();
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             sc.nextLine();
-            LocalDateTime arrival = departure.plusHours(duration+timeDifference);
-            flightScheduleList.add(new FlightScheduleEntity(departure,arrival,duration));
-//fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(departure,arrival,duration)));
+            LocalDateTime arrival = departure.plusHours(durationHours+timeDifference).plusMinutes(durationMinutes);
+            flightScheduleList.add(new FlightScheduleEntity(departure,arrival,durationHours));
+//fsp.getFlightSchedules().add(flightSchedulePlanSessionBeanRemote.createNewFlightSchedule(new FlightScheduleEntity(departure,arrival,durationHours)));
             
         } else if(type==2) {
             fsp.setSchedule(ScheduleEnum.MULTIPLE);
@@ -252,13 +254,15 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             String date = sc.nextLine().trim();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-           System.out.println("Enter estimated flight duration " + (i+1) + " (in hours)>");
-         int duration = sc.nextInt();
+           System.out.println("Enter estimated flight duration " + (i+1) + " (hours)>");
+         int durationHours = sc.nextInt();
+         System.out.println("Enter estimated flight duration " + (i+1) + " (minutes)>");
+         int durationMinutes = sc.nextInt();
          sc.nextLine();
          FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
-         LocalDateTime arrival = dateTime.plusHours(duration+timeDifference);
-            flightScheduleList.add(new FlightScheduleEntity(dateTime,arrival,duration));
+         LocalDateTime arrival = dateTime.plusHours(durationHours+timeDifference).plusMinutes(durationMinutes);
+            flightScheduleList.add(new FlightScheduleEntity(dateTime,arrival,durationHours));
             }
             
         } else if( type == 3){
@@ -276,16 +280,18 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
            System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
             LocalDateTime departure = LocalDateTime.parse(date, formatter);
-            System.out.println("Enter estimated flight duration (in hours)>");
-            int duration = sc.nextInt();
+            System.out.println("Enter estimated flight duration (hours)>");
+            int durationHours = sc.nextInt();  
+            System.out.println("Enter estimated flight duration (minutes)>");
+            int durationMinutes = sc.nextInt();
             sc.nextLine();
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
-            LocalDateTime arrival = departure.plusHours(duration+timeDifference);
+            LocalDateTime arrival = departure.plusHours(durationHours+timeDifference).plusMinutes(durationMinutes);
             //fsp.setN(n);
             //for(int i =0 ;i<n;i++){
             while (arrival.isBefore(endDate) || arrival.isEqual(endDate)){
-               flightScheduleList.add(new FlightScheduleEntity(departure,arrival,duration));
+               flightScheduleList.add(new FlightScheduleEntity(departure,arrival,durationHours));
                 departure = departure.plusDays(n);
                 arrival = arrival.plusDays(n);
             }
@@ -304,16 +310,18 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
             LocalDateTime departure = LocalDateTime.parse(date, formatter);
-           System.out.println("Enter estimated flight duration (in hours)>");
-         int duration = sc.nextInt();
-         sc.nextLine();
+          System.out.println("Enter estimated flight duration (hours)>");
+            int durationHours = sc.nextInt();  
+            System.out.println("Enter estimated flight duration (minutes)>");
+            int durationMinutes = sc.nextInt();
+            sc.nextLine();
           FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
-            LocalDateTime arrival = departure.plusHours(duration+timeDifference);
+            LocalDateTime arrival = departure.plusHours(durationHours+timeDifference).plusMinutes(durationMinutes);
            
          
          while (arrival.isBefore(endDate) || arrival.isEqual(endDate)){
-                      flightScheduleList.add(new FlightScheduleEntity(departure,arrival,duration));
+                      flightScheduleList.add(new FlightScheduleEntity(departure,arrival,durationHours));
                       
              departure = departure.plusWeeks(1);
              arrival = arrival.plusWeeks(1);
@@ -409,7 +417,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         System.out.println("Flight Schedule Plan " + fspId.getFightSchedulePlanId() + " has been successfully created!");
             
          //check if got complementary return flightId
-        if (flight.getComplentaryFlight() != null)
+        if (flight.getComplementaryFlight() != null)
         {
             System.out.println("Would you like to create a complementary return schedule plan? (Y/N)> ");
             if(sc.nextLine().trim().equals("Y")) {
@@ -417,7 +425,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                 int layoverDuration = sc.nextInt();
                 sc.nextLine();
                 
-                FlightEntity complementaryFlight = flightSessionBeanRemote.retrieveFlightByFlightNumber(flight.getComplentaryFlight().getFlightNumber());
+                FlightEntity complementaryFlight = flightSessionBeanRemote.retrieveFlightByFlightNumber(flight.getComplementaryFlight().getFlightNumber());
                 List<FlightScheduleEntity> complementaryFs = new ArrayList<FlightScheduleEntity>(); 
                 FlightSchedulePlanEntity complementaryFsp = new FlightSchedulePlanEntity(complementaryFlight);
                 complementaryFsp.setSchedule(fspId.getSchedule());
@@ -720,8 +728,8 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                if(!r.isComplementary()){
                 System.out.println("Flight ID: "+r.getFlightId()+ "; Flight Number: " + r.getFlightNumber());
 
-               if(r.getComplentaryFlight()!=null) {
-                 System.out.println("Flight ID: "+r.getComplentaryFlight().getFlightId()+ "; Flight Number: " + r.getComplentaryFlight().getFlightNumber());
+               if(r.getComplementaryFlight()!=null) {
+                 System.out.println("Flight ID: "+r.getComplementaryFlight().getFlightId()+ "; Flight Number: " + r.getComplementaryFlight().getFlightNumber());
 
                }
             }

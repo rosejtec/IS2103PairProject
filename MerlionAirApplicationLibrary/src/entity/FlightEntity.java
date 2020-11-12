@@ -57,7 +57,7 @@ public class FlightEntity implements Serializable {
         this.complementary = complementary;
     }
 
-    public FlightEntity getComplentaryFlight() {
+    public FlightEntity getComplementaryFlight() {
         return complentaryFlight;
     }
 

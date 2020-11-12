@@ -8,11 +8,14 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import util.enumeration.CabinClassType;
 
 /**
  *
@@ -35,6 +38,8 @@ public class FareEntity implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
+     @Enumerated(EnumType.STRING)
+    private CabinClassType cabinClassType;
     
     public FareEntity() {
     }
@@ -108,6 +113,14 @@ public class FareEntity implements Serializable {
 
     public void setFlightSchedulePlan(FlightSchedulePlanEntity flightSchedulePlan) {
         this.flightSchedulePlan = flightSchedulePlan;
+    }
+
+    public CabinClassType getCabinClassType() {
+        return cabinClassType;
+    }
+
+    public void setCabinClassType(CabinClassType cabinClassType) {
+        this.cabinClassType = cabinClassType;
     }
     
 }

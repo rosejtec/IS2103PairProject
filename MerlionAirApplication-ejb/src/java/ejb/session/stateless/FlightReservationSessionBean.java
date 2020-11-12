@@ -24,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.CabinClassType;
 import util.enumeration.NoFlightsFoundOnSearchException;
+import util.exception.AirportNotFoundException;
 
 /**
  *
@@ -45,9 +46,9 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<FlightScheduleEntity> searchSingleDay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<FlightScheduleEntity> searchSingleDay(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int passengers, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
         try {
-            AirportEntity a1 = airportSessionBean.retriveBy(origin);
+            AirportEntity a1 = airportSessionBean.retriveBy(origin);    
             AirportEntity a2 = airportSessionBean.retriveBy(destination);
 
             Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE  m.origin.airportId = :inOrg AND m.destination.airportId = :outDes AND  f.departure BETWEEN :inDate AND :inDate1");
@@ -69,12 +70,11 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
             throw new NoFlightsFoundOnSearchException();
 
-        }
-
+        } 
     }
 
     @Override
-    public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<FlightScheduleEntity> searchThreeDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
             AirportEntity a1 = airportSessionBean.retriveBy(origin);
@@ -102,7 +102,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<FlightScheduleEntity> searchThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
         try {
             AirportEntity a1 = airportSessionBean.retriveBy(origin);
             AirportEntity a2 = airportSessionBean.retriveBy(destination);
@@ -129,7 +129,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<List<FlightScheduleEntity>> searchConnectingThreeDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
 
@@ -179,7 +179,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<FlightScheduleEntity> getOneWayAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<FlightScheduleEntity> getOneWayAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
            // System.out.println(origin);
@@ -200,7 +200,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<List<List<FlightScheduleEntity>>> searchConnectingDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<List<List<FlightScheduleEntity>>> searchConnectingDaysAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
 
@@ -253,7 +253,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
     
       @Override
-    public List<List<FlightScheduleEntity>> searchConnectingThreeDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<List<FlightScheduleEntity>> searchConnectingThreeDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
 
@@ -294,7 +294,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<FlightScheduleEntity> getOneWayBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<FlightScheduleEntity> getOneWayBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
             System.out.println(origin);
@@ -315,7 +315,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     }
 
     @Override
-    public List<FlightScheduleEntity> getDestination(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<FlightScheduleEntity> getDestination(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
             AirportEntity a1 = airportSessionBean.retriveBy(origin);
@@ -338,7 +338,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
         }
     }
     @Override
-    public List<List<List<FlightScheduleEntity>>> searchConnectingDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+    public List<List<List<FlightScheduleEntity>>> searchConnectingDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException, AirportNotFoundException {
 
         try {
                         departure=departure.plusDays(days);

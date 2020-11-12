@@ -33,6 +33,7 @@ import javax.naming.NamingException;
 import util.enumeration.CabinClassType;
 import util.enumeration.FlightScheduleEntityNotFoundException;
 import util.enumeration.NoFlightsFoundOnSearchException;
+import util.exception.AirportNotFoundException;
 import util.exception.FlightReservationNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -94,6 +95,8 @@ public class MainApp {
                         doSearchFlights();
                     } catch (NoFlightsFoundOnSearchException ex) {
                         System.out.println("No flights search available!\n");
+                    } catch (AirportNotFoundException ex) {
+                        System.out.println("Airport does not exist!");
                     }
                 } else if (response == 4)
                 {
@@ -135,7 +138,11 @@ public class MainApp {
                 if (response == 1) 
                 {
                     try {
-                        doReserveFlight();
+                        try {
+                            doReserveFlight();
+                        } catch (AirportNotFoundException ex) {
+                            System.out.println("Airport does not exist!");
+                        }
                     } catch (FlightScheduleEntityNotFoundException ex) {
                         System.out.println("Flight schedule does not exist!");
                     } catch (NoFlightsFoundOnSearchException ex) {
@@ -232,7 +239,7 @@ public class MainApp {
 
 
 
-    private void doReserveFlight() throws FlightScheduleEntityNotFoundException, NoFlightsFoundOnSearchException {
+    private void doReserveFlight() throws FlightScheduleEntityNotFoundException, NoFlightsFoundOnSearchException, AirportNotFoundException {
         Scanner sc = new Scanner(System.in);
         List<FlightReservationDetailsEntity> inbound = new ArrayList<FlightReservationDetailsEntity>();
         List<FlightReservationDetailsEntity> outbound = new ArrayList<FlightReservationDetailsEntity>();
@@ -388,7 +395,7 @@ public class MainApp {
         //create creditcard entiy and ask for input details
     }
 
-    private void doSearchFlights() throws NoFlightsFoundOnSearchException {
+    private void doSearchFlights() throws NoFlightsFoundOnSearchException, AirportNotFoundException {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

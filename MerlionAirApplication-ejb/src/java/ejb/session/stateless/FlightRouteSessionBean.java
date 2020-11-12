@@ -79,6 +79,23 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         
     }
     
+    public FlightRouteEntity retrieveFlightRouteByAirportCode(String departure, String arrival) throws FlightRouteNotFoundException
+    {
+        
+       Query query = em.createQuery("SELECT fr FROM FlightRouteEntity  WHERE a.departure = :inDdeparture AND a.arrival = : inArrival");
+       query.setParameter("inDeparture", departure);
+       query.setParameter("inArrival", arrival);
+        
+       FlightRouteEntity fr = (FlightRouteEntity)query.getSingleResult();
+       fr.getFlights().size();
+       fr.getComplementaryReturnRoute();
+       fr.getDestination();
+       fr.getOrigin();
+       return fr;
+        
+        
+    }
+     
     //delete flight route use case
     public void deleteFlightRoute(Long flightRouteId) throws FlightRouteNotFoundException
     {
