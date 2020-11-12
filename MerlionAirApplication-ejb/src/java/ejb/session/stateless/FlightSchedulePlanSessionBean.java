@@ -15,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.FareNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 import util.exception.FlightScheduleNotFoundException;
 import util.exception.FlightSchedulePlanNotFoundException;
@@ -131,9 +132,12 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
              return fsp;
          } else {
              throw new FlightSchedulePlanNotFoundException();
-         }
-         
+         }       
      }
+     
+     
+     
+     
     public void deleteFlightSchedule(Long flightSchedulePlanId, Long flightScheduleId) throws FlightSchedulePlanNotFoundException, FlightScheduleNotFoundException 
     {
         
@@ -144,17 +148,40 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
             throw new FlightScheduleNotFoundException("Flight Schedule ID " + flightScheduleId + "does not exist!"); 
         }
         
-        /*
-        //need to check for tickets to do delete and change in fare
-        
-        if (fsToDelete.)
+     
             fsp.getFlightSchedules().remove(fsToDelete);
             em.remove(fsToDelete);
-      */
+          }
+    
+    
+         public FlightScheduleEntity retrieveFlightScheduleById(Long fsId) throws FlightScheduleNotFoundException
+    {
+        FlightScheduleEntity fs = em.find(FlightScheduleEntity.class, fsId);
+        
+        if(fs != null)
+        {
+            return fs;
+        }
+        else
+        {
+            throw new FlightScheduleNotFoundException("Flight ScheduleID " + fsId + " does not exist!");
+        }               
     }
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-
+        
+          public FareEntity retrieveFareByFareId(Long fareId) throws FareNotFoundException
+    {
+        FareEntity fare = em.find(FareEntity.class, fareId);
+        
+        if(fare != null)
+        {
+            return fare;
+        }
+        else
+        {
+            throw new FareNotFoundException("Fare ID " + fareId + " does not exist!");
+        }               
+    }
+          
     @Override
     public FareEntity createNewFare(FareEntity flightScheduleEntity) {
      em.persist(flightScheduleEntity);
@@ -175,4 +202,28 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         return flightScheduleEntity;
       }
   
+        public void updateFare(FareEntity fare) throws FareNotFoundException 
+        {
+       // if (fare != null && fare.getFareId()) != null)
+       // {
+           FareEntity fareToUpdate = retrieveFareByFareId(fare.getFareId());
+           
+          // if(fareToUpdate.getFareId().equals(fare.getFareId()))
+           //{
+               //things to be updated
+               fareToUpdate.setFareBasisCode(fare.getFareBasisCode());
+               fareToUpdate.setFareAmount(fare.getFareAmount());
+         //   }
+           // else
+           // {
+           //     throw new UpdateFlightException("Flight number of flight record to be updated does not match the existing record!");
+            //}
+        }
+       // else 
+        //{ 
+         //   throw new FlightNotFoundException("Flight ID not provided for product to be updated");
+       // }
+
+//em.update(flightEntity);
+    
 }

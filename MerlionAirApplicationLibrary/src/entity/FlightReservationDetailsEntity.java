@@ -28,57 +28,57 @@ public class FlightReservationDetailsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long flightReservationDetailId;
+    private Long flightReservationDetailsId;
     @Enumerated(EnumType.STRING)
     private CabinClassType cabinClass;
     @OneToOne 
-    private FlightScheduleEntity schedule;
+    private FlightScheduleEntity flightSchedule;
     private List<String> seatNum;
     @ManyToOne
-    private FlightReservationEntity reservation;
+    private FlightReservationEntity flightReservation;
 
     public FlightReservationDetailsEntity() {
     }
 
     public FlightReservationDetailsEntity(CabinClassType cabinClass, FlightScheduleEntity schedule) {
         this.cabinClass = cabinClass;
-        this.schedule = schedule;
+        this.flightSchedule = schedule;
     }
 
-    public FlightReservationEntity getReservation() {
-        return reservation;
+    public FlightReservationEntity getFlightReservation() {
+        return flightReservation;
     }
 
-    public void setReservation(FlightReservationEntity reservation) {
-        this.reservation = reservation;
+    public void setFlightReservation(FlightReservationEntity flightReservation) {
+        this.flightReservation = flightReservation;
     }
 
 
 
     
-    public Long getFlightReservationDetailId() {
-        return flightReservationDetailId;
+    public Long getFlightReservationDetailsId() {
+        return flightReservationDetailsId;
     }
 
-    public void setFlightReservationDetailId(Long flightReservationDetailId) {
-        this.flightReservationDetailId = flightReservationDetailId;
+    public void setFlightReservationDetailsId(Long flightReservationDetailsId) {
+        this.flightReservationDetailsId = flightReservationDetailsId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (flightReservationDetailId != null ? flightReservationDetailId.hashCode() : 0);
+        hash += (flightReservationDetailsId != null ? flightReservationDetailsId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the flightReservationDetailId fields are not set
+        // TODO: Warning - this method won't work in the case the flightReservationDetailsId fields are not set
         if (!(object instanceof FlightReservationDetailsEntity)) {
             return false;
         }
         FlightReservationDetailsEntity other = (FlightReservationDetailsEntity) object;
-        if ((this.flightReservationDetailId == null && other.flightReservationDetailId != null) || (this.flightReservationDetailId != null && !this.flightReservationDetailId.equals(other.flightReservationDetailId))) {
+        if ((this.flightReservationDetailsId == null && other.flightReservationDetailsId != null) || (this.flightReservationDetailsId != null && !this.flightReservationDetailsId.equals(other.flightReservationDetailsId))) {
             return false;
         }
         return true;
@@ -86,7 +86,7 @@ public class FlightReservationDetailsEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.FlightReservationDetailsEntity[ id=" + flightReservationDetailId + " ]";
+        return "entity.FlightReservationDetailsEntity[ id=" + flightReservationDetailsId + " ]";
     }
 
     public CabinClassType getCabinClass() {
@@ -97,12 +97,12 @@ public class FlightReservationDetailsEntity implements Serializable {
         this.cabinClass = cabinClass;
     }
 
-    public FlightScheduleEntity getSchedule() {
-        return schedule;
+    public FlightScheduleEntity getFlightSchedule() {
+        return flightSchedule;
     }
 
-    public void setSchedule(FlightScheduleEntity schedule) {
-        this.schedule = schedule;
+    public void setFlightSchedule(FlightScheduleEntity flightSchedule) {
+        this.flightSchedule = flightSchedule;
     }
 
     public List<String> getSeatNum() {

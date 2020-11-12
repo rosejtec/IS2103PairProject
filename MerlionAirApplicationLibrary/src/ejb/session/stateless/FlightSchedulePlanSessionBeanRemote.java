@@ -11,6 +11,7 @@ import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.FareNotFoundException;
 import util.exception.FlightScheduleNotFoundException;
 import util.exception.FlightSchedulePlanNotFoundException;
 
@@ -34,5 +35,11 @@ public interface FlightSchedulePlanSessionBeanRemote {
     public FareEntity createNewFare(FareEntity fareEntity);
 
     public FlightScheduleEntity createNewFlightSchedule(FlightScheduleEntity flightScheduleEntity);
+
+    public FlightScheduleEntity retrieveFlightScheduleById(Long fsId) throws FlightScheduleNotFoundException;
+
+    public FareEntity retrieveFareByFareId(Long fareId) throws FareNotFoundException;
+
+    public void updateFare(FareEntity fare) throws FareNotFoundException;
     
 }

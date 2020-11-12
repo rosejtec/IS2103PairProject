@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.CreditCardEntity;
+import entity.CustomerEntity;
 import entity.FareEntity;
 import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
@@ -25,7 +26,9 @@ import util.enumeration.FlightScheduleEntityNotFoundException;
 public interface ReservationSessionBeanRemote {
     Integer getFare(FlightScheduleEntity fs, CabinClassType t); 
      FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
-       FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass,Integer passenger,CreditCardEntity c);
+      
 void updateSeat(SeatsInventoryEntity seat);
+
+    public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound, List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass, Integer passenger, CreditCardEntity c, CustomerEntity customer);
 
 }

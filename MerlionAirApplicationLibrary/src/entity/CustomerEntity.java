@@ -34,10 +34,8 @@ public class CustomerEntity implements Serializable {
     @Column(length = 32, nullable = false, unique = true)
     private String username;
     private String password;
-    
-    
     @OneToMany
-    private List<FlightReservationEntity> reservations;
+    private List<FlightReservationEntity> flightReservations;
 
     public CustomerEntity() {
     }
@@ -90,12 +88,12 @@ public class CustomerEntity implements Serializable {
         this.password = password;
     }
 
-    public List<FlightReservationEntity> getReservations() {
-        return reservations;
+    public List<FlightReservationEntity> getFlightReservations() {
+        return flightReservations;
     }
 
-    public void setReservations(List<FlightReservationEntity> reservations) {
-        this.reservations = reservations;
+    public void setFlightReservations(List<FlightReservationEntity> flightReservations) {
+        this.flightReservations = flightReservations;
     }
     
     

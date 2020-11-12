@@ -6,12 +6,14 @@
 package ejb.session.stateless;
 
 import entity.CustomerEntity;
+import entity.FlightReservationEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.CustomerNotFoundException;
+import util.exception.FlightReservationNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -116,9 +118,26 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
         }
     }
     
-    
+    public FlightReservationEntity retrieveFlightReservationById(Long frId) throws FlightReservationNotFoundException 
+    {
+         FlightReservationEntity fr = em.find(FlightReservationEntity.class, frId);
+         
+         if(fr != null)
+         {
+             fr.getPassenger().size();
+             fr.getInBound().size();
+             fr.getOutBound().size();
+             
+             return fr;
+         } else {
+             throw new FlightReservationNotFoundException("Flight Reservation ID " + frId + " does not exist!");
+
+         }
+    }
+   
 
     public void persist(Object object) {
         em.persist(object);
     }
+
 }

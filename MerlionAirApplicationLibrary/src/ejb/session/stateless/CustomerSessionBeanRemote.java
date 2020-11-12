@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import entity.CustomerEntity;
+import entity.FlightReservationEntity;
 import javax.ejb.Remote;
 import util.exception.CustomerNotFoundException;
+import util.exception.FlightReservationNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -21,5 +23,7 @@ public interface CustomerSessionBeanRemote {
      public CustomerEntity retrieveCustomerById(Long customerId) throws CustomerNotFoundException;
 
     public CustomerEntity createNewCustomer(CustomerEntity customer);
+
+    public FlightReservationEntity retrieveFlightReservationById(Long frId) throws FlightReservationNotFoundException;
     
 }

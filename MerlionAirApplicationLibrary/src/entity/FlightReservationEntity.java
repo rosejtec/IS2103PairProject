@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -28,10 +29,10 @@ public class FlightReservationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightReservationId;
     
-    @OneToMany(mappedBy = "reservation")
+    @OneToMany(mappedBy = "flightReservation")
     private List<FlightReservationDetailsEntity> inBound;
     
-    @OneToMany(mappedBy = "reservation")
+    @OneToMany(mappedBy = "flightReservation")
     private List<FlightReservationDetailsEntity> outBound;
     private Integer totalPassengers;
     @OneToMany
@@ -41,6 +42,8 @@ public class FlightReservationEntity implements Serializable {
     private Integer totalAmount;
     private boolean connecting;
     private boolean returnFlight;
+    @ManyToOne
+    private CustomerEntity customer;
 
     public FlightReservationEntity() {
     }
@@ -142,6 +145,14 @@ public class FlightReservationEntity implements Serializable {
     @Override
     public String toString() {
         return "entity.FlightReservationEntity[ id=" + flightReservationId + " ]";
+    }
+
+    public CustomerEntity getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerEntity customer) {
+        this.customer = customer;
     }
     
 }
