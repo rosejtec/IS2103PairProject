@@ -28,7 +28,7 @@ public class FlightEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightId;
-    @Column(length = 5, nullable = false, unique = true)
+    @Column(length = 6, nullable = false, unique = true)
     private String flightNum;
     @OneToMany(mappedBy = "flight")
     private List<FlightSchedulePlanEntity> flightSchedulePlans;    

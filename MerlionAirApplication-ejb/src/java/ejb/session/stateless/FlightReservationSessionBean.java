@@ -133,10 +133,13 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
         try {
 
+            System.out.println("Days" + days);
             departure=departure.plusDays(days);
+            System.out.println("Departure" + departure);
+
 
             List<FlightScheduleEntity> list = getOneWayAfter(connecting, round, origin, destination, departure, days, cabinClass);
-
+            System.out.println(list.size());
             List<List<FlightScheduleEntity>> c = new ArrayList<>();
             int i = 0;
             AirportEntity a2 = airportSessionBean.retriveBy(destination);
@@ -148,20 +151,26 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
                 query1.setParameter("inDes", a2.getAirportId());
                 query1.setParameter("inDate", fs.getArrival());
                 query1.setParameter("inDate1", fs.getArrival().plusDays(1));
-
+                
+                System.out.println("inOrg"+ fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getAirportId());
+                System.out.println("inDes"+a2.getAirportId());
+                System.out.println("inDate"+fs.getArrival());
+                System.out.println("inDate1"+ fs.getArrival().plusDays(1));
+                
+                System.out.println("c" + c);
                 List<FlightScheduleEntity> connect = query1.getResultList();
                 System.out.println(fs.getArrival());
                 System.out.println(connect);
 
                 if (!connect.isEmpty()) {
                     c.get(i).addAll(connect);
+                System.out.println("c after add" + c);
                 }
 
                 i++;
             }
 
-            System.out.println(c);
-
+            
             return c;
 
         } catch (NoResultException ex) {
@@ -173,17 +182,17 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
     public List<FlightScheduleEntity> getOneWayAfter(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
 
         try {
-            System.out.println(origin);
+           // System.out.println(origin);
             AirportEntity a1 = airportSessionBean.retriveBy(origin);
             Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND f.departure BETWEEN :inDate11 AND :inDate12");
-            System.out.println(departure.plusDays(1));
+            System.out.println("MaxOutdate" +departure.plusDays(1));
             query.setParameter("inOrg", a1.getAirportId());
             query.setParameter("inDate11", departure);
             query.setParameter("inDate12", departure.plusDays(1));
 
             List<FlightScheduleEntity> list = query.getResultList();
-
-            System.out.println(list);
+           System.out.println("List:" +list);
+           // System.out.println(list);
             return list;
         } catch (NoResultException ex) {
             throw new NoFlightsFoundOnSearchException();
@@ -197,7 +206,7 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
 
             departure=departure.plusDays(days);
             List<FlightScheduleEntity> list = getOneWayAfter(connecting, round, origin, destination, departure, days, cabinClass);
-
+           System.out.println("lIST"+list);
             List<List<List<FlightScheduleEntity>>> c1 = new ArrayList<>();
             int j = 0;
             List<List<FlightScheduleEntity>> c2 = new ArrayList<>();
@@ -206,7 +215,8 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
             for (FlightScheduleEntity fs : list) {
                 c2.add(new ArrayList<FlightScheduleEntity>());
                 c1.add(c2);
-                List<FlightScheduleEntity> list2 = getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getOrigin().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), days, cabinClass);
+                List<FlightScheduleEntity> list2 = getOneWayAfter(connecting, round, fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getCode(), fs.getArrival(), days, cabinClass);
+                System.out.println("lIST2:" +list2);
                 int i = 0;
                 for (FlightScheduleEntity fs2 : list2) {
                     Query query1 = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND m.destination.airportId = :inDes AND f.departure BETWEEN :inDate AND :inDate1");
@@ -217,9 +227,13 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
                     query1.setParameter("inDate", fs2.getArrival());
                     query1.setParameter("inDate1", fs2.getArrival().plusDays(1));
 
+                System.out.println("inOrg"+ fs2.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getAirportId());
+                System.out.println("inDes"+a2.getAirportId());
+                System.out.println("inDate"+fs2.getArrival());
+                System.out.println("inDate1"+ fs2.getArrival().plusDays(1));
+                
                     List<FlightScheduleEntity> connect = query1.getResultList();
-                    System.out.println(fs.getArrival());
-                    System.out.println(connect);
+                    System.out.println("cONNECT"+connect);
 
                     if (!connect.isEmpty()) {
                         c2.get(i).addAll(connect);
@@ -300,6 +314,29 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
         }
     }
 
+    @Override
+    public List<FlightScheduleEntity> getDestination(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
+
+        try {
+            AirportEntity a1 = airportSessionBean.retriveBy(origin);
+            AirportEntity a2= airportSessionBean.retriveBy(destination);
+
+            Query query = em.createQuery("SELECT f FROM FlightScheduleEntity f JOIN f.flightSchedulePlan p JOIN p.flight t JOIN t.flightRoute m WHERE m.origin.airportId = :inOrg AND m.destination.airportId = :inDes AND f.departure BETWEEN :inDate AND :inDate1");
+
+                                query.setParameter("inOrg", a1.getAirportId());
+                                query.setParameter("inDes", a2.getAirportId());
+                                query.setParameter("inDate", departure);
+                                query.setParameter("inDate1", departure.plusDays(1));
+                   
+
+                    List<FlightScheduleEntity> list = query.getResultList();
+            
+            System.out.println(list);
+            return list;
+        } catch (NoResultException ex) {
+            throw new NoFlightsFoundOnSearchException();
+        }
+    }
     @Override
     public List<List<List<FlightScheduleEntity>>> searchConnectingDaysBefore(boolean connecting, boolean round, String origin, String destination, LocalDateTime departure, int days, CabinClassType cabinClass) throws NoFlightsFoundOnSearchException {
 

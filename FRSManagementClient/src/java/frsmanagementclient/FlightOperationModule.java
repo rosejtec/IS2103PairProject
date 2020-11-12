@@ -565,6 +565,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
          FlightRouteEntity fr = flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute);
         sc.nextLine();
         
+       sc.nextLine();
        System.out.println("Enter Flight Number>");
        
        String flightNum = sc.nextLine().trim();
