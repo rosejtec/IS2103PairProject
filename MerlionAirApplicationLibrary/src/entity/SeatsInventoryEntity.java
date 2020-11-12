@@ -6,7 +6,9 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,22 +31,27 @@ public class SeatsInventoryEntity implements Serializable {
     private Integer balanceSeats;
     @OneToOne
     private FlightScheduleEntity flightSchedule;        
-    HashMap<String,Boolean> seats;
+    List<String> seats;
     
     public SeatsInventoryEntity() {
-    }
+//            this.seats= new HashMap<>();
+}
 
-    public HashMap<String, Boolean> getSeats() {
+    public List<String> getSeats() {
         return seats;
     }
 
-    public void setSeats(HashMap<String, Boolean> seats) {
+    public void setSeats(List<String> seats) {
         this.seats = seats;
     }
+
+ 
 
     public SeatsInventoryEntity(Integer availableSeats, Integer reservedSeats) {
         this.availableSeats = availableSeats;
         this.reservedSeats = reservedSeats;
+        this.seats= new ArrayList<>();
+
     }
     
     
@@ -90,7 +97,7 @@ public class SeatsInventoryEntity implements Serializable {
     }
     
     public void updateAvailableSeats(Integer availableSeats) {
-        this.availableSeats += availableSeats;
+        this.availableSeats -= availableSeats;
     }
 
     public Integer getReservedSeats() {

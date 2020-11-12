@@ -5,11 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.CreditCardEntity;
 import entity.FareEntity;
 import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
 import entity.PassengerEntity;
+import entity.SeatsInventoryEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -56,9 +58,26 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
      }
     }
  
-          public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass){
+    
+    @Override
+    public void updateSeat(SeatsInventoryEntity seat){
+      em.merge(seat);
+      em.flush();
+    }
+    
+    
+    
+          public FlightReservationEntity reserveFlight(FlightReservationEntity book, List<FlightReservationDetailsEntity> inbound,List<FlightReservationDetailsEntity> outbond, List<PassengerEntity> pass, Integer passenger,CreditCardEntity c){
+            
+              em.persist(c);
+              em.flush();
+              book.setCard(c);
               em.persist(book);
               em.flush();
+              
+
+             
+
               
               for(PassengerEntity p:pass){
                   em.persist(p);
@@ -69,6 +88,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                   em.persist(frd);
                   em.flush();
                   book.getInBound().add(frd);
+                  frd.setReservation(book);
+                 
                   
               }
               
@@ -76,7 +97,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                   em.persist(frd);
                   em.flush();
                   book.getOutBound().add(frd);
-                
+               
+                 frd.setReservation(book);
+             
               }
              
 

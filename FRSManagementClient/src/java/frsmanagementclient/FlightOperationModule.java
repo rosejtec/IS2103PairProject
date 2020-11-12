@@ -225,11 +225,10 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         System.out.println("Select type of flight schedule plan");
         System.out.println("1. SINGLE, 2. MULTIPLE, 3. RECURRENT DAY, 4. RECURRENT WEEK");
         int type= sc.nextInt();
-        sc.nextLine();
         List<FlightScheduleEntity> flightScheduleList = new ArrayList<FlightScheduleEntity>(); 
-  
         if(type==1) {
-            
+                    sc.nextLine();
+
             fsp.setSchedule(ScheduleEnum.SINGLE);
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -292,7 +291,8 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             }
             //}
         } else if (type == 4) {
-              
+                      sc.nextLine();
+
             fsp.setSchedule(ScheduleEnum.RECURRENTWEEK);
             System.out.println("Enter end date (yyyy-MM-dd HH:mm)>");
             String endDateOfRecurrent = sc.nextLine().trim();
@@ -330,7 +330,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
        
         List<CabinClassConfigurationEntity> cccList = flight.getAircraftConfiguration().getCabinClassConfigurations();
         List<FareEntity> fareList = new ArrayList<FareEntity>();
-      
+         System.out.println(cccList.size());
         for (CabinClassConfigurationEntity ccc : cccList)
         {
             System.out.println();

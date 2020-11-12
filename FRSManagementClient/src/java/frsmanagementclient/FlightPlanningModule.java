@@ -175,14 +175,15 @@ public class FlightPlanningModule {
         newAircraftConfiguration.setName(scanner.nextLine().trim());
         System.out.println("Enter Number Of Cabin Classes (1 to 4)> ");
         Integer numOfCabinClasses = scanner.nextInt();
-        scanner.nextLine().trim();
+        scanner.nextLine();
         newAircraftConfiguration.setNumOfCabinClass(numOfCabinClasses);
         List<CabinClassConfigurationEntity> newCabinClassConfiguration = new ArrayList<CabinClassConfigurationEntity>();
 
         int max = 0;
-        int count = 1;
-        while (numOfCabinClasses >= 1) {
-               System.out.println("Enter Cabin Type (F, J, W, Y) for Cabin Class " + count + "> ");
+        for(int i =0 ;i<numOfCabinClasses;i++){
+            
+            int j=i+1;
+               System.out.println("Enter Cabin Type (F, J, W, Y) for Cabin Class "  + j+ " > ");
                String cabinClassType = scanner.nextLine().trim();
                System.out.println("Enter Number Of Aisles (0 to 2)> ");
                Integer numOfAisles = scanner.nextInt();
@@ -199,8 +200,6 @@ public class FlightPlanningModule {
                    throw new ExceedsMaximumCapacityException();
                }
                
-               numOfCabinClasses -= 1;
-               count += 1;
               newCabinClassConfiguration.add(new CabinClassConfigurationEntity(numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, CabinClassType.valueOf(cabinClassType), max));
         }
         
