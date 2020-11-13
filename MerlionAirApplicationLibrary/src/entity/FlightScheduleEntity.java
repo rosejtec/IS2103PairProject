@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,11 +42,10 @@ public class FlightScheduleEntity implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private FlightSchedulePlanEntity flightSchedulePlan;
-   
-    
  @OneToOne (mappedBy = "flightSchedule")
  private SeatsInventoryEntity seatsInventory;
- 
+ @OneToMany
+ private List<FlightReservationEntity> flightReservations;
 
     public FlightScheduleEntity() {
     }
@@ -139,6 +140,14 @@ public class FlightScheduleEntity implements Serializable {
 
     public void setSeatsInventory(SeatsInventoryEntity seatsInventory) {
         this.seatsInventory = seatsInventory;
+    }
+
+    public List<FlightReservationEntity> getFlightReservations() {
+        return flightReservations;
+    }
+
+    public void setFlightReservations(List<FlightReservationEntity> flightReservations) {
+        this.flightReservations = flightReservations;
     }
 
 

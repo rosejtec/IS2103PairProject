@@ -9,12 +9,15 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import util.enumeration.CabinClassType;
 
 /**
  *
@@ -44,7 +47,11 @@ public class FlightReservationEntity implements Serializable {
     private boolean returnFlight;
     @ManyToOne
     private CustomerEntity customer;
-
+    @ManyToOne
+    private FlightScheduleEntity flightSchedule;
+    @Enumerated(EnumType.STRING)
+    private CabinClassType cabinClassType;
+    
     public FlightReservationEntity() {
     }
 
@@ -153,6 +160,22 @@ public class FlightReservationEntity implements Serializable {
 
     public void setCustomer(CustomerEntity customer) {
         this.customer = customer;
+    }
+
+    public FlightScheduleEntity getFlightSchedule() {
+        return flightSchedule;
+    }
+
+    public void setFlightSchedule(FlightScheduleEntity flightSchedule) {
+        this.flightSchedule = flightSchedule;
+    }
+
+    public CabinClassType getCabinClassType() {
+        return cabinClassType;
+    }
+
+    public void setCabinClassType(CabinClassType cabinClassType) {
+        this.cabinClassType = cabinClassType;
     }
     
 }

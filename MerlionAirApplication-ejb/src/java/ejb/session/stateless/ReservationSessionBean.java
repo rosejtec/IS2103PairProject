@@ -65,6 +65,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @Override
     public void updateSeat(SeatsInventoryEntity seat){
       em.merge(seat);
+      seat.setBalanceSeats();
       em.flush();
     }
     

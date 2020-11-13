@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import entity.AirportEntity;
 import entity.CustomerEntity;
+import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -308,8 +309,16 @@ public class FlightReservationSessionBean implements FlightReservationSessionBea
         }
         
     }
-   
     
-    
+    public List<FlightReservationEntity> getCabinClassTypeReservations(CabinClassType type, FlightScheduleEntity fs) {
+        Query query = em.createQuery("SELECT fr FROM FlightReservationEntity fr WHERE fr.flightSchedule = :inFlightSchedule AND fr.cabinClassType = :inCabinClassType");
+         query.setParameter("inFlightSchedule", fs);
+         query.setParameter("inCabinClassType", type);
+         
+         query.getResultList();
+         
+         return  query.getResultList();
+         
+    }
 
 }
