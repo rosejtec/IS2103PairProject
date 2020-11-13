@@ -11,6 +11,8 @@ import entity.EmployeeEntity;
 import entity.FlightEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -67,12 +69,20 @@ public class SalesManagementModule {
 
                 if(response == 1)
                 {
-                     doViewSeatsInventory();
+                try {
+                    doViewSeatsInventory();
+                } catch (FlightNotFoundException ex) {
+                   System.out.println("Flight does not exist!");
+                 }
                 }
                 
                 else if(response == 2)
                 {
+                try {
                     doViewFlightReservations();
+                } catch (FlightNotFoundException ex) {
+                    System.out.println("Flight does not exist!");
+                }
                 }
                
                 else if(response == 3)
@@ -97,12 +107,11 @@ public class SalesManagementModule {
         }  
     }
 
-    private void doViewSeatsInventory() {
+    private void doViewSeatsInventory() throws FlightNotFoundException {
        
            Scanner sc = new Scanner(System.in);
                 System.out.println("Enter flight number> ");
-                
-            try {
+
                 FlightEntity f = flightSessionBeanRemote.retrieveFlightByFlightNumber(sc.nextLine().trim());
                 
                 
@@ -115,35 +124,70 @@ public class SalesManagementModule {
                     for(FlightScheduleEntity fs2 : fs1)
                     {
                         fsList.add(fs2);
-                    }
+                    }                    
                 }
-                
+                /*
                 for(FlightScheduleEntity fs : fsList)
                 {
                     System.out.println("Flight Schedule " + fs.getFlightScheduleId() + "; Departure: " + fs.getDeparture() + "; Arrival: " + fs.getArrival());
                 }
-                
-                System.out.println("Select flight schedule number to view> ");
-                try {
-                    FlightScheduleEntity fsToView = seatsInventorySessionBeanRemote.retrieveFlightScheduleByFlightScheduleId(sc.nextLong());
-                    int maxCapacity = f.getAircraftConfiguration().getAircraftType().getMaxCapacity();
-                    System.out.println("Available Seats: " + fsToView.getSeatsInventory().getAvailableSeats());
-                    System.out.println("Balance Seats: " + fsToView.getSeatsInventory().getBalanceSeats());
-                    System.out.println("Reserved Seats: " + fsToView.getSeatsInventory().getReservedSeats());
-                    
-                } catch (FlightScheduleNotFoundException ex) {
-                    Logger.getLogger(SalesManagementModule.class.getName()).log(Level.SEVERE, null, ex);
+                */
+                System.out.println("Enter flight schedule local depature date (yyyy-MM-dd HH:mm)>");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                LocalDateTime departure = LocalDateTime.parse(sc.nextLine().trim(), formatter);
+            
+              FlightScheduleEntity fsToView = null;
+             
+                for(FlightScheduleEntity fs : fsList)
+                {
+                    if (departure.getDayOfWeek().equals(fs.getDeparture().getDayOfWeek()))
+                    {
+                    fsToView = fs;
+                    System.out.println("Flight Schedule " + fsToView.getFlightScheduleId() + "; Departure: " + fsToView.getDeparture() + "; Arrival: " + fsToView.getArrival());
+                    } 
                 }
                 
-            } catch (FlightNotFoundException ex) {
-                Logger.getLogger(SalesManagementModule.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                System.out.println("Available Seats: " + fsToView.getSeatsInventory().getAvailableSeats() + "Balance Seats: " + fsToView.getSeatsInventory().getBalanceSeats() + "Reserved Seats: " + fsToView.getSeatsInventory().getReservedSeats());
             
-        }
+            } 
+  
     
 
-    private void doViewFlightReservations() {
+    private void doViewFlightReservations() throws FlightNotFoundException {
 
+         Scanner sc = new Scanner(System.in);
+         System.out.println("Enter flight number> ");
+
+         FlightEntity f = flightSessionBeanRemote.retrieveFlightByFlightNumber(sc.nextLine().trim());
+         
+         List<FlightSchedulePlanEntity> fspList = f.getFlightSchedulePlans();
+                List<FlightScheduleEntity> fsList = new ArrayList();
+                
+                for(FlightSchedulePlanEntity fsp : fspList)
+                {
+                    List<FlightScheduleEntity> fs1 = fsp.getFlightSchedules();
+                    for(FlightScheduleEntity fs2 : fs1)
+                    {
+                        fsList.add(fs2);
+                    }                    
+                }
+                 System.out.println("Enter flight schedule local depature date (yyyy-MM-dd HH:mm)>");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                LocalDateTime departure = LocalDateTime.parse(sc.nextLine().trim(), formatter);
+
+            
+              FlightScheduleEntity fsToView = null;
+             
+                for(FlightScheduleEntity fs : fsList)
+                {
+                    if (departure.getDayOfWeek().equals(fs.getDeparture().getDayOfWeek()))
+                    {
+                    fsToView = fs;
+                    }
+                }
+                
+         //   fsToView.getFlightSchedulePlan().getFares()
+                
+                
     }
-    
 }
