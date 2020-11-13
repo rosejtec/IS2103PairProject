@@ -453,10 +453,11 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
     
        for(FlightSchedulePlanEntity fsp1 : fsp) {
            System.out.println("Flight Schedule Plan ID: " + fsp1.getFightSchedulePlanId() + " Flight Number: " + fsp1.getFlight().getFlightNumber());
-           
+           /*
            if(fsp1.getComplementaryFlightSchedulePlan() != null) {
                System.out.println("Complementary Flight Schedule Plan ID: " + fsp1.getComplementaryFlightSchedulePlan().getFightSchedulePlanId()+ "; Flight Number: " + fsp1.getComplementaryFlightSchedulePlan().getFlight().getFlightNumber());
            }
+*/
        }        
     }
     

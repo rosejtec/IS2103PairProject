@@ -60,6 +60,17 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         return query.getResultList();
     }
     
+    /*
+    public boolean check (FlighteNT id){
+        FlightRouteEntity fr = em.find(FlightRouteEntity.class, id);
+        if(fr == null ){
+            return true;
+        } else {
+            
+        }
+        
+    }
+    */
     //ascending order!!!!!!!!!!!!!!!
     public FlightRouteEntity retrieveFlightRouteByFlightRouteId(Long flightRouteId) throws FlightRouteNotFoundException
     {
@@ -84,9 +95,12 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         
        Query query = em.createQuery("SELECT fr FROM FlightRouteEntity fr WHERE fr.origin.code = :inDeparture AND fr.destination.code = :inArrival");
        query.setParameter("inDeparture", departure);
-       query.setParameter("inArrival", arrival);
+       query.setParameter("inArrival", arrival);               
         
        FlightRouteEntity fr = (FlightRouteEntity)query.getSingleResult();
+       
+       System.out.println("********** retrieveFlightRouteByAirportCode: " + fr.getFlightRouteId());
+       
        fr.getFlights().size();
        fr.getComplementaryReturnRoute();
        fr.getDestination();

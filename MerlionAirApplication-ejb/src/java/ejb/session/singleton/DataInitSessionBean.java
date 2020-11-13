@@ -246,6 +246,10 @@ public class DataInitSessionBean {
         try {
             FlightEntity f = new FlightEntity("MA111", flightRouteSessionBean.retrieveFlightRouteByAirportCode("SIN", "HKG"), aircraftConfigurationSessionBean.retrieveAircraftConfigurationByAircraftConfigurationId(2L));
             FlightEntity f2 = new FlightEntity("MA112", flightRouteSessionBean.retrieveFlightRouteByAirportCode("HKG", "SIN"), aircraftConfigurationSessionBean.retrieveAircraftConfigurationByAircraftConfigurationId(2L));
+            
+            System.out.println("********** f: " + f.getFlightRoute().getFlightRouteId());
+            System.out.println("********** f2: " + f2.getFlightRoute().getFlightRouteId());
+            
             f2.setComplementary(true);
             f = flightSessionBean.createNewFlight(f);
             f.setComplentaryFlight(f2);
@@ -356,13 +360,13 @@ public class DataInitSessionBean {
         }
 
         try {
-            FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity(flightSessionBean.retrieveFlightByFlightNumber("MA711"), ScheduleEnum.RECURRENTWEEK);
+            FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity(flightSessionBean.retrieveFlightByFlightNumber("ML711"), ScheduleEnum.RECURRENTWEEK);
             List<FlightScheduleEntity> flightScheduleList = new ArrayList<FlightScheduleEntity>();
             String endDateOfRecurrent = "2020-12-31 09:00";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
 
-            FlightEntity flight = flightSessionBean.retrieveFlightByFlightNumber("M711");
+            FlightEntity flight = flightSessionBean.retrieveFlightByFlightNumber("ML711");
             String date = "2020-12-07 09:00";
             LocalDateTime departure = LocalDateTime.parse(date, formatter);
             FlightRouteEntity flightRoute = flight.getFlightRoute();

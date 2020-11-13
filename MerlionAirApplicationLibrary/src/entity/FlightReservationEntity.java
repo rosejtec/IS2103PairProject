@@ -40,6 +40,10 @@ public class FlightReservationEntity implements Serializable {
     private Integer totalPassengers;
     @OneToMany
     private List<PassengerEntity> passenger;
+   
+    @ManyToOne
+    FlightScheduleEntity scheduleEntity;
+    
     @OneToOne
     private CreditCardEntity card;
     private Integer totalAmount;
