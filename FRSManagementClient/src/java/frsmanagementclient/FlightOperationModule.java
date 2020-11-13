@@ -20,8 +20,10 @@ import entity.FlightEntity;
 import entity.FlightRouteEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -304,18 +306,20 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             String endDateOfRecurrent = sc.nextLine().trim();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
-
-              // fsp.setEnd(endDate);
+           System.out.println("Enter day of week >");
+           String day = sc.nextLine().trim();
             
             System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
-            LocalDateTime departure = LocalDateTime.parse(date, formatter);
-          System.out.println("Enter estimated flight duration (hours)>");
+            LocalDateTime dep = LocalDateTime.parse(date, formatter);
+            LocalDateTime departure = dep.with(TemporalAdjusters.next(DayOfWeek.valueOf(day)));
+
+            System.out.println("Enter estimated flight duration (hours)>");
             int durationHours = sc.nextInt();  
             System.out.println("Enter estimated flight duration (minutes)>");
             int durationMinutes = sc.nextInt();
             sc.nextLine();
-          FlightRouteEntity flightRoute = flight.getFlightRoute();
+            FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             LocalDateTime arrival = departure.plusHours(durationHours+timeDifference).plusMinutes(durationMinutes);
            

@@ -9,6 +9,7 @@ import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.FlightReservationSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
 import entity.AirportEntity;
+import entity.CabinClassConfigurationEntity;
 import entity.CreditCardEntity;
 import entity.CustomerEntity;
 import entity.FlightReservationDetailsEntity;
@@ -273,7 +274,18 @@ public class MainApp {
         seat.updateAvailableSeats(passenger);
         seat.updateReservedSeats(passenger);
         inbound.get(0).setSeatNum(seatNum);
-        
+           if (type == CabinClassType.F) {
+                    seat.setF(seat.getF()-passenger);
+                } else if (type == CabinClassType.W) {
+                    seat.setW(seat.getW()-passenger);
+
+                } else if (type== CabinClassType.Y) {
+                    seat.setY(seat.getY()-passenger);
+
+                } else {
+                    seat.setJ(seat.getJ()-passenger);
+
+                }
         reservationSessionBeanRemote.updateSeat(seat);
 
         seatNum.clear();
@@ -300,6 +312,19 @@ public class MainApp {
                 }
                 seat.updateAvailableSeats(passenger);
                 seat.updateReservedSeats(passenger);
+                if (type == CabinClassType.F) {
+                    seat.setF(seat.getF()-passenger);
+                } else if (type == CabinClassType.W) {
+                    seat.setW(seat.getW()-passenger);
+
+                } else if (type== CabinClassType.Y) {
+                    seat.setY(seat.getY()-passenger);
+
+                } else {
+                    seat.setJ(seat.getJ()-passenger);
+
+                }
+            
                 inbound.get(i).setSeatNum(seatNum);
         reservationSessionBeanRemote.updateSeat(seat);
 
@@ -326,6 +351,18 @@ public class MainApp {
             }
             seat.updateAvailableSeats(passenger);
             seat.updateReservedSeats(passenger);
+               if (type == CabinClassType.F) {
+                    seat.setF(seat.getF()-passenger);
+                } else if (type == CabinClassType.W) {
+                    seat.setW(seat.getW()-passenger);
+
+                } else if (type== CabinClassType.Y) {
+                    seat.setY(seat.getY()-passenger);
+
+                } else {
+                    seat.setJ(seat.getJ()-passenger);
+
+                }
             amount += reservationSessionBeanRemote.getFare(reservationSessionBeanRemote.retrievebyId(id), type) * passenger;
         reservationSessionBeanRemote.updateSeat(seat);
 
@@ -352,6 +389,18 @@ public class MainApp {
                     }
                     seat.updateAvailableSeats(passenger);
                     seat.updateReservedSeats(passenger);
+                       if (type == CabinClassType.F) {
+                    seat.setF(seat.getF()-passenger);
+                } else if (type == CabinClassType.W) {
+                    seat.setW(seat.getW()-passenger);
+
+                } else if (type== CabinClassType.Y) {
+                    seat.setY(seat.getY()-passenger);
+
+                } else {
+                    seat.setJ(seat.getJ()-passenger);
+
+                }
                     amount += reservationSessionBeanRemote.getFare(reservationSessionBeanRemote.retrievebyId(id), type) * passenger;
                   reservationSessionBeanRemote.updateSeat(seat);
  
@@ -615,9 +664,9 @@ public class MainApp {
                     System.out.println(l.getFlightScheduleId() + "                     " + l.getArrival().toString() + "       " + l.getDeparture().toString() + "       " + l.getDuration());
 
                     System.out.println();
-                    System.out.println("                  SinglePassenger   AllPassenger");
+                    System.out.println("                  SinglePassenger   AllPassenger  TotalFlightAvailibility       CabinClassAvailibility");
 
-                    System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) : "Not availablr"));
+                    System.out.println("1.FirstClass:     " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.F)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.F) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.F) * passengers) +"               " +l.getSeatsInventory().getBalanceSeats() +"               " +l.getSeatsInventory().getF() : "Not availablr"));
                     System.out.println("2.BusinessClass:  " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.J)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.J) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.J) * passengers) : "Not availablr"));
                     System.out.println("3.PremiumEconomy: " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.W)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.W) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.W) * passengers) : "Not availablr"));
                     System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) : "Not availablr"));
