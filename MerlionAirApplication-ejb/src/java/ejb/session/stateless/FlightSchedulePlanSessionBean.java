@@ -49,15 +49,15 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
             SeatsInventoryEntity sie = new SeatsInventoryEntity(flight.getAircraftConfiguration().getMaxSeats(), 0);
             for (CabinClassConfigurationEntity cc : flight.getAircraftConfiguration().getCabinClassConfigurations()) {
                 if (cc.getCabinClassType() == CabinClassType.F) {
-                    sie.setF(cc.getMaximum());
+                    sie.setAvailableF(cc.getMaximum());
                 } else if (cc.getCabinClassType() == CabinClassType.W) {
-                    sie.setW(cc.getMaximum());
+                    sie.setAvailableW(cc.getMaximum());
 
                 } else if (cc.getCabinClassType() == CabinClassType.Y) {
-                    sie.setY(cc.getMaximum());
+                    sie.setAvailableY(cc.getMaximum());
 
                 } else {
-                    sie.setJ(cc.getMaximum());
+                    sie.setAvailableJ(cc.getMaximum());
 
                 }
             }
