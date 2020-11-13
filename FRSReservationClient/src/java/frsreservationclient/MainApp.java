@@ -435,6 +435,7 @@ public class MainApp {
         book.setTotalPassengers(passenger);
         book.setReturnFlight(round);
         book.setTotalAmount(amount);
+        
         List<PassengerEntity> pass = new ArrayList<PassengerEntity>();
         for (int i = 0; i < this.passenger; i++) {
             int j = i+1;
