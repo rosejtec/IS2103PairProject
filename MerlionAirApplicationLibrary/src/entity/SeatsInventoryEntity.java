@@ -30,7 +30,14 @@ public class SeatsInventoryEntity implements Serializable {
     private Integer reservedSeats;
     private Integer balanceSeats;
     @OneToOne
-    private FlightScheduleEntity flightSchedule;        
+    private FlightScheduleEntity flightSchedule;   
+    
+    private Integer Y;
+    private Integer J;
+    private Integer F;
+    private Integer W;
+
+    
     List<String> seats;
     
     public SeatsInventoryEntity() {
@@ -52,6 +59,38 @@ public class SeatsInventoryEntity implements Serializable {
         this.reservedSeats = reservedSeats;
         this.seats= new ArrayList<>();
 
+    }
+
+    public Integer getY() {
+        return Y;
+    }
+
+    public void setY(Integer Y) {
+        this.Y = Y;
+    }
+
+    public Integer getJ() {
+        return J;
+    }
+
+    public void setJ(Integer J) {
+        this.J = J;
+    }
+
+    public Integer getF() {
+        return F;
+    }
+
+    public void setF(Integer F) {
+        this.F = F;
+    }
+
+    public Integer getW() {
+        return W;
+    }
+
+    public void setW(Integer W) {
+        this.W = W;
     }
     
     
