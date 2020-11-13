@@ -8,6 +8,7 @@ package frsmanagementclient;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import ejb.session.stateless.SeatsInventorySessionBeanRemote;
 import entity.EmployeeEntity;
+import entity.FareEntity;
 import entity.FlightEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
@@ -19,6 +20,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import util.enumeration.CabinClassType;
 import util.enumeration.EmployeeAccessRight;
 import util.exception.FlightNotFoundException;
 import util.exception.FlightScheduleNotFoundException;
@@ -147,8 +149,29 @@ public class SalesManagementModule {
                     } 
                 }
                 
-                System.out.println("Available Seats: " + fsToView.getSeatsInventory().getAvailableSeats() + "Balance Seats: " + fsToView.getSeatsInventory().getBalanceSeats() + "Reserved Seats: " + fsToView.getSeatsInventory().getReservedSeats());
+                System.out.println("Total Available Seats: " + fsToView.getSeatsInventory().getAvailableSeats() + "; Total Reserved Seats: " + fsToView.getSeatsInventory().getReservedSeats() + "; Balance Seats: " + fsToView.getSeatsInventory().getBalanceSeats());
             
+                 for(FlightSchedulePlanEntity fsp : fspList)
+                {
+                    List<FareEntity> fareList =  fsp.getFares();
+                    for(FareEntity fare : fareList)
+                    {
+                        if (fare.getCabinClassType().equals(CabinClassType.F))
+                        {
+                            System.out.println("Cabin Class F> Available Seats: " + fsToView.getSeatsInventory().getAvailableF() + "; Reserved Seats: " + fsToView.getSeatsInventory().getReservedF() + "; Balance Seats: " + (fsToView.getSeatsInventory().getAvailableF()-fsToView.getSeatsInventory().getReservedF()));
+                        } else if (fare.getCabinClassType().equals(CabinClassType.J)) 
+                        {
+                            System.out.println(" Cabin Class J> Available Seats: " + fsToView.getSeatsInventory().getAvailableJ() + "; Reserved Seats: " + fsToView.getSeatsInventory().getReservedJ() + "; Balance Seats: " + (fsToView.getSeatsInventory().getAvailableJ()-fsToView.getSeatsInventory().getReservedJ()));
+                        } else if (fare.getCabinClassType().equals(CabinClassType.W)) 
+                        {
+                            System.out.println(" Cabin Class W> Available Seats: " + fsToView.getSeatsInventory().getAvailableW() + "; Reserved Seats: " + fsToView.getSeatsInventory().getReservedW() + "; Balance Seats: " + (fsToView.getSeatsInventory().getAvailableW()-fsToView.getSeatsInventory().getReservedW()));
+                        } else if (fare.getCabinClassType().equals(CabinClassType.Y))
+                        {
+                            System.out.println(" Cabin Class Y> Available Seats: " + fsToView.getSeatsInventory().getAvailableY() + "; Reserved Seats: " + fsToView.getSeatsInventory().getReservedY() + "; Balance Seats: " + (fsToView.getSeatsInventory().getAvailableY()-fsToView.getSeatsInventory().getReservedY()));
+                        }
+                    }
+                    
+                }
             } 
   
     

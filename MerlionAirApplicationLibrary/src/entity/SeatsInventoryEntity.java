@@ -32,10 +32,14 @@ public class SeatsInventoryEntity implements Serializable {
     @OneToOne
     private FlightScheduleEntity flightSchedule;   
     
-    private Integer Y;
-    private Integer J;
-    private Integer F;
-    private Integer W;
+    private Integer availableY;
+    private Integer reservedY;
+    private Integer availableJ;
+    private Integer reservedJ;
+    private Integer availableF;
+    private Integer reservedF;
+    private Integer availableW;
+    private Integer reservedW;
 
     
     List<String> seats;
@@ -60,39 +64,6 @@ public class SeatsInventoryEntity implements Serializable {
         this.seats= new ArrayList<>();
 
     }
-
-    public Integer getY() {
-        return Y;
-    }
-
-    public void setY(Integer Y) {
-        this.Y = Y;
-    }
-
-    public Integer getJ() {
-        return J;
-    }
-
-    public void setJ(Integer J) {
-        this.J = J;
-    }
-
-    public Integer getF() {
-        return F;
-    }
-
-    public void setF(Integer F) {
-        this.F = F;
-    }
-
-    public Integer getW() {
-        return W;
-    }
-
-    public void setW(Integer W) {
-        this.W = W;
-    }
-    
     
     public Long getSeatsInventoryId() {
         return seatsInventoryId;
@@ -166,6 +137,70 @@ public class SeatsInventoryEntity implements Serializable {
 
     public void setFlightSchedule(FlightScheduleEntity flightSchedule) {
         this.flightSchedule = flightSchedule;
+    }
+
+    public Integer getAvailableY() {
+        return availableY;
+    }
+
+    public void setAvailableY(Integer availableY) {
+        this.availableY = availableY;
+    }
+
+    public Integer getReservedY() {
+        return reservedY;
+    }
+
+    public void setReservedY(Integer reservedY) {
+        this.reservedY = reservedY;
+    }
+
+    public Integer getAvailableJ() {
+        return availableJ;
+    }
+
+    public void setAvailableJ(Integer availableJ) {
+        this.availableJ = availableJ;
+    }
+
+    public Integer getReservedJ() {
+        return reservedJ;
+    }
+
+    public void setReservedJ(Integer reservedJ) {
+        this.reservedJ = reservedJ;
+    }
+
+    public Integer getAvailableF() {
+        return availableF;
+    }
+
+    public void setAvailableF(Integer availableF) {
+        this.availableF = availableF;
+    }
+
+    public Integer getReservedF() {
+        return reservedF;
+    }
+
+    public void setReservedF(Integer reservedF) {
+        this.reservedF = reservedF;
+    }
+
+    public Integer getAvailableW() {
+        return availableW;
+    }
+
+    public void setAvailableW(Integer availableW) {
+        this.availableW = availableW;
+    }
+
+    public Integer getReservedW() {
+        return reservedW;
+    }
+
+    public void setReservedW(Integer reservedW) {
+        this.reservedW = reservedW;
     }
 
 
