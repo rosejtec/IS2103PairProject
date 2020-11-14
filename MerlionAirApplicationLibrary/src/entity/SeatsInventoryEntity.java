@@ -210,5 +210,6 @@ public class SeatsInventoryEntity implements Serializable {
         this.flightSchedule = flightSchedule;
     }
 
+ 
 
 }

@@ -146,6 +146,14 @@ public class FlightScheduleEntity implements Serializable {
         this.seatsInventory = seatsInventory;
     }
 
+    public List<FlightReservationEntity> getFlightReservations() {
+        return flightReservations;
+    }
+
+    public void setFlightReservations(List<FlightReservationEntity> flightReservations) {
+        this.flightReservations = flightReservations;
+    }
+
 
     
 }

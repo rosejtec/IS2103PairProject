@@ -198,8 +198,8 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         }
 
         if (fspToDelete.getFlight() == null) {
-            fspToDelete.setComplementaryFsp(null);
-            em.remove(fspToDelete.getComplementaryFlightSchedulePlan());
+           // fspToDelete.setComplementaryFsp(null);
+            //em.remove(fspToDelete.getComplementaryFlightSchedulePlan());
             fspToDelete.setFares(null);
             fspToDelete.setFlightSchedules(null);
             em.remove(fspToDelete);

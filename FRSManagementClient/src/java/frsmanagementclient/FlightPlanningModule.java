@@ -235,7 +235,7 @@ public class FlightPlanningModule {
         System.out.println("Details> ");
         System.out.println("Name: " + aircraft.getName());
         System.out.println("Number Of Cabin Class: " + aircraft.getNumOfCabinClass());
-        System.out.println("Aircraft Type: " + aircraft.getAircraftType().getName() +  "; Max Capacity: " + aircraft.getAircraftType().getMaxCapacity());
+        System.out.println("Aircraft Type: " + aircraft.getAircraftType().getName() +  "; Max Capacity: " + aircraft.getMaxSeats());
     
         for(CabinClassConfigurationEntity c : aircraft.getCabinClassConfigurations()) {
             System.out.println("Seat Configuration: " + c.getSeatConfiguration() + "; Cabin Class Type: "+  c.getCabinClassType()+ "; Number Of Aisles: " + c.getNumOfAisles()+ "; Number Of Rows: " + c.getNumOfRows() + "; Number Of Seats Abreast: " + c.getNumOfSeatsAbreast());

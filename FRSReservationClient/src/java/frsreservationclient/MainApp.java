@@ -527,7 +527,10 @@ public class MainApp {
         System.out.print("Connecting Flight : 1.Yes  2.No 3.NoPreference > ");
         int t2 = scanner.nextInt();
         connecting = (t2 == 1) ? true : false;
-               
+        boolean both = false;
+        if(t2==3)  {     
+            both = true;
+        }
         this.connecting = connecting;
         this.departureAirport = departureAirport;
         this.round = round;
@@ -541,7 +544,7 @@ public class MainApp {
             System.out.println("Outbound Flights:");
             System.out.println();
 
-            if (connecting) {
+            if (connecting||both) {
                 if (use) {
                     System.out.println("Connecting on the Same Day");
                     System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
@@ -677,7 +680,11 @@ public class MainApp {
                     }
 
                 }
-            } else {
+            } 
+            
+            
+            if(!connecting||both)
+            {
                 System.out.println("Direct on the Same Day");
                 System.out.println("FlightScheduleId       ArrivalTime            DepartureTime          Duration");
                 List<FlightScheduleEntity> day1 = flightReservationSessionBeanRemote.searchSingleDay(false, false, departureAirport, destinationAirport, departureTime, passengers, type);
@@ -737,7 +744,7 @@ public class MainApp {
 
         if (round) {
 
-            if (!connecting) {
+            if (!connecting||both) {
                 System.out.println();
                 System.out.println("Inbound Flights:");
                 System.out.println("Direct on the Same Day");
@@ -794,8 +801,10 @@ public class MainApp {
                     System.out.println("4.Economy:        " + (!(reservationSessionBeanRemote.getFare(l, CabinClassType.Y)).toString().equals("-1") ? reservationSessionBeanRemote.getFare(l, CabinClassType.Y) + "               " + (reservationSessionBeanRemote.getFare(l, CabinClassType.Y) * passengers) +"               " +l.getSeatsInventory().getBalanceSeats() +"               " +l.getSeatsInventory().getAvailableY(): "Not availablr"));  }
                 }
 
-            } else {
-               if (connecting) {
+            } 
+            
+           
+               if (connecting||both) {
                 if (use) {
                     
            LocalDateTime temp = departureTime;
@@ -935,7 +944,7 @@ public class MainApp {
 
                 }
             }
-        }
+        
         }
     }
 
