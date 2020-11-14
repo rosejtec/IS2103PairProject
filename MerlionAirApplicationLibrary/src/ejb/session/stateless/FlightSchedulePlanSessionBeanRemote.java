@@ -5,12 +5,14 @@
  */
 package ejb.session.stateless;
 
+import entity.AirportEntity;
 import entity.FareEntity;
 import entity.FlightEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.AirportNotFoundException;
 import util.exception.FareNotFoundException;
 import util.exception.FlightScheduleNotFoundException;
 import util.exception.FlightSchedulePlanNotFoundException;
@@ -41,5 +43,9 @@ public interface FlightSchedulePlanSessionBeanRemote {
     public FareEntity retrieveFareByFareId(Long fareId) throws FareNotFoundException;
 
     public void updateFare(FareEntity fare) throws FareNotFoundException;
+
+    public FlightSchedulePlanEntity createCompFlightSchedulePlan(FlightSchedulePlanEntity fsp, FlightSchedulePlanEntity original, List<FlightScheduleEntity> fs, List<FareEntity> f, FlightEntity flight);
+
+    public AirportEntity retriveBy(String code) throws AirportNotFoundException;
     
 }

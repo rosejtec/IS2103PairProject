@@ -25,11 +25,12 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
     @PersistenceContext(unitName = "MerlionAirApplication-ejbPU")
     private EntityManager em;
 
+    @Override
     public FlightEntity createNewFlight(FlightEntity newFlightEntity)
     {
         em.persist(newFlightEntity);
         em.flush();
-        
+        System.out.println(newFlightEntity.getFlightId());
 
         return newFlightEntity;
     }

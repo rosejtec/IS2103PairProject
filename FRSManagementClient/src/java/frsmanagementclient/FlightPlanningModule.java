@@ -120,14 +120,15 @@ public class FlightPlanningModule {
                 else if(response == 4)
                 {
                     try {
+                       
                         try {
                             doCreateFlightRoute();
+                        } catch (FlightRouteNotFoundException ex) {
+                          System.out.println("FlightRoute does not exist");
+                        }
                         } catch (AirportNotFoundException ex) {
                             System.out.println("Airport code does not exist!\n");
                         }
-                    } catch (FlightRouteNotFoundException ex) {
-                        System.out.println("Flight Route does not exist!\n");
-                    }
                 }
                 else if(response == 5)
                 {
@@ -191,11 +192,11 @@ public class FlightPlanningModule {
             int j=i+1;
                System.out.println("Enter Cabin Type (F, J, W, Y) for Cabin Class "  + j+ " > ");
                String cabinClassType = scanner.nextLine().trim();
-               System.out.println("Enter Number Of Aisles (0 to 2)> ");
+               System.out.print("Enter Number Of Aisles (0 to 2)> ");
                Integer numOfAisles = scanner.nextInt();
-               System.out.println("Enter Number Of Rows> ");
+               System.out.print("Enter Number Of Rows> ");
                Integer numOfRows = scanner.nextInt();
-               System.out.println("Enter Number Of Seats Abreast> ");
+               System.out.print("Enter Number Of Seats Abreast> ");
                Integer numOfSeatsAbreast = scanner.nextInt();
                scanner.nextLine();
                System.out.println("Enter Seat Configuration> ");
@@ -209,8 +210,7 @@ public class FlightPlanningModule {
               newCabinClassConfiguration.add(new CabinClassConfigurationEntity( CabinClassType.valueOf(cabinClassType),numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, max));
         }
         
-        newAircraftConfiguration.setMaxSeats(max);
-                  
+        newAircraftConfiguration.setMaxSeats(max);         
         aircraftConfigurationSessionBeanRemote.createNewAircraftConfiguration(newAircraftConfiguration,newCabinClassConfiguration, type);
         System.out.println("Aircraft Configuration " + newAircraftConfiguration.getName() +  " has been successfully created!");
      
@@ -244,7 +244,7 @@ public class FlightPlanningModule {
         System.out.println();
     }
 
-    private void doCreateFlightRoute() throws FlightRouteNotFoundException, AirportNotFoundException {
+    private void doCreateFlightRoute() throws AirportNotFoundException, FlightRouteNotFoundException {
       Scanner sc = new Scanner(System.in);
       System.out.println("Enter Origin Airport Code> ");
       String codeO= sc.nextLine().trim();
@@ -253,7 +253,14 @@ public class FlightPlanningModule {
       String codeD= sc.nextLine().trim();
       AirportEntity destination = airportSessionBeanRemote.retriveBy(codeD);
 
-        FlightRouteEntity route  = new FlightRouteEntity(origin, destination);
+      try{
+           flightRouteSessionBeanRemote.retrieveFlightRouteByAirportCode(codeD, codeD);
+           System.out.println("FlightRouteAlreadyExist");
+     
+      
+      } catch(FlightRouteNotFoundException ex){
+  
+         FlightRouteEntity route  = new FlightRouteEntity(origin, destination);
         Long id = flightRouteSessionBeanRemote.createNewFlightRoute(route);
         System.out.println("Flight Route " + id + " has been successfully created!");
         System.out.println("Would you like a Complementary Flight Route (Y/N)> ");
@@ -263,6 +270,7 @@ public class FlightPlanningModule {
           FlightRouteEntity routeComp  = new FlightRouteEntity(airportSessionBeanRemote.retriveBy(codeD),airportSessionBeanRemote.retriveBy(codeO));
           flightRouteSessionBeanRemote.createNewComplementaryReturnRoute(id, routeComp);
           System.out.println("Complementary Flight Route has been successfully created!");
+      }
       }
     }
 

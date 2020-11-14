@@ -66,6 +66,10 @@ public class Main
         MainApp mainApp = new MainApp(flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, flightRouteSessionBeanRemote, cabinClassConfigurationSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote, seatsInventorySessionBeanRemote);
         mainApp.runApp();
 // TODO code application logic here
+    
+    
     }
+    
+    
     
 }

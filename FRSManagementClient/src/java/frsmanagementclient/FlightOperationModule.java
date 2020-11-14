@@ -13,6 +13,7 @@ import ejb.session.stateless.FlightRouteSessionBeanRemote;
 import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 
 import ejb.session.stateless.FlightSessionBeanRemote;
+import entity.AirportEntity;
 import entity.CabinClassConfigurationEntity;
 import entity.EmployeeEntity;
 import entity.FareEntity;
@@ -39,6 +40,7 @@ import util.enumeration.ExceedsMaximumCapacityException;
 import util.enumeration.ScheduleEnum;
 import util.exception.AircraftConfigurationNotFoundException;
 import util.exception.AircraftTypeNotFoundException;
+import util.exception.AirportNotFoundException;
 import util.exception.FareNotFoundException;
 import util.exception.FlightNotFoundException;
 import util.exception.FlightRouteNotFoundException;
@@ -115,7 +117,9 @@ public class FlightOperationModule {
                      System.out.println("Flight Route ID does not exist!\n");
                  } catch (AircraftConfigurationNotFoundException ex) {
                      System.out.println("Aircraft Configuration! ID does not exist!\n");
-                 }
+                 } catch (AirportNotFoundException ex) {
+                    Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 }
                 else if(response == 2)
                 {
@@ -429,7 +433,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                 int layoverDuration = sc.nextInt();
                 sc.nextLine();
                 
-                FlightEntity complementaryFlight = flightSessionBeanRemote.retrieveFlightByFlightNumber(flight.getComplementaryFlight().getFlightNumber());
+                FlightEntity complementaryFlight = flight.getComplementaryFlight();
                 List<FlightScheduleEntity> complementaryFs = new ArrayList<FlightScheduleEntity>(); 
                 FlightSchedulePlanEntity complementaryFsp = new FlightSchedulePlanEntity(complementaryFlight);
                 complementaryFsp.setSchedule(fspId.getSchedule());
@@ -439,7 +443,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(departure, departure.plusHours(flightDuration), flightDuration));
                 }
-                 FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBeanRemote.createFlightSchedulePlan(complementaryFsp, complementaryFs, fareList,complementaryFlight);
+                 FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBeanRemote.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs, fareList,complementaryFlight);
                  System.out.println("Complementary Flight Schedule Plan " + complementaryFspId.getFightSchedulePlanId() + " has been successfuly created!");
             }          
         }     
@@ -740,17 +744,21 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         }  
     }
 
-    public void doCreateFlight() throws FlightRouteNotFoundException, AircraftConfigurationNotFoundException {
+    public void doCreateFlight() throws FlightRouteNotFoundException, AircraftConfigurationNotFoundException, AirportNotFoundException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter Aircraft Configuration ID> ");
         Long aircraftConfiguration = sc.nextLong();
-          
-        System.out.println("Enter Flight Route ID> ");
-        Long flightRoute = sc.nextLong();
-         FlightRouteEntity fr = flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute);
-        sc.nextLine();
-        
-       sc.nextLine();
+          System.out.println("Enter Origin Airport Code> ");
+      String codeO= sc.nextLine().trim();
+      AirportEntity origin = flightSchedulePlanSessionBeanRemote.retriveBy(codeO);
+      System.out.println("Enter Destination Airport Code> ");
+      String codeD= sc.nextLine().trim();
+      AirportEntity destination = flightSchedulePlanSessionBeanRemote.retriveBy(codeD);
+
+      
+      FlightRouteEntity fr = flightRouteSessionBeanRemote.retrieveFlightRouteByAirportCode(codeD, codeD);
+     
+   
        System.out.println("Enter Flight Number>");
        
        String flightNum = sc.nextLine().trim();
@@ -766,19 +774,22 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
      
         System.out.println("Would you like a complementary flight? (Y/N)> ");
         String comp = sc.nextLine().trim();
-      
+           
       if(comp.equals("Y") ){
-          
-         flightNum = flightNum + "C";
-         FlightEntity f2 = new FlightEntity(flightNum, false,fr.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+      
+          System.out.println("Enter Flight Number>");
+       
+        flightNum = sc.nextLine().trim();
+       FlightEntity f2 = new FlightEntity(flightNum, false,fr.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
           
          f2.setComplementary(true);
+                f2 = flightSessionBeanRemote.createNewFlight(f2);
+         f.setComplentaryFlight(f2);
+
          f = flightSessionBeanRemote.createNewFlight(f);
          //System.out.println("Flight ID " + f.getFlightId() + " has been successfully created!");
         // f2 = flightSessionBeanRemote.createNewFlight(f2);
-         f.setComplentaryFlight(f2);
        //flightSessionBeanRemote.createNewFlight(f);
-       f2 = flightSessionBeanRemote.createNewFlight(f2);
        System.out.println("Flight ID " + f.getFlightId() + " has been successfully created!");
        System.out.println("Complementary Flight ID " + f2.getFlightId() + " has been successfully created!");
           
@@ -796,4 +807,6 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
     }
 
     } 
+
+
 }

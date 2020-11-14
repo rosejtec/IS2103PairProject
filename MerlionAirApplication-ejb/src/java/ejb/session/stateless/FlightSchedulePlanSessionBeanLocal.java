@@ -19,4 +19,6 @@ import javax.ejb.Local;
 @Local
 public interface FlightSchedulePlanSessionBeanLocal {
        public FlightSchedulePlanEntity createFlightSchedulePlan(FlightSchedulePlanEntity fsp, List<FlightScheduleEntity> fs, List<FareEntity> f,FlightEntity flight) ;
+    public FlightSchedulePlanEntity createCompFlightSchedulePlan(FlightSchedulePlanEntity fsp,FlightSchedulePlanEntity original, List<FlightScheduleEntity> fs, List<FareEntity> f, FlightEntity flight) ;
+
 }

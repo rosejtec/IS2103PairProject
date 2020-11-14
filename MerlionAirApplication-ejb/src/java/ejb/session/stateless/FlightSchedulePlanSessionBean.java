@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.AirportEntity;
 import entity.CabinClassConfigurationEntity;
 import entity.FareEntity;
 import entity.FlightEntity;
@@ -14,9 +15,12 @@ import entity.SeatsInventoryEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.CabinClassType;
+import util.exception.AirportNotFoundException;
 import util.exception.FareNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 import util.exception.FlightScheduleNotFoundException;
@@ -37,6 +41,81 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
 
         em.persist(fsp);
         em.flush();
+        System.out.println("Here");
+        System.out.println(fsp.getFightSchedulePlanId());
+
+        fsp.setFlight(flight);
+        //map flight schedules
+        for (FlightScheduleEntity d : fs) {
+            d.setFlightSchedulePlan(fsp);
+            em.persist(d);
+            em.flush();
+            fsp.getFlightSchedules().add(d);
+            SeatsInventoryEntity sie = new SeatsInventoryEntity(flight.getAircraftConfiguration().getMaxSeats(), 0);
+            for (CabinClassConfigurationEntity cc : flight.getAircraftConfiguration().getCabinClassConfigurations()) {
+                if (cc.getCabinClassType() == CabinClassType.F) {
+                    sie.setAvailableF(cc.getMaximum());
+                } else if (cc.getCabinClassType() == CabinClassType.W) {
+                    sie.setAvailableW(cc.getMaximum());
+
+                } else if (cc.getCabinClassType() == CabinClassType.Y) {
+                    sie.setAvailableY(cc.getMaximum());
+
+                } else {
+                    sie.setAvailableJ(cc.getMaximum());
+
+                }
+            }
+
+            System.out.println(fsp.getFlightSchedules().size());
+            em.persist(sie);
+            em.flush();
+            d.setSeatsInventory(sie);
+            sie.setFlightSchedule(d);
+        }
+
+        //map fare entity
+        for (FareEntity fe : f) {
+            fe.setFlightSchedulePlan(fsp);
+            FareEntity N = this.createNewFare(fe);
+            fsp.getFares().add(N);
+
+        }
+        //em.flush();
+        fsp.getFlightSchedules().size();
+        flight.getFlightSchedulePlans().size();
+        flight.getFlightSchedulePlans().add(fsp);
+        em.flush();
+        return fsp;
+
+    }
+
+    @Override
+    public AirportEntity retriveBy(String code) throws AirportNotFoundException
+    {
+        
+        Query q = em.createQuery("SELECT a FROM AirportEntity a WHERE a.code = :inCode");
+        q.setParameter("inCode", code);
+        
+        try
+        {
+        AirportEntity a = (AirportEntity) q.getSingleResult();
+        return a;
+        }
+         catch(NoResultException | NonUniqueResultException ex)
+        {
+         
+            throw new AirportNotFoundException("Airport code " + code + " does not exist!");
+        }
+    }
+    
+    @Override
+    public FlightSchedulePlanEntity createCompFlightSchedulePlan(FlightSchedulePlanEntity fsp,FlightSchedulePlanEntity original, List<FlightScheduleEntity> fs, List<FareEntity> f, FlightEntity flight) {
+
+        em.persist(fsp);
+        em.flush();
+        
+        original.setComplementaryFsp(fsp);
         System.out.println("Here");
         System.out.println(fsp.getFightSchedulePlanId());
 
@@ -62,6 +141,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
                 }
             }
 
+            System.out.println(fsp.getFlightSchedules().size());
             em.persist(sie);
             em.flush();
             d.setSeatsInventory(sie);
@@ -83,7 +163,6 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
         return fsp;
 
     }
-
     /*
     public FareEntity createNewFare(Long flightSchedulePlanId, FareEntity newFare) throws FlightSchedulePlanNotFoundException
     {

@@ -37,7 +37,7 @@ public class FlightEntity implements Serializable {
     FlightRouteEntity flightRoute;
     @Column(name="COMP")
     private boolean complementary;
-    @OneToOne
+    @OneToOne(optional = true)
     FlightEntity complentaryFlight;    
     @OneToOne
     AircraftConfigurationEntity  aircraftConfiguration;

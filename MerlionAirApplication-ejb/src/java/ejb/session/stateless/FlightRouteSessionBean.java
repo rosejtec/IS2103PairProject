@@ -9,6 +9,7 @@ import entity.FlightRouteEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.FlightRouteNotFoundException;
@@ -79,9 +80,10 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         
     }
     
+    @Override
     public FlightRouteEntity retrieveFlightRouteByAirportCode(String departure, String arrival) throws FlightRouteNotFoundException
     {
-        
+       try{ 
        Query query = em.createQuery("SELECT fr FROM FlightRouteEntity fr WHERE fr.origin.code = :inDeparture AND fr.destination.code = :inArrival");
        query.setParameter("inDeparture", departure);
        query.setParameter("inArrival", arrival);
@@ -91,8 +93,12 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
        fr.getComplementaryReturnRoute();
        fr.getDestination();
        fr.getOrigin();
-       return fr;
-        
+       
+              return fr;
+       } catch(NoResultException ex){
+           throw new FlightRouteNotFoundException();
+       }
+               
         
     }
      
