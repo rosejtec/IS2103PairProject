@@ -5,13 +5,18 @@
  */
 package ejb.session.stateless;
 
+import entity.AirportEntity;
 import entity.FlightRouteEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.AirportNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 
 /**
@@ -21,16 +26,43 @@ import util.exception.FlightRouteNotFoundException;
 @Stateless
 public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, FlightRouteSessionBeanLocal {
 
+    @EJB
+    private AirportSessionBeanLocal airportSessionBeanLocal;
+
     @PersistenceContext(unitName = "MerlionAirApplication-ejbPU")
     private EntityManager em;
+    
+    
 
     //create new flight route use case
-    public Long createNewFlightRoute(FlightRouteEntity newFlightRouteEntity)
+    @Override
+    public Long createNewFlightRoute(String origin, String destination, Boolean createComplementary) throws AirportNotFoundException
     {
-            em.persist(newFlightRouteEntity);
-            em.flush();
+        AirportEntity originAirportEntity = airportSessionBeanLocal.retriveBy(origin);
+        AirportEntity destinationAirportEntity = airportSessionBeanLocal.retriveBy(destination);
 
-            return newFlightRouteEntity.getFlightRouteId();
+        FlightRouteEntity newFlightRouteEntity = new FlightRouteEntity();
+        newFlightRouteEntity.setOrigin(originAirportEntity);
+        newFlightRouteEntity.setDestination(destinationAirportEntity);
+        originAirportEntity.getFlightRoutesInbound().add(newFlightRouteEntity);
+        destinationAirportEntity.getFlightRoutesOutbound().add(newFlightRouteEntity);            
+        em.persist(newFlightRouteEntity);
+
+        if(createComplementary)
+        {
+            FlightRouteEntity complementaryFlightRouteEntity = new FlightRouteEntity();
+            complementaryFlightRouteEntity.setOrigin(destinationAirportEntity);
+            complementaryFlightRouteEntity.setDestination(originAirportEntity);
+            destinationAirportEntity.getFlightRoutesInbound().add(complementaryFlightRouteEntity);
+            originAirportEntity.getFlightRoutesOutbound().add(complementaryFlightRouteEntity);            
+            newFlightRouteEntity.setComplementaryReturnRoute(complementaryFlightRouteEntity);
+            em.persist(complementaryFlightRouteEntity);
+        }
+
+
+        em.flush();
+
+        return newFlightRouteEntity.getFlightRouteId();            
     }
 
     public FlightRouteEntity createNewComplementaryReturnRoute(Long flightRouteId, FlightRouteEntity complementaryReturnRoute) throws FlightRouteNotFoundException
@@ -102,12 +134,7 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
        FlightRouteEntity fr = (FlightRouteEntity)query.getSingleResult();
        
        System.out.println("********** retrieveFlightRouteByAirportCode: " + fr.getFlightRouteId());
-       
-       fr.getFlights().size();
-       fr.getComplementaryReturnRoute();
-       fr.getDestination();
-       fr.getOrigin();
-       
+      
               return fr;
        } catch(NoResultException ex){
            throw new FlightRouteNotFoundException();

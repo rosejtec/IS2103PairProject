@@ -24,6 +24,5 @@ import util.enumeration.FlightScheduleEntityNotFoundException;
 public interface ReservationSessionBeanLocal {
      Integer getFare(FlightScheduleEntity fs, CabinClassType t); 
      FlightScheduleEntity retrievebyId(Long id) throws FlightScheduleEntityNotFoundException;
-   void updateSeat(SeatsInventoryEntity seat);
 
 }

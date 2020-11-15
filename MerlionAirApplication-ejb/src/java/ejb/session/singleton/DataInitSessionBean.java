@@ -32,8 +32,10 @@ import entity.FlightRouteEntity;
 import entity.FlightScheduleEntity;
 import entity.FlightSchedulePlanEntity;
 import entity.PartnerEntity;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -170,7 +172,7 @@ public class DataInitSessionBean {
         cc = new ArrayList<>();
         cc.add(new CabinClassConfigurationEntity(CabinClassType.Y, 2, 38, 10, "3-4-3", 380));
         try {   
-            aircraftConfigurationSessionBean.createNewAircraftConfiguration(ac, cc, ate.getAircraftTypeId());
+            aircraftConfigurationSessionBean.createNewAircraftConfiguration(ac, cc, ate2.getAircraftTypeId());
         } catch (AircraftTypeNotFoundException ex) {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (AircraftConfigurationNotFoundException ex) {
@@ -184,69 +186,30 @@ public class DataInitSessionBean {
         cc.add(new CabinClassConfigurationEntity(CabinClassType.Y, 2, 32, 10, "3-4-3", 320));
 
         try {
-            aircraftConfigurationSessionBean.createNewAircraftConfiguration(ac, cc, ate.getAircraftTypeId());
+            aircraftConfigurationSessionBean.createNewAircraftConfiguration(ac, cc, ate2.getAircraftTypeId());
         } catch (AircraftTypeNotFoundException ex) {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (AircraftConfigurationNotFoundException ex) {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Long id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SIN"), airportSessionBean.retriveBy("HKG")));
+        flightRouteSessionBean.createNewFlightRoute("SIN", "HKG", true);
+        flightRouteSessionBean.createNewFlightRoute("SIN", "TPE", true);
+        flightRouteSessionBean.createNewFlightRoute("SIN", "NRT", true);
+        flightRouteSessionBean.createNewFlightRoute("HKG", "NRT", true);
+        flightRouteSessionBean.createNewFlightRoute("TPE", "NRT", true);
+        flightRouteSessionBean.createNewFlightRoute("SIN", "SYD", true);
+        flightRouteSessionBean.createNewFlightRoute("SYD", "NRT", true);
+        
+        
         try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("HKG"), airportSessionBean.retriveBy("SIN")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SIN"), airportSessionBean.retriveBy("TPE")));
-        try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("TPE"), airportSessionBean.retriveBy("SIN")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SIN"), airportSessionBean.retriveBy("NRT")));
-        try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("NRT"), airportSessionBean.retriveBy("SIN")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("HKG"), airportSessionBean.retriveBy("NRT")));
-        try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("NRT"), airportSessionBean.retriveBy("HKG")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("TPE"), airportSessionBean.retriveBy("NRT")));
-        try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("NRT"), airportSessionBean.retriveBy("TPE")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SIN"), airportSessionBean.retriveBy("SYD")));
-        try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("SYD"), airportSessionBean.retriveBy("SIN")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            id = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(airportSessionBean.retriveBy("SYD"), airportSessionBean.retriveBy("NRT")));
-        } catch (AirportNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            flightRouteSessionBean.createNewComplementaryReturnRoute(id, new FlightRouteEntity(airportSessionBean.retriveBy("NRT"), airportSessionBean.retriveBy("SYD")));
-        } catch (FlightRouteNotFoundException ex) {
-            Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-       
-        try {
-            FlightEntity f = new FlightEntity("MA111", flightRouteSessionBean.retrieveFlightRouteByAirportCode("SIN", "HKG") , aircraftConfigurationSessionBean.retrieveAircraftConfigurationByAircraftConfigurationId(2L));
-            FlightEntity f2 = new FlightEntity("MA112", flightRouteSessionBean.retrieveFlightRouteByAirportCode("HKG", "SIN"), aircraftConfigurationSessionBean.retrieveAircraftConfigurationByAircraftConfigurationId(2L));
+            FlightRouteEntity fr1 = flightRouteSessionBean.retrieveFlightRouteByAirportCode("SIN", "HKG");
+            FlightRouteEntity fr2 = flightRouteSessionBean.retrieveFlightRouteByAirportCode("HKG", "SIN");
+            System.err.println("********** DATA INIT: " + fr1.getFlightRouteId() + "; " + fr1);
+            System.err.println("********** DATA INIT: " + fr2.getFlightRouteId() + "; " + fr2);
+            
+            FlightEntity f = new FlightEntity("ML111", flightRouteSessionBean.retrieveFlightRouteByAirportCode("SIN", "HKG") , aircraftConfigurationSessionBean.retrieveAircraftConfigurationByAircraftConfigurationId(2L));
+            FlightEntity f2 = new FlightEntity("ML112", flightRouteSessionBean.retrieveFlightRouteByAirportCode("HKG", "SIN"), aircraftConfigurationSessionBean.retrieveAircraftConfigurationByAircraftConfigurationId(2L));
               f2.setComplementary(true);
                 f2 = flightSessionBean.createNewFlight(f2);
          f.setComplentaryFlight(f2);
@@ -376,8 +339,8 @@ public class DataInitSessionBean {
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
 
             FlightEntity flight = flightSessionBean.retrieveFlightByFlightNumber("ML711");
-            String date = "2020-12-07 09:00";
-            LocalDateTime departure = LocalDateTime.parse(date, formatter);
+            String date = "2020-12-01 09:00";
+            LocalDateTime departure = LocalDateTime.parse(date, formatter).with(TemporalAdjusters.next(DayOfWeek.MONDAY));;
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             LocalDateTime arrival = departure.plusHours(14 + timeDifference);
@@ -410,6 +373,14 @@ public class DataInitSessionBean {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(departure, departure.plusHours(flightDuration), flightDuration));
                 }
+                fareList = new ArrayList<FareEntity>();
+                        fareList.add(new FareEntity(CabinClassType.F, "F001", "6500"));
+                        fareList.add(new FareEntity(CabinClassType.F, "F002", "6000"));
+                        fareList.add(new FareEntity(CabinClassType.J, "J001", "3500"));
+                        fareList.add(new FareEntity(CabinClassType.J, "J002", "3000"));
+                         fareList.add(new FareEntity(CabinClassType.Y, "Y001", "1500"));
+                          fareList.add(new FareEntity(CabinClassType.Y, "Y002", "1000"));
+
                  FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBean.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs, fareList,complementaryFlight);
         
         
@@ -427,8 +398,8 @@ public class DataInitSessionBean {
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
 
             FlightEntity flight = flightSessionBean.retrieveFlightByFlightNumber("ML611");
-            String date = "2020-12-07 12:00";
-            LocalDateTime departure = LocalDateTime.parse(date, formatter);
+            String date = "2020-12-01 12:00";
+            LocalDateTime departure = LocalDateTime.parse(date, formatter).with(TemporalAdjusters.next(DayOfWeek.SUNDAY));;
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             LocalDateTime arrival = departure.plusHours(8 + timeDifference);
@@ -461,6 +432,14 @@ public class DataInitSessionBean {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(departure, departure.plusHours(flightDuration), flightDuration));
                 }
+                
+        fareList = new ArrayList<FareEntity>();
+        fareList.add(new FareEntity(CabinClassType.F, "F001", "3250"));
+        fareList.add(new FareEntity(CabinClassType.F, "F002", "3000"));
+        fareList.add(new FareEntity(CabinClassType.J, "J001", "1750"));
+        fareList.add(new FareEntity(CabinClassType.J, "J002", "1500"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y001", "750"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y002", "500"));
                  FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBean.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs,fareList,complementaryFlight);
         
         
@@ -477,8 +456,8 @@ public class DataInitSessionBean {
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
 
             FlightEntity flight = flightSessionBean.retrieveFlightByFlightNumber("ML621");
-            String date = "2020-12-07 10:00";
-            LocalDateTime departure = LocalDateTime.parse(date, formatter);
+            String date = "2020-12-01 10:00";
+            LocalDateTime departure = LocalDateTime.parse(date, formatter).with(TemporalAdjusters.next(DayOfWeek.TUESDAY));;
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             LocalDateTime arrival = departure.plusHours(8 + timeDifference);
@@ -505,6 +484,11 @@ public class DataInitSessionBean {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(departure, departure.plusHours(flightDuration), flightDuration));
                 }
+                
+                
+                fareList = new ArrayList<FareEntity>();
+        fareList.add(new FareEntity(CabinClassType.Y, "Y001", "700"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y002", "400"));
                  FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBean.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs, fareList,complementaryFlight);
         
         
@@ -520,8 +504,8 @@ public class DataInitSessionBean {
             LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
 
             FlightEntity flight = flightSessionBean.retrieveFlightByFlightNumber("ML311");
-            String date = "2020-12-07 10:00";
-            LocalDateTime departure = LocalDateTime.parse(date, formatter);
+            String date = "2020-12-01 10:00";
+            LocalDateTime departure = LocalDateTime.parse(date, formatter).with(TemporalAdjusters.next(DayOfWeek.MONDAY));;
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             LocalDateTime arrival = departure.plusHours(6 + timeDifference).plusMinutes(30);
@@ -555,6 +539,14 @@ public class DataInitSessionBean {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(departure, departure.plusHours(flightDuration), flightDuration));
                 }
+                
+                fareList = new ArrayList<FareEntity>();
+        fareList.add(new FareEntity(CabinClassType.F, "F001", "3350"));
+        fareList.add(new FareEntity(CabinClassType.F, "F002", "3200"));
+        fareList.add(new FareEntity(CabinClassType.J, "J001", "1850"));
+        fareList.add(new FareEntity(CabinClassType.J, "J002", "1600"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y001", "850"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y002", "600"));
                  FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBean.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs, fareList,complementaryFlight);
         
         
@@ -609,6 +601,15 @@ public class DataInitSessionBean {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(departure, departure.plusHours(flightDuration), flightDuration));
                 }
+                
+                
+                fareList = new ArrayList<FareEntity>();
+        fareList.add(new FareEntity(CabinClassType.F, "F001", "3350"));
+        fareList.add(new FareEntity(CabinClassType.F, "F002", "3200"));
+        fareList.add(new FareEntity(CabinClassType.J, "J001", "1850"));
+        fareList.add(new FareEntity(CabinClassType.J, "J002", "1600"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y001", "850"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y002", "600"));
                  FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBean.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs,fareList,complementaryFlight);
         
             }catch(FlightNotFoundException ex){
@@ -667,6 +668,15 @@ public class DataInitSessionBean {
                     int flightDuration = fs.getDuration();
                     complementaryFs.add(new FlightScheduleEntity(dateTime, dateTime.plusHours(flightDuration), flightDuration));
                 }
+                
+                fareList = new ArrayList<FareEntity>();
+        fareList.add(new FareEntity(CabinClassType.F, "F001", "3150"));
+        fareList.add(new FareEntity(CabinClassType.F, "F002", "2850"));
+        fareList.add(new FareEntity(CabinClassType.J, "J001", "1600"));
+        fareList.add(new FareEntity(CabinClassType.J, "J002", "1600"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y001", "600"));
+        fareList.add(new FareEntity(CabinClassType.Y, "Y002", "650"));
+
                  FlightSchedulePlanEntity complementaryFspId = flightSchedulePlanSessionBean.createCompFlightSchedulePlan(complementaryFsp,fspId, complementaryFs, fareList,complementaryFlight);
         
             }catch(FlightNotFoundException ex){

@@ -6,6 +6,8 @@
 package ejb.session.stateless;
 
 import entity.FlightEntity;
+import entity.FlightScheduleEntity;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.FlightNotFoundException;
@@ -17,7 +19,7 @@ import util.exception.UpdateFlightException;
  */
 @Remote
 public interface FlightSessionBeanRemote {
-
+ List<FlightScheduleEntity> retrieveFlightSchedule(FlightEntity f, LocalDateTime date) throws FlightNotFoundException;
 public FlightEntity createNewFlight(FlightEntity newFlightEntity);
     public List<FlightEntity> retrieveAllFlights();
 

@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.FlightRouteEntity;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.AirportNotFoundException;
 import util.exception.FlightRouteNotFoundException;
 
 /**
@@ -16,7 +17,7 @@ import util.exception.FlightRouteNotFoundException;
  */
 @Remote
 public interface FlightRouteSessionBeanRemote {
-     public Long createNewFlightRoute(FlightRouteEntity newFlightRouteEntity);
+     public Long createNewFlightRoute(String origin, String destination, Boolean createComplementary) throws AirportNotFoundException;
          public FlightRouteEntity createNewComplementaryReturnRoute(Long flightRouteId, FlightRouteEntity complementaryReturnRoute) throws FlightRouteNotFoundException;
 public List<FlightRouteEntity> retrieveAllFlightRoutes();
 public FlightRouteEntity retrieveFlightRouteByFlightRouteId(Long flightRouteId) throws FlightRouteNotFoundException;

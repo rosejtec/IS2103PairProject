@@ -45,8 +45,8 @@ public class FlightSchedulePlanEntity implements Serializable {
     @OneToMany (mappedBy = "flightSchedulePlan")
     
     private List<FareEntity> fares;
-    //@OneToOne
-    //private FlightSchedulePlanEntity complementaryFsp;
+    @OneToOne
+    private FlightSchedulePlanEntity complementaryFsp;
     private boolean disabled;
 
     public FlightSchedulePlanEntity(FlightEntity flight) {
@@ -136,7 +136,7 @@ public class FlightSchedulePlanEntity implements Serializable {
     public String toString() {
         return "entity.FlightSchedulePlanEntity[ id=" + fightSchedulePlanId + " ]";
     }
-/*
+
     public FlightSchedulePlanEntity getComplementaryFlightSchedulePlan() {
         return complementaryFsp;
     }
@@ -144,7 +144,7 @@ public class FlightSchedulePlanEntity implements Serializable {
     public void setComplementaryFsp(FlightSchedulePlanEntity complementaryFsp) {
         this.complementaryFsp = complementaryFsp;
     }
-*/
+
     public boolean isDisabled() {
         return disabled;
     }

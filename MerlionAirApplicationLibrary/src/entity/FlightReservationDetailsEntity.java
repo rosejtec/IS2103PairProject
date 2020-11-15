@@ -29,28 +29,35 @@ public class FlightReservationDetailsEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flightReservationDetailsId;
-    @Enumerated(EnumType.STRING)
-    private CabinClassType cabinClass;
+  
     @OneToOne 
     private FlightScheduleEntity flightSchedule;
-    private List<String> seatNum;
     @ManyToOne
     private FlightReservationEntity flightReservation;
-
+    @OneToOne
+    private List<SeatPassengeEntity> seats;
     public FlightReservationDetailsEntity() {
     }
 
-    public FlightReservationDetailsEntity(CabinClassType cabinClass, FlightScheduleEntity schedule) {
-        this.cabinClass = cabinClass;
-        this.flightSchedule = schedule;
+    public List<SeatPassengeEntity> getSeats() {
+        return seats;
     }
 
+    public void setSeats(List<SeatPassengeEntity> seats) {
+        this.seats = seats;
+    }
+
+ 
     public FlightReservationEntity getFlightReservation() {
         return flightReservation;
     }
 
     public void setFlightReservation(FlightReservationEntity flightReservation) {
         this.flightReservation = flightReservation;
+    }
+
+    public FlightReservationDetailsEntity(FlightScheduleEntity flightSchedule) {
+        this.flightSchedule = flightSchedule;
     }
 
 
@@ -89,13 +96,7 @@ public class FlightReservationDetailsEntity implements Serializable {
         return "entity.FlightReservationDetailsEntity[ id=" + flightReservationDetailsId + " ]";
     }
 
-    public CabinClassType getCabinClass() {
-        return cabinClass;
-    }
-
-    public void setCabinClass(CabinClassType cabinClass) {
-        this.cabinClass = cabinClass;
-    }
+    
 
     public FlightScheduleEntity getFlightSchedule() {
         return flightSchedule;
@@ -103,14 +104,6 @@ public class FlightReservationDetailsEntity implements Serializable {
 
     public void setFlightSchedule(FlightScheduleEntity flightSchedule) {
         this.flightSchedule = flightSchedule;
-    }
-
-    public List<String> getSeatNum() {
-        return seatNum;
-    }
-
-    public void setSeatNum(List<String> seatNum) {
-        this.seatNum = seatNum;
     }
     
 }

@@ -188,7 +188,8 @@ public class FlightPlanningModule {
 
         int max = 0;
         for(int i =0 ;i<numOfCabinClasses;i++){
-            
+                    int individual=0;
+
             int j=i+1;
                System.out.println("Enter Cabin Type (F, J, W, Y) for Cabin Class "  + j+ " > ");
                String cabinClassType = scanner.nextLine().trim();
@@ -201,13 +202,13 @@ public class FlightPlanningModule {
                scanner.nextLine();
                System.out.println("Enter Seat Configuration> ");
                String seatConfiguration=scanner.nextLine().trim();
-               
+               individual+=numOfRows*numOfSeatsAbreast;
                max += numOfRows*numOfSeatsAbreast;
                if(max >= aircraft.getMaxCapacity()) {
                    throw new ExceedsMaximumCapacityException();
                }
                
-              newCabinClassConfiguration.add(new CabinClassConfigurationEntity( CabinClassType.valueOf(cabinClassType),numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, max));
+              newCabinClassConfiguration.add(new CabinClassConfigurationEntity( CabinClassType.valueOf(cabinClassType),numOfAisles, numOfRows, numOfSeatsAbreast, seatConfiguration, individual));
         }
         
         newAircraftConfiguration.setMaxSeats(max);         
@@ -254,34 +255,44 @@ public class FlightPlanningModule {
       AirportEntity destination = airportSessionBeanRemote.retriveBy(codeD);
 
       try{
-           flightRouteSessionBeanRemote.retrieveFlightRouteByAirportCode(codeD, codeD);
-           System.out.println("FlightRouteAlreadyExist");
+          FlightRouteEntity FR = flightRouteSessionBeanRemote.retrieveFlightRouteByAirportCode(codeO, codeD);
+           System.out.println("Flight Route Already exists");
      
-      
-      } catch(FlightRouteNotFoundException ex){
+            } catch(FlightRouteNotFoundException ex){
   
          FlightRouteEntity route  = new FlightRouteEntity(origin, destination);
-        Long id = flightRouteSessionBeanRemote.createNewFlightRoute(route);
-        System.out.println("Flight Route " + id + " has been successfully created!");
         System.out.println("Would you like a Complementary Flight Route (Y/N)> ");
         String comp =sc.nextLine().trim();
       
-      if(comp.equals("Y")){
-          FlightRouteEntity routeComp  = new FlightRouteEntity(airportSessionBeanRemote.retriveBy(codeD),airportSessionBeanRemote.retriveBy(codeO));
-          flightRouteSessionBeanRemote.createNewComplementaryReturnRoute(id, routeComp);
-          System.out.println("Complementary Flight Route has been successfully created!");
-      }
-      }
+        Boolean createComplementary;
+        
+          if(comp.equals("Y")){
+          
+          createComplementary = true;
+        }
+        else
+        {
+          createComplementary = false;
+        }
+      
+      Long id = flightRouteSessionBeanRemote.createNewFlightRoute(codeO, codeD, createComplementary);
+            
+      System.out.println("Flight Route has been successfully created!");
+      System.out.println("Flight Route " + id + " has been successfully created!");
+            }
     }
 
     private void doViewAllFlightRoutes() {
         List<FlightRouteEntity> route = flightRouteSessionBeanRemote.retrieveAllFlightRoutes();
-        
+        List<FlightRouteEntity>  route2 = new ArrayList<>();
         for(FlightRouteEntity r:route){
+            if(!route2.contains(r)) {
             System.out.println("Flight Route ID: "+r.getFlightRouteId()+ "; Origin: " + r.getOrigin().getCity()+ "; Destination: " + r.getDestination().getCity());
-            if(r.getComplementaryReturnRoute()!= null) {
-            System.out.println("Flight Route ID: "+r.getComplementaryReturnRoute().getFlightRouteId()+ "; Origin: " + r.getComplementaryReturnRoute().getOrigin().getCity()+ "; Destination: " + r.getComplementaryReturnRoute().getDestination().getCity());
-   
+            route2.add(r);
+            if(r.getComplementaryReturnRoute()!= null && !route2.contains(r.getComplementaryReturnRoute())) {
+            System.out.println("Complementary : Flight Route ID: "+r.getComplementaryReturnRoute().getFlightRouteId()+ "; Origin: " + r.getComplementaryReturnRoute().getOrigin().getCity()+ "; Destination: " + r.getComplementaryReturnRoute().getDestination().getCity());
+                 route2.add(r.getComplementaryReturnRoute());
+            }
             }
         }
     }

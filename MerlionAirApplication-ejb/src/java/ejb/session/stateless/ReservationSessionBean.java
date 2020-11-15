@@ -12,6 +12,7 @@ import entity.FlightReservationDetailsEntity;
 import entity.FlightReservationEntity;
 import entity.FlightScheduleEntity;
 import entity.PassengerEntity;
+import entity.SeatPassengeEntity;
 import entity.SeatsInventoryEntity;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -38,9 +39,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @Override
     public Integer getFare(FlightScheduleEntity fs, CabinClassType t){
         
-        Query q= em.createQuery("SELECT f FROM FareEntity f WHERE f.flightSchedulePlan.fightSchedulePlanId=:t  AND f.type=:f ORDER BY f.fareAmount ASC");
+        Query q= em.createQuery("SELECT f FROM FareEntity f WHERE f.flightSchedulePlan.fightSchedulePlanId=:t  AND f.cabinClassType=:fare ORDER BY f.fareAmount ASC");
         q.setParameter("t",fs.getFlightSchedulePlan().getFightSchedulePlanId() ); 
-        q.setParameter("f", t);
+        q.setParameter("fare", t);
         
         List<FareEntity> fare =  q.getResultList();
         if(fare.size()>0){
@@ -63,8 +64,30 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
  
     
     @Override
-    public void updateSeat(SeatsInventoryEntity seat){
-      em.merge(seat);
+    public void updateSeat(SeatsInventoryEntity seat,CabinClassType type,int passenger){
+
+                seat.updateAvailableSeats(passenger);
+                seat.updateReservedSeats(passenger);   
+               if (type == CabinClassType.F) {
+                    seat.setAvailableF(seat.getAvailableF()-passenger);
+                    seat.setReservedF(seat.getReservedF()+passenger);
+
+                } else if (type == CabinClassType.W) {
+                    seat.setAvailableW(seat.getAvailableW()-passenger);
+                    seat.setReservedW(seat.getReservedW()+passenger);
+                } else if (type== CabinClassType.Y) {
+                    seat.setAvailableY(seat.getAvailableY()-passenger);
+                    seat.setReservedY(seat.getReservedY()+passenger);
+
+                } else {
+                     
+                    seat.setAvailableJ(seat.getAvailableJ()-passenger);
+                    seat.setReservedJ(seat.getReservedJ()+passenger);
+
+                }
+     
+        
+        em.merge(seat);
       seat.setBalanceSeats();
       em.flush();
     }
@@ -78,19 +101,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
               book.setCard(c);
               em.persist(book);
               em.flush();
-              
-
-             
-
-              
-              for(PassengerEntity p:pass){
-                  em.persist(p);
-                  em.flush();
-                  book.getPassenger().add(p);
-              }
+      
               for(FlightReservationDetailsEntity frd:inbound){
-                  em.persist(frd);
-                  em.flush();
+             
                   book.getInBound().add(frd);
                   frd.setFlightReservation(book);
                  
@@ -98,8 +111,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
               }
               
              for(FlightReservationDetailsEntity frd:outbond){
-                  em.persist(frd);
-                  em.flush();
                   book.getOutBound().add(frd);
                
                  frd.setFlightReservation(book);
@@ -108,15 +119,34 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
              
              book.setCustomer(customer);
              customer.getFlightReservations().add(book);
-             
-             
-
+           
             
              return book;
           }
+     
+     
+      public FlightReservationDetailsEntity reserveFlightReservation(FlightReservationDetailsEntity inbound, SeatPassengeEntity seat){
+     
+           em.persist(seat);
+           
+           em.persist(inbound);
+           
+           inbound.getSeats().add(seat);
+           return inbound;
+      }
+      
+      public PassengerEntity persistPassenger(PassengerEntity p) {
+            em.persist(p);
+            em.flush();
+            
+            return p;
+      }
+
     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+  
 
    
    

@@ -6,6 +6,8 @@
 package ejb.session.stateless;
 
 import entity.FlightEntity;
+import entity.FlightScheduleEntity;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -54,6 +56,9 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
             flight.getAircraftConfiguration().getCabinClassConfigurations().size();
             flight.getFlightSchedulePlans().size();
             flight.getComplementaryFlight();
+            if(flight.getComplementaryFlight()!=null &&flight.getComplementaryFlight().getFlightSchedulePlans()!=null) {
+            flight.getComplementaryFlight().getFlightSchedulePlans().size();
+            }
             return flight; 
             
         }
@@ -140,6 +145,26 @@ public class FlightSessionBean implements FlightSessionBeanRemote, FlightSession
         
                     em.flush();
 
+    }
+   
+   
+    public List<FlightScheduleEntity> retrieveFlightSchedule(FlightEntity f, LocalDateTime date) throws FlightNotFoundException{
+     try{
+        Query q = em.createQuery("SELECT f FROM FlightScheduleEntity f WHERE f.flightSchedulePlan.flight=:f AND f.departure BETWEEN :date AND :date2");
+     q.setParameter("date", date);
+     q.setParameter("date2", date.plusDays(1));
+     q.setParameter("f", f);
+     
+     List<FlightScheduleEntity> fs =q.getResultList();
+     for(FlightScheduleEntity l :fs){
+       l.getFlightSchedulePlan();
+       l.getFlightSchedulePlan().getFares().size();
+
+     }
+     return fs;
+     } catch (NoResultException ex ){
+         throw new FlightNotFoundException();
+     }
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

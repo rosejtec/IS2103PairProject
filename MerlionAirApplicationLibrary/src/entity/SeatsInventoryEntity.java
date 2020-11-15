@@ -66,6 +66,10 @@ public class SeatsInventoryEntity implements Serializable {
         this.reservedSeats = reservedSeats;
         this.balanceSeats= availableSeats;
         this.seats= new ArrayList<>();
+        this.reservedF=0;
+        this.reservedW=0;
+        this.reservedY=0;
+        this.reservedJ=0;
 
     }
 

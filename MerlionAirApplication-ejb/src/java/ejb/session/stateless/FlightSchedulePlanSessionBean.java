@@ -76,11 +76,14 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
 
         //map fare entity
         for (FareEntity fe : f) {
+            
             fe.setFlightSchedulePlan(fsp);
-            FareEntity N = this.createNewFare(fe);
-            fsp.getFares().add(N);
-
+            em.persist(fe);
+            em.flush();
+            fsp.getFares().add(fe);
+           System.out.println("NotComp" +fe.getFareId());
         }
+        
         //em.flush();
         fsp.getFlightSchedules().size();
         flight.getFlightSchedulePlans().size();
@@ -150,10 +153,11 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
 
         //map fare entity
         for (FareEntity fe : f) {
-            fe.setFlightSchedulePlan(fsp);
-            FareEntity N = this.createNewFare(fe);
-            fsp.getFares().add(N);
-
+             fe.setFlightSchedulePlan(fsp);
+            em.persist(fe);
+            em.flush();
+            fsp.getFares().add(fe);
+           System.out.println("Comp" +fe.getFareId());
         }
         //em.flush();
         fsp.getFlightSchedules().size();

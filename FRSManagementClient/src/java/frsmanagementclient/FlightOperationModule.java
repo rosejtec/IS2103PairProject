@@ -174,6 +174,8 @@ public class FlightOperationModule {
                             doViewFlightSchedulePlanDetails();
                         } catch (FareNotFoundException ex) {
                             System.out.println("Fare ID does not exist!\n");
+                        } catch (FlightNotFoundException ex) {
+                            Logger.getLogger(FlightOperationModule.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } catch (FlightSchedulePlanNotFoundException ex)
                     {
@@ -277,13 +279,13 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             System.out.println("Enter every n days>");
             int n = sc.nextInt();
             sc.nextLine();
-            System.out.println("Enter end date (yyyy-MM-dd HH:mm)>");
+            System.out.println("Enter arrival date (yyyy-MM-dd HH:mm)>");
             //String endDate = sc.nextLine().trim();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime endDate = LocalDateTime.parse(sc.nextLine().trim(), formatter);
            // fsp.setEnd(endDate);
             
-           System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
+           System.out.println("Enter local departure date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
             LocalDateTime departure = LocalDateTime.parse(date, formatter);
             System.out.println("Enter estimated flight duration (hours)>");
@@ -294,30 +296,31 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             FlightRouteEntity flightRoute = flight.getFlightRoute();
             int timeDifference = flightRoute.getDestination().getTimeZone() - flightRoute.getOrigin().getTimeZone();
             LocalDateTime arrival = departure.plusHours(durationHours+timeDifference).plusMinutes(durationMinutes);
-            //fsp.setN(n);
-            //for(int i =0 ;i<n;i++){
+           
             while (arrival.isBefore(endDate) || arrival.isEqual(endDate)){
                flightScheduleList.add(new FlightScheduleEntity(departure,arrival,durationHours));
+
                 departure = departure.plusDays(n);
                 arrival = arrival.plusDays(n);
+
             }
             //}
         } else if (type == 4) {
                       sc.nextLine();
 
             fsp.setSchedule(ScheduleEnum.RECURRENTWEEK);
-            System.out.println("Enter end date (yyyy-MM-dd HH:mm)>");
-            String endDateOfRecurrent = sc.nextLine().trim();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
            System.out.println("Enter day of week >");
            String day = sc.nextLine().trim();
             
-            System.out.println("Enter local depature date (yyyy-MM-dd HH:mm)>");
+            System.out.println("Enter start date (yyyy-MM-dd HH:mm)>");
             String date = sc.nextLine().trim();
             LocalDateTime dep = LocalDateTime.parse(date, formatter);
             LocalDateTime departure = dep.with(TemporalAdjusters.next(DayOfWeek.valueOf(day)));
-
+            System.out.println("Enter end date (yyyy-MM-dd HH:mm)>");
+            String endDateOfRecurrent = sc.nextLine().trim();
+            LocalDateTime endDate = LocalDateTime.parse(endDateOfRecurrent, formatter); 
             System.out.println("Enter estimated flight duration (hours)>");
             int durationHours = sc.nextInt();  
             System.out.println("Enter estimated flight duration (minutes)>");
@@ -329,8 +332,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
            
          
          while (arrival.isBefore(endDate) || arrival.isEqual(endDate)){
-                      flightScheduleList.add(new FlightScheduleEntity(departure,arrival,durationHours));
-                      
+             flightScheduleList.add(new FlightScheduleEntity(departure,arrival,durationHours));                      
              departure = departure.plusWeeks(1);
              arrival = arrival.plusWeeks(1);
          }
@@ -346,7 +348,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
        
         List<CabinClassConfigurationEntity> cccList = flight.getAircraftConfiguration().getCabinClassConfigurations();
         List<FareEntity> fareList = new ArrayList<FareEntity>();
-         System.out.println(cccList.size());
+        System.out.println(cccList.size());
         for (CabinClassConfigurationEntity ccc : cccList)
         {
             System.out.println();
@@ -361,6 +363,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             
             FareEntity f = new FareEntity();
           //  f.setCabinClassConfiguration(ccc);
+            f.setCabinClassType(CabinClassType.F);
             System.out.print("First Class - Enter fare basis code> ");
             f.setFareBasisCode(sc.nextLine().trim());
             System.out.print("First Class - Enter fare amount> ");
@@ -380,6 +383,8 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             j.setFareBasisCode(sc.nextLine().trim());
             System.out.print("Business Class - Enter fare amount> ");
             j.setFareAmount(sc.nextLine().trim());
+                        j.setCabinClassType(CabinClassType.J);
+
            fareList.add(j);  
             }
         
@@ -395,7 +400,10 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             w.setFareBasisCode(sc.nextLine().trim());
             System.out.print("Premium Economy Class - Enter fare amount> ");
             w.setFareAmount(sc.nextLine().trim());
+                                    w.setCabinClassType(CabinClassType.W);
+
             fareList.add(w);
+            
                // flightSchedulePlanSessionBeanRemote.createNewFare(fr, w);
         }  
         } else if (ccc.getCabinClassType() == CabinClassType.Y)
@@ -406,12 +414,14 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
         for(int i = 0; i < faresNum4; i++) {
             FareEntity y = new FareEntity();
           //  y.setCabinClassConfiguration(ccc);
+                                  y.setCabinClassType(CabinClassType.Y);
+
             System.out.print("Economy Class - Enter fare basis code> ");
             y.setFareBasisCode(sc.nextLine().trim());
             System.out.print("Economy Class - Enter fare amount> ");
             y.setFareAmount(sc.nextLine().trim());
             fareList.add(y);  
-            System.out.println(i);
+           // System.out.println(i);
         }
         }
         }
@@ -465,13 +475,18 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
        }        
     }
     
-    public void doViewFlightSchedulePlanDetails() throws FlightSchedulePlanNotFoundException, FareNotFoundException {
+    public void doViewFlightSchedulePlanDetails() throws FlightSchedulePlanNotFoundException, FareNotFoundException, FlightNotFoundException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter Flight Schedule Plan ID> ");
+        System.out.println("Enter Name> ");
+        String fsp3 = sc.nextLine().trim();
+        List<FlightSchedulePlanEntity> list= flightSessionBeanRemote.retrieveFlightByFlightNumber(fsp3).getFlightSchedulePlans();
+        
+        for(FlightSchedulePlanEntity l :list){
+           System.out.println("Flight Schedule Plan ID: " + l.getFightSchedulePlanId() + " Flight Number: " + l.getFlight().getFlightNumber());
+        }
+        System.out.println("Enter Flight schedule Id to be updated from the list above> ");
         Long fspId = sc.nextLong();
-        sc.nextLine();
-            
-
+     
             FlightSchedulePlanEntity fsp = flightSchedulePlanSessionBeanRemote.retrieveFlightSchedulePlanById(fspId);
             System.out.println("Flight Schedule Plan " + fspId + " details");
             System.out.println("Flight Route: " + fsp.getFlight().getFlightRoute().getOrigin().getName() + "-" + fsp.getFlight().getFlightRoute().getDestination().getName());
@@ -554,58 +569,40 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
           
                Integer response = 0;
             
-            while(response < 1 || response > 3)
+            while(response < 1 || response > 2)
             {
            System.out.println("1: Change flight schedule details");
            System.out.println("2: Delete flight schedule");
-           System.out.println("3: Change fare details");
-           System.out.println("4: Back\n");
+           System.out.println("3: Back\n");
            System.out.print("> ");
            
            response = sc.nextInt();
            
            if (response == 1) {
-               System.out.println("Enter ID of Flight Schedule to be changed> ");
-               Long fsId = sc.nextLong();
-               sc.nextLine();
+              
+                   sc.nextLine();
             
-                FlightScheduleEntity fsToBeUpdated = flightSchedulePlanSessionBeanRemote.retrieveFlightScheduleById(fsId);        
-                System.out.println("Enter new departure date/time (yyyy-MM-dd HH:mm)> ");
-                String dateTime = sc.nextLine().trim();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                LocalDateTime newDate = LocalDateTime.parse(dateTime, formatter);
-                fsToBeUpdated.setDeparture(newDate);
-                System.out.println("Enter new duration> ");
-                int newDuration = sc.nextInt();
-                sc.nextLong();
-                fsToBeUpdated.setDuration(newDuration);  
-               System.out.println("Flight Schedule ID " + fsToBeUpdated.getFlightScheduleId() + " has been successfully updated!");
-               
+                for(FareEntity fareToBeUpdated: fsp.getFares()){    
+                
+                 System.out.println("Enter new fare basis code> ");
+                 String fareBasisCode = sc.nextLine().trim();
+                 fareToBeUpdated.setFareBasisCode(fareBasisCode); //string
+                 System.out.println("Enter new fare amount> ");
+                 String fareAmount = sc.nextLine().trim();
+                 fareToBeUpdated.setFareAmount(fareAmount);//String
+                 flightSchedulePlanSessionBeanRemote.updateFare(fareToBeUpdated);
+                 System.out.println("Fare ID " + fareToBeUpdated.getFareId() + " has been successfully updated!");
+                 System.out.println("Flight Schedule ID " + fsp.getFightSchedulePlanId() + " has been successfully updated!");
+                }
             }
-           else if (response == 2) 
+           else if (response == 2) {
            {
               System.out.println("Enter ID of Flight Schedule to be deleted> ");
               Long fsId = sc.nextLong();
               sc.nextLine();
                    flightSchedulePlanSessionBeanRemote.deleteFlightSchedule(fspId, fsId);
-               } else if (response == 3)
-               {
-                    System.out.println("Enter ID of Fare to be changed> ");
-               Long fareId = sc.nextLong();
-               sc.nextLine();
-            
-                FareEntity fareToBeUpdated = flightSchedulePlanSessionBeanRemote.retrieveFareByFareId(fareId);
-                
-                System.out.println("Enter new fare basis code> ");
-                String fareBasisCode = sc.nextLine().trim();
-                fareToBeUpdated.setFareBasisCode(fareBasisCode); //string
-                System.out.println("Enter new fare amount> ");
-                String fareAmount = sc.nextLine().trim();
-                fareToBeUpdated.setFareAmount(fareAmount);//String
-                flightSchedulePlanSessionBeanRemote.updateFare(fareToBeUpdated);
-                
-               System.out.println("Fare ID " + fareToBeUpdated.getFareId() + " has been successfully updated!");
-               } else if(response == 4)
+               } 
+               } else if(response == 3)
                 {
                     break;
                 }
@@ -616,7 +613,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                          
             }
                  
-                if(response == 4)
+                if(response == 3)
                 {
                     break;
                 }
@@ -636,10 +633,6 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
 
 
     public void doDeleteFlight(Long flightId) throws FlightNotFoundException {
-            // Scanner sc = new Scanner(System.in);
-             //System.out.println("Enter Flight ID to be deleted> ");
-             //Long flightId = sc.nextLong();
-             
              flightSessionBeanRemote.deleteFlight(flightId);
              System.out.println("Flight ID " + flightId + " has been successfully deleted!");
      }
@@ -647,14 +640,9 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
     public void doUpdateFlight(Long flightId) throws FlightNotFoundException, UpdateFlightException, AircraftConfigurationNotFoundException, FlightRouteNotFoundException {
           Scanner sc = new Scanner(System.in);    
           FlightEntity flightToBeUpdated = flightSessionBeanRemote.retrieveFlightByFlightId(flightId);
-         System.out.println("Enter ID of Aircraft Configuration to be updated> ");
-        Long aircraftConfiguration = sc.nextLong();
-          flightToBeUpdated.setAircraftConfiguration(aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
-        System.out.println("Enter ID of Flight Route to be updated> ");
-        Long flightRoute = sc.nextLong();
-        
-      
-        flightToBeUpdated.setFlightRoute(flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute));
+          System.out.println("Enter nAME of Aircraft Configuration to be updated> ");
+          String aircraftConfiguration = sc.nextLine().trim();
+          flightToBeUpdated.setAircraftConfiguration(aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigName(aircraftConfiguration));
         
         flightSessionBeanRemote.updateFlight(flightToBeUpdated);
         System.out.println("Flight ID " + flightToBeUpdated.getFlightId() + " has been successfully updated!");
@@ -662,15 +650,15 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
 
     public void doViewFlightDetails() throws FlightNotFoundException {
              Scanner sc = new Scanner(System.in);
-             System.out.println("Enter Flight ID> ");
-             Long flightId = sc.nextLong();
-        //  sc.nextLine();
-          
-            FlightEntity f = flightSessionBeanRemote.retrieveFlightByFlightId(flightId);
+             System.out.println("Enter Flight Name> ");
+                String flightNum = sc.nextLine().trim();
+            FlightEntity f =flightSessionBeanRemote.retrieveFlightByFlightNumber(flightNum);
+         
         
         System.out.println("Flight Number: " + f.getFlightNumber());
         System.out.println("Flight Route: Origin> " +f.getFlightRoute().getOrigin().getCity()+ "; Destination> " + f.getFlightRoute().getDestination().getCity());
-    
+        System.out.println("Flight Config: " + f.getAircraftConfiguration().getName());
+
         Integer response = 0;
        
         while(true)
@@ -681,8 +669,8 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
             while(response < 1 || response > 3)
             {
                 
-            System.out.println("1: Update Flight ID " + flightId);
-            System.out.println("2: Delete Flight ID " + flightId);
+            System.out.println("1: Update Flight ID " );
+            System.out.println("2: Delete Flight ID " );
             System.out.println("3: Back\n");
             System.out.print("> ");
 
@@ -691,7 +679,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                 if(response == 1)
                 {
                  try { 
-                     doUpdateFlight(flightId) ;
+                     doUpdateFlight(f.getFlightId()) ;
                  } catch (FlightNotFoundException ex) {
                      System.out.println("Flight ID does not exist!");
                  } catch (UpdateFlightException ex) {
@@ -705,7 +693,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
                 else if(response == 2)
                 {
                  try {
-                     doDeleteFlight(flightId);
+                     doDeleteFlight(f.getFlightId());
                  } catch (FlightNotFoundException ex) {
                      System.out.println("Flight ID does not exist!");
                  }
@@ -747,25 +735,32 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
 
     public void doCreateFlight() throws FlightRouteNotFoundException, AircraftConfigurationNotFoundException, AirportNotFoundException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter Aircraft Configuration ID> ");
-        Long aircraftConfiguration = sc.nextLong();
-          System.out.println("Enter Origin Airport Code> ");
+        System.out.print("Enter Aircraft Configuration Name> ");
+        String aircraftConfiguration=sc.nextLine().trim();
+       
+          System.out.print("Enter Origin Airport Code> ");
       String codeO= sc.nextLine().trim();
       AirportEntity origin = flightSchedulePlanSessionBeanRemote.retriveBy(codeO);
-      System.out.println("Enter Destination Airport Code> ");
+      System.out.print("Enter Destination Airport Code> ");
       String codeD= sc.nextLine().trim();
       AirportEntity destination = flightSchedulePlanSessionBeanRemote.retriveBy(codeD);
 
       
-      FlightRouteEntity fr = flightRouteSessionBeanRemote.retrieveFlightRouteByAirportCode(codeD, codeD);
+      FlightRouteEntity fr = flightRouteSessionBeanRemote.retrieveFlightRouteByAirportCode(codeO, codeD);
      
    
        System.out.println("Enter Flight Number>");
        
        String flightNum = sc.nextLine().trim();
  
+        try {
+            flightSessionBeanRemote.retrieveFlightByFlightNumber(flightNum);
+            System.out.println("Flight with same name already exists");
+        } catch (FlightNotFoundException ex) {
+          
+        
        // FlightRouteEntity fr = flightRouteSessionBeanRemote.retrieveFlightRouteByFlightRouteId(flightRoute);
-       FlightEntity f = new FlightEntity(flightNum, false, fr , aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+       FlightEntity f = new FlightEntity(flightNum, false, fr , aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigName(aircraftConfiguration));
        f.setComplementary(false);
        //flightSessionBeanRemote.createNewFlight(f);
        
@@ -781,7 +776,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
           System.out.println("Enter Flight Number>");
        
         flightNum = sc.nextLine().trim();
-       FlightEntity f2 = new FlightEntity(flightNum, false,fr.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigurationByAircraftConfigurationId(aircraftConfiguration));
+       FlightEntity f2 = new FlightEntity(flightNum, false,fr.getComplementaryReturnRoute(), aircraftConfigurationSessionBeanRemote.retrieveAircraftConfigName(aircraftConfiguration));
           
          f2.setComplementary(true);
                 f2 = flightSessionBeanRemote.createNewFlight(f2);
@@ -806,6 +801,7 @@ public void doCreateFlightSchedulePlan() throws FlightNotFoundException {
           System.out.println("Flight ID " + f.getFlightId() + " has been successfully created!");
       //}
     }
+        }
 
     } 
 
